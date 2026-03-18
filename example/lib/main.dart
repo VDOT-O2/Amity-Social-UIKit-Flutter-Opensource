@@ -365,7 +365,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? 'e7a5427e4fcc03e2927c92a884224cbe3d7a732b' : authToken,
+                      authToken: authToken.isEmpty ? '4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6' : authToken,
                       callback: (isSuccess, error) {
                         log("callback:$isSuccess");
                         if (isSuccess) {
@@ -412,7 +412,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? 'e7a5427e4fcc03e2927c92a884224cbe3d7a732b' : authToken,
+                      authToken: authToken.isEmpty ? '4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6' : authToken,
                       callback: (isSuccess, error) {
                         log("callback:$isSuccess");
                         if (isSuccess) {

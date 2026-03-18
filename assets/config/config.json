@@ -12,7 +12,7 @@
             "alert_color": "#ff3b30",
             "background_color": "#FFFFFF",
             "base_inverse_color": "#000000",
-            "highlight_color": "#000000",
+            "highlight_color": "#111111",
             "avatar_background_color": "#000000",
             "avatar_border_color": "#D9D9D9",
             "avatar_text_color": "#FFFFFF"
@@ -25,11 +25,11 @@
             "base_shade2_color": "#6E7487",
             "base_shade3_color": "#40434E",
             "base_shade4_color": "#292B32",
-            "alert_color": "#FA4D30",
-            "background_color": "#191919",
+            "alert_color": "#ff3b30",
+            "background_color": "#000000",
             "base_inverse_color": "#FFFFFF",
-            "highlight_color": "#1054DE",
-            "avatar_background_color": "#0F1217",
+            "highlight_color": "#ffffff",
+            "avatar_background_color": "#0f1217",
             "avatar_border_color": "#2E3742",
             "avatar_text_color": "#FFFFFF"
         }
@@ -279,12 +279,9 @@
         "post_detail_page/*/back_button": {
             "icon": "backButtonIcon"
         },
-        "social_home_page/community_categories/*": {
-        },
-        "social_home_page/recommended_communities/*": {
-        },
-        "social_home_page/trending_communities/*": {
-        },
+        "social_home_page/community_categories/*": {},
+        "social_home_page/recommended_communities/*": {},
+        "social_home_page/trending_communities/*": {},
         "post_detail_page/*/menu_button": {
             "icon": "menuIcon"
         },
@@ -498,7 +495,7 @@
                     "background_shade_color": "#FFFFFF",
                     "highlight_color": "#1054DE"
                 },
-               "dark": {
+                "dark": {
                     "primary_color": "#1054DE",
                     "secondary_color": "#292B32",
                     "base_color": "#EBECEF",
@@ -528,7 +525,7 @@
                     "base_inverse_color": "#000000",
                     "highlight_color": "#1054DE"
                 },
-                 "dark": {
+                "dark": {
                     "primary_color": "#1054DE",
                     "secondary_color": "#292B32",
                     "base_color": "#EBECEF",
@@ -598,7 +595,7 @@
             "right_bubble_text_color": "#FFFFFF",
             "right_bubble_subtle_text_color": "#A9C4F9",
             "right_bubble_preview_link_color": "#FFFFFF",
-            "bubble_divider_color": "#C1C1C1"            
+            "bubble_divider_color": "#C1C1C1"
         },
         "group_chat_page/*/group_chat_page_title": {},
         "group_chat_page/*/group_chat_page_image": {
