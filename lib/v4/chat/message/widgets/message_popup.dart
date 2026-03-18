@@ -75,9 +75,31 @@ class _ReactionRowState extends State<ReactionRow> {
     setState(() => highlightedIndex = null);
   }
 
+  Future _onTap(TapDownDetails details) async {
+    _updateHighlight(details.globalPosition);
+    if (highlightedIndex != null) {
+      final reactionItem = widget.reactions[highlightedIndex!];
+
+      await Future.delayed(Duration(milliseconds: 100));
+      setState(() => highlightedIndex = null);
+
+      if (!mounted) {
+        return;
+      }
+      await Future.delayed(Duration(milliseconds: 100));
+
+      if (reactionItem.isSelected) {
+        widget.onReactionSelected(reactionItem.reaction, true);
+      } else {
+        widget.onReactionSelected(reactionItem.reaction, false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapDown: _onTap,
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
