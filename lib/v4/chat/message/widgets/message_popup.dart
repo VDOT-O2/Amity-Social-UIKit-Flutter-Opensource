@@ -254,7 +254,10 @@ extension MessagePopup on MessageBubbleView {
                     ReactionRow(
                       onReactionSelected:
                           (AmityReactionType reaction, bool isSelected) async {
-                        HapticFeedback.heavyImpact();
+                        HapticFeedback.heavyImpact();           
+                        Navigator.of(context).pop();            
+                         
+                        await Future.delayed(const Duration(milliseconds: 100));
 
                         if (isSelected) {
                           await message.react().removeReaction(reaction.name);
@@ -268,7 +271,6 @@ extension MessagePopup on MessageBubbleView {
                           }
                           await message.react().addReaction(reaction.name);
                         }
-                        Navigator.of(context).pop();
                       },
                       reactions: reactionItems,
                       theme: theme,
