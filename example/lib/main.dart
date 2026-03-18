@@ -365,7 +365,7 @@ class _UserListPageState extends State<UserListPage> {
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
                     String baseUrl = prefs.getString('customUrl') ?? "";
-                    String authToken = serverKey.isEmpty ? "" : await getSecureModeAuthKey(httpUrl,_usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty ? "4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6" : await getSecureModeAuthKey(httpUrl,_usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
@@ -413,7 +413,7 @@ class _UserListPageState extends State<UserListPage> {
                       }
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
-                    String authToken = serverKey.isEmpty ? "" : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty ? "4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6" : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
 
                     ///Step 3: login with Amity
