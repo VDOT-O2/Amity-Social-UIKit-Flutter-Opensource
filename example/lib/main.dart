@@ -271,7 +271,13 @@ class _UserListPageState extends State<UserListPage> {
     AmityUIKit().observeSessionState().listen((event) {
       if (event == SessionState.Established) {
         final username = AmityUIKit().getCurrentUser().displayName ?? AmityUIKit().getCurrentUser().userId ?? "";
-        NavigationService.navigatorKey.currentState!.pushReplacement(
+        final currentState = NavigationService.navigatorKey.currentState;
+
+        if (currentState == null) {
+          return;
+        }
+        
+        currentState.pushReplacement(
           MaterialPageRoute(builder: (context) => SecondPage(username: username)),
         );
       }
@@ -365,7 +371,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? '4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6' : authToken,
+                      authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
                       callback: (isSuccess, error) {
                         log("callback:$isSuccess");
                         if (isSuccess) {
@@ -412,7 +418,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? '4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6' : authToken,
+                      authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
                       callback: (isSuccess, error) {
                         log("callback:$isSuccess");
                         if (isSuccess) {

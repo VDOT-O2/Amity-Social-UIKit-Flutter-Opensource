@@ -213,9 +213,11 @@ class AmityUIKit {
 
 class AmityUIKitProvider extends StatelessWidget {
   final Widget child;
-  const AmityUIKitProvider({Key? key, required this.child, this.navigationProvider}) : super(key: key);
+  const AmityUIKitProvider({Key? key, required this.child, this.navigationProvider, this.withMaterialApp = true})
+      : super(key: key);
 
   final NavigationProvider? navigationProvider;
+  final bool withMaterialApp;
 
   @override
   Widget build(BuildContext context) {
@@ -262,9 +264,56 @@ class AmityUIKitProvider extends StatelessWidget {
       child: Builder(builder: (context) {
         return Consumer<ConfigProvider>(builder: (context, configProvider, _) {
           configProvider.loadConfig();
-          return Builder(builder: (context2) {
+          final contentBuilder = Builder(builder: (context2) {
             return child;
           });
+
+          if (!withMaterialApp) {
+            return contentBuilder;
+          }
+
+          return MaterialApp(
+            theme: ThemeData(),
+            debugShowCheckedModeBanner: false,
+            navigatorKey: NavigationService.navigatorKey,
+            home: contentBuilder,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('pt'), // Base Portuguese locale
+              Locale('pt', 'BR'),  // Portuguese (Brazil)
+              Locale('es'),        // Base Spanish locale
+              Locale('es', 'CL'),  // Spanish (Chile)
+              Locale('es', 'CO'),  // Spanish (Colombia)
+              Locale('es', 'MX'),  // Spanish (Mexico)
+              Locale('es', 'PE'),  // Spanish (Peru)
+            ],
+            // Ensure the app uses the device locale by default
+            localeResolutionCallback: (deviceLocale, supportedLocales) {
+              if (deviceLocale != null) {
+                for (var locale in supportedLocales) {
+                  print ("deviceLocale: ${deviceLocale.languageCode}");
+                  print ("supportedLocales: $supportedLocales}");
+                  // Check for exact matches first
+                  if (locale.languageCode == deviceLocale.languageCode &&
+                      locale.countryCode == deviceLocale.countryCode) {
+                    return locale;
+                  }
+                  // Then check for language code matches
+                  if (locale.languageCode == deviceLocale.languageCode) {
+                    return locale;
+                  }
+                }
+              }
+              // Default to English if no match found
+              return const Locale('en');
+            },
+          );
         });
       }),
     );

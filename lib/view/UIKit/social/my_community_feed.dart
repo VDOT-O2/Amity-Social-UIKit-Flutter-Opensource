@@ -175,7 +175,7 @@ class CommunityWidget extends StatelessWidget {
                     ),
               title: Row(
                 children: [
-                  if (!community.isPublic!)
+                  if (!(community.isPublic ?? true))
                     Icon(
                       Icons.lock,
                       size: 16.0,
