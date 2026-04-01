@@ -51,9 +51,9 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
     return BlocListener<CreateStoryBloc, CreateStoryState>(
       listener: (context, state) {
         if (state is CreateStorySuccess) {
-          context.read<AmityToastBloc>().add(
-            const AmityToastShort(message: "Successfully shared story", icon: AmityToastIcon.success),
-          );
+          context
+              .read<AmityToastBloc>()
+              .add(const AmityToastShort(message: "Successfully shared story", icon: AmityToastIcon.success));
         }
       },
       child: BlocBuilder<GlobalStoryTargetBloc, GlobalStoryTargetState>(
@@ -140,10 +140,9 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                   baseColor: const Color.fromARGB(255, 243, 242, 242),
                   highlightColor: const Color.fromARGB(255, 225, 225, 225),
                   child: Container(
-                    width: 100,
-                    height: 10,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  ),
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
                 ),
               ],
             ),
@@ -167,10 +166,9 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                   baseColor: const Color.fromARGB(255, 243, 242, 242),
                   highlightColor: const Color.fromARGB(255, 225, 225, 225),
                   child: Container(
-                    width: 100,
-                    height: 10,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  ),
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
                 ),
               ],
             ),
@@ -194,10 +192,9 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                   baseColor: const Color.fromARGB(255, 243, 242, 242),
                   highlightColor: const Color.fromARGB(255, 225, 225, 225),
                   child: Container(
-                    width: 100,
-                    height: 10,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  ),
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
                 ),
               ],
             ),
@@ -221,10 +218,9 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                   baseColor: const Color.fromARGB(255, 243, 242, 242),
                   highlightColor: const Color.fromARGB(255, 225, 225, 225),
                   child: Container(
-                    width: 100,
-                    height: 10,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  ),
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
                 ),
               ],
             ),
