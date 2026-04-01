@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AmityTheme {
   final Color primaryColor;
   final Color secondaryColor;
+  final Color buttonColor;
+  final Color buttonTextColor;
   final Color baseColor;
   final Color baseInverseColor;
   final Color baseColorShade1;
@@ -20,6 +22,8 @@ class AmityTheme {
   AmityTheme({
     required this.primaryColor,
     required this.secondaryColor,
+    required this.buttonColor,
+    required this.buttonTextColor,
     required this.baseColor,
     required this.baseInverseColor,
     required this.baseColorShade1,
@@ -39,6 +43,8 @@ class AmityTheme {
     return AmityTheme(
       primaryColor: _colorFromHex(json['primary_color']) ?? fallbackTheme.primaryColor,
       secondaryColor: _colorFromHex(json['secondary_color']) ?? fallbackTheme.secondaryColor,
+      buttonColor: _colorFromHex(json['button_color']) ?? fallbackTheme.buttonColor,
+      buttonTextColor: _colorFromHex(json['button_text_color']) ?? fallbackTheme.buttonTextColor,
       baseColor: _colorFromHex(json['base_color']) ?? fallbackTheme.baseColor,
       baseInverseColor: _colorFromHex(json['base_inverse_color']) ?? fallbackTheme.baseInverseColor,
       baseColorShade1: _colorFromHex(json['base_shade1_color']) ?? fallbackTheme.baseColorShade1,
@@ -79,6 +85,8 @@ class AmityTheme {
 class AmityThemeColor {
   final Color primaryColor;
   final Color secondaryColor;
+  final Color buttonColor;
+  final Color buttonTextColor;
   final Color baseColor;
   final Color baseInverseColor;
   final Color baseColorShade1;
@@ -96,6 +104,8 @@ class AmityThemeColor {
   AmityThemeColor({
     required this.primaryColor,
     required this.secondaryColor,
+    required this.buttonColor,
+    required this.buttonTextColor,
     required this.baseColor,
     required this.baseInverseColor,
     required this.baseColorShade1,
@@ -118,6 +128,8 @@ enum AmityThemeStyle { light, dark, system }
 final lightTheme = AmityTheme(
   primaryColor: const Color(0xFF1054DE),
   secondaryColor: const Color(0xFF292B32),
+  buttonColor: const Color(0xFF111111),
+  buttonTextColor: const Color(0xFFFFFFFF),
   baseColor: const Color(0xFF292B32),
   baseInverseColor: const Color(0xFF292B32),
   baseColorShade1: const Color(0xFF636878),
@@ -136,6 +148,8 @@ final lightTheme = AmityTheme(
 final darkTheme = AmityTheme(
   primaryColor: const Color(0xFF1054DE),
   secondaryColor: const Color(0xFF292B32),
+  buttonColor: const Color(0xFFFFFFFF),
+  buttonTextColor: const Color(0xFF000000),
   baseColor: const Color(0xFFEBECEF),
   baseInverseColor: const Color(0xFFFFFFFF),
   baseColorShade1: const Color(0xFFA5A9B5),

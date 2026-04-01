@@ -135,6 +135,8 @@ extension ThemeConfig on ConfigRepository {
     return AmityThemeColor(
       primaryColor: theme?.primaryColor ?? fallbackTheme.primaryColor,
       secondaryColor: theme?.secondaryColor ?? fallbackTheme.secondaryColor,
+      buttonColor: theme?.buttonColor ?? fallbackTheme.buttonColor,
+      buttonTextColor: theme?.buttonTextColor ?? fallbackTheme.buttonTextColor,
       baseColor: theme?.baseColor ?? fallbackTheme.baseColor,
       baseColorShade1: theme?.baseColorShade1 ?? fallbackTheme.baseColorShade1,
       baseColorShade2: theme?.baseColorShade2 ?? fallbackTheme.baseColorShade2,

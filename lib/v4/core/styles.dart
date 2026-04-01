@@ -10,6 +10,10 @@ class AmityTextStyle {
     return getStyle(17, FontWeight.w600, color, textHeight);
   }
 
+    static TextStyle titleSemiBold(Color color, {double? textHeight}) {
+    return getStyle(17, FontWeight.w500, color, textHeight);
+  }
+
   static TextStyle title(Color color, {double? textHeight}) {
     return getStyle(17, FontWeight.w400, color, textHeight);
   }

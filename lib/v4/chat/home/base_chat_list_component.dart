@@ -77,6 +77,10 @@ class BaseChatListComponent extends NewBaseComponent {
                         package: 'amity_uikit_beta_service',
                         width: 12,
                         height: 12,
+                        colorFilter: ColorFilter.mode(
+                          theme.baseColorShade1,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const SizedBox(width: 4),
                       Text(

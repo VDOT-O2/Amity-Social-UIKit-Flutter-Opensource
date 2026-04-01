@@ -39,7 +39,7 @@ class MessageColor {
   Color getColor(String configName, Color defaultColor) {
     try {
       final configString = config[configName] as String?;
-      return _colorFromHex(configString);
+      return _colorFromHex(configString, defaultColor);
     } catch (e) {
       return defaultColor;
     }
@@ -47,8 +47,8 @@ class MessageColor {
 
 
 
-  static Color _colorFromHex(String? hexColor) {
-    if (hexColor == null) return const Color(0x00000000);
+  static Color _colorFromHex(String? hexColor, [Color defaultColor = const Color(0x00000000)]) {
+    if (hexColor == null) return defaultColor;
     hexColor = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
       hexColor = 'FF$hexColor';
