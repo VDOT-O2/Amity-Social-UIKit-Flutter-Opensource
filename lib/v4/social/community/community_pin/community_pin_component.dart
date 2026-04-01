@@ -108,6 +108,10 @@ class CommunityPinComponent extends NewBaseComponent {
                   child: SvgPicture.asset(
                     'assets/Icons/amity_ic_feed_empty.svg',
                     package: 'amity_uikit_beta_service',
+                    colorFilter: ColorFilter.mode(
+                      theme.primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],

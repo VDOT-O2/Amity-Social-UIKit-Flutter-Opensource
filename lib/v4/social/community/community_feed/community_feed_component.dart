@@ -160,6 +160,10 @@ class CommunityFeedComponent extends NewBaseComponent {
                   child: SvgPicture.asset(
                     'assets/Icons/amity_ic_feed_empty.svg',
                     package: 'amity_uikit_beta_service',
+                    colorFilter: ColorFilter.mode(
+                      theme.primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],
@@ -174,7 +178,7 @@ class CommunityFeedComponent extends NewBaseComponent {
                 color: theme.baseColorShade3,
                 fontSize: 17,
                 fontFamily: 'SF Pro Text',
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

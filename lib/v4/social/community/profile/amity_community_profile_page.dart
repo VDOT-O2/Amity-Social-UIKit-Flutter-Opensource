@@ -303,7 +303,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                                 width: 64,
                                 height: 64,
                                 decoration: ShapeDecoration(
-                                  color: theme.primaryColor,
+                                  color: theme.buttonColor,
                                   shape: OvalBorder(),
                                 ),
                               ),
@@ -327,6 +327,8 @@ class AmityCommunityProfilePage extends NewBasePage {
                                         package: 'amity_uikit_beta_service',
                                         width: 32,
                                         height: 32,
+                                        colorFilter: ColorFilter.mode(
+                                            theme.buttonTextColor, BlendMode.srcIn),
                                       ),
                                     ),
                                   ],

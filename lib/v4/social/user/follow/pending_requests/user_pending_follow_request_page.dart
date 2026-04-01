@@ -113,6 +113,10 @@ Widget getEmptyStateView(AmityThemeColor theme) {
           SvgPicture.asset(
             'assets/Icons/amity_ic_follow_request_empty.svg',
             package: 'amity_uikit_beta_service',
+            colorFilter: ColorFilter.mode(
+              theme.primaryColor,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(height: 16),
           Text(

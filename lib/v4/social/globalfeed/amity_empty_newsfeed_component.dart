@@ -27,6 +27,10 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
             package: 'amity_uikit_beta_service',
             width: 160,
             height: 160,
+            colorFilter: ColorFilter.mode(
+              theme.primaryColor,
+              BlendMode.srcIn,
+            ),
           ),
         ),
         Column(
@@ -54,10 +58,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                 Text(
                   'Find community or create your own ',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: theme.baseColorShade1,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(color: theme.baseColorShade1, fontSize: 13, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 17),
                 Container(
@@ -68,9 +69,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          context
-                              .read<SocialHomeBloc>()
-                              .add(TabSelectedEvent(1));
+                          context.read<SocialHomeBloc>().add(TabSelectedEvent(1));
                         },
                         child: Container(
                           width: 220,
@@ -82,8 +81,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                           ),
                           decoration: ShapeDecoration(
                             color: theme.primaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -93,8 +91,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                               Container(
                                 width: 20,
                                 height: 20,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
+                                padding: const EdgeInsets.symmetric(vertical: 2),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -127,14 +124,12 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                       const SizedBox(height: 4),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const CreateCommunityPage()));
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) => const CreateCommunityPage()));
                         },
                         child: Container(
                           width: 220,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,

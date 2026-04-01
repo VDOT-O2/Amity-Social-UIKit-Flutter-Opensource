@@ -7,8 +7,7 @@ import 'package:flutter_svg/svg.dart';
 class UserFeedEmptyState extends BaseElement {
   final UserFeedEmptyStateInfo info;
 
-  UserFeedEmptyState({Key? key, required this.info})
-      : super(key: key, elementId: "user_feed_empty_state_view");
+  UserFeedEmptyState({Key? key, required this.info}) : super(key: key, elementId: "user_feed_empty_state_view");
 
   @override
   Widget buildElement(BuildContext context) {
@@ -22,6 +21,10 @@ class UserFeedEmptyState extends BaseElement {
           SvgPicture.asset(
             info.icon,
             package: 'amity_uikit_beta_service',
+            colorFilter: ColorFilter.mode(
+              theme.primaryColor,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(height: 8),
           Text(

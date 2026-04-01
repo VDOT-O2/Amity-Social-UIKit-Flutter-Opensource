@@ -15,8 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityExploreComponent extends NewBaseComponent {
-  final ExploreComponentRefreshController _refreshController =
-      ExploreComponentRefreshController();
+  final ExploreComponentRefreshController _refreshController = ExploreComponentRefreshController();
 
   AmityExploreComponent({
     super.key,
@@ -33,9 +32,7 @@ class AmityExploreComponent extends NewBaseComponent {
             onRefresh: () async {
               context.read<ExploreComponentCubit>().setRefreshing();
             },
-            child: state.isRefreshing
-                ? _buildLoadingState()
-                : _buildContent(context, state),
+            child: state.isRefreshing ? _buildLoadingState() : _buildContent(context, state),
           );
         },
       ),
@@ -91,36 +88,36 @@ class AmityExploreComponent extends NewBaseComponent {
   }
 
   Widget _buildEmptyState(BuildContext context, ExploreComponentState state) {
-    final String title = state.categoryState == CategoryListState.empty
-        ? "Your explore is empty"
-        : "No community yet";
+    final String title = state.categoryState == CategoryListState.empty ? "Your explore is empty" : "No community yet";
     final String caption = state.categoryState == CategoryListState.empty
         ? "Find community or create your own"
         : "Let's create your own communities..";
 
-    Widget emptyWidget = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+    Widget emptyWidget = Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       SvgPicture.asset(
-          'assets/Icons/amity_ic_global_feed_empty.svg',
-          width: 160,
-          height: 160,
-          package: 'amity_uikit_beta_service',
+        'assets/Icons/amity_ic_global_feed_empty.svg',
+        width: 160,
+        height: 160,
+        package: 'amity_uikit_beta_service',
+        colorFilter: ColorFilter.mode(
+          theme.primaryColor,
+          BlendMode.srcIn,
         ),
-        const SizedBox(height: 16),
-        Text(title, style: AmityTextStyle.titleBold(theme.baseColorShade3)),
-        const SizedBox(height: 4),
-        Text(caption, style: AmityTextStyle.caption(theme.baseColorShade3)),
-        const SizedBox(height: 26),
-        _buildCreateCommunityButton(context),
-        const SizedBox(height: 40)
+      ),
+      const SizedBox(height: 16),
+      Text(title, style: AmityTextStyle.titleBold(theme.baseColorShade3)),
+      const SizedBox(height: 4),
+      Text(caption, style: AmityTextStyle.caption(theme.baseColorShade3)),
+      const SizedBox(height: 26),
+      _buildCreateCommunityButton(context),
+      const SizedBox(height: 40)
     ]);
 
     return Column(
       children: [
         _getDivider(),
-        if (state.categoryState != CategoryListState.empty)...[
-           AmityCommunityCategoriesComponent(
+        if (state.categoryState != CategoryListState.empty) ...[
+          AmityCommunityCategoriesComponent(
             onStateChanged: (state) {
               context.read<ExploreComponentCubit>().setCategoryState(state);
             },
@@ -142,11 +139,9 @@ class AmityExploreComponent extends NewBaseComponent {
           package: 'amity_uikit_beta_service',
         ),
         const SizedBox(height: 16),
-        Text("Something went wrong",
-            style: AmityTextStyle.titleBold(theme.baseColorShade3)),
+        Text("Something went wrong", style: AmityTextStyle.titleBold(theme.baseColorShade3)),
         const SizedBox(height: 2),
-        Text("Please try again.",
-            style: AmityTextStyle.caption(theme.baseColorShade3)),
+        Text("Please try again.", style: AmityTextStyle.caption(theme.baseColorShade3)),
         const SizedBox(height: 40)
       ],
     );

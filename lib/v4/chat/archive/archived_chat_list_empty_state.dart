@@ -22,10 +22,13 @@ class ArchivedChatListEmptyState extends StatelessWidget {
             package: 'amity_uikit_beta_service',
             width: 60,
             height: 45,
+            colorFilter: ColorFilter.mode(
+              theme.primaryColor,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(height: 16),
-          Text(context.l10n.chat_archived_empty_title,
-              style: AmityTextStyle.titleBold(theme.baseColorShade3)),
+          Text(context.l10n.chat_archived_empty_title, style: AmityTextStyle.titleBold(theme.baseColorShade3)),
         ],
       ),
     );
