@@ -1,7 +1,6 @@
 {
     "editor.formatOnSave": false,
-	"[dart]": {
+    "[dart]": {
 		"editor.formatOnSave": false
 	}
 }
-

@@ -58,9 +58,7 @@ class AmityStoryTargetElement extends BaseElement {
     }
 
     return const AmityNetworkImage(
-      imageUrl: "",
-      placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg",
-    );
+        imageUrl: "", placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg");
   }
 
   @override
