@@ -64,32 +64,32 @@ class BaseChatListComponent extends NewBaseComponent {
         } else {
           return Column(
             children: [
-              if (!state.isPushNotificationEnabled)
-                Container(
-                  color: theme.backgroundShade1Color,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/Icons/amity_ic_chat_mute.svg',
-                        package: 'amity_uikit_beta_service',
-                        width: 12,
-                        height: 12,
-                        colorFilter: ColorFilter.mode(
-                          theme.baseColorShade1,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        context.l10n.chat_notifications_disabled,
-                        style: TextStyle(color: theme.baseColorShade1, fontSize: 13, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
+              // if (!state.isPushNotificationEnabled)
+              //   Container(
+              //     color: theme.backgroundShade1Color,
+              //     padding: const EdgeInsets.symmetric(vertical: 12),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         SvgPicture.asset(
+              //           'assets/Icons/amity_ic_chat_mute.svg',
+              //           package: 'amity_uikit_beta_service',
+              //           width: 12,
+              //           height: 12,
+              //           colorFilter: ColorFilter.mode(
+              //             theme.baseColorShade1,
+              //             BlendMode.srcIn,
+              //           ),
+              //         ),
+              //         const SizedBox(width: 4),
+              //         Text(
+              //           context.l10n.chat_notifications_disabled,
+              //           style: TextStyle(color: theme.baseColorShade1, fontSize: 13, fontWeight: FontWeight.w400),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
@@ -97,6 +97,7 @@ class BaseChatListComponent extends NewBaseComponent {
                   itemBuilder: (context, index) {
                     final channel = state.channels[index];
                     final channelMember = state.channelMembers[channel.channelId]; // Other participant
+                    final listItem = renderChatListItem(context, chatListType, channel, channelMember);
 
                     return GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -135,7 +136,7 @@ class BaseChatListComponent extends NewBaseComponent {
                             });
                           }
                         },
-                        child: renderChatListItem(context, chatListType, channel, channelMember));
+                        child: index == 0 ? Padding(padding: const EdgeInsets.only(top: 16), child: listItem) : listItem);
                   },
                 ),
               ),
