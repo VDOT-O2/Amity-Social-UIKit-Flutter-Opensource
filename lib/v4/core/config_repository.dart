@@ -150,6 +150,10 @@ extension ThemeConfig on ConfigRepository {
       baseInverseColor: theme?.baseInverseColor ?? fallbackTheme.baseInverseColor,
       backgroundShade1Color: fallbackTheme.backgroundShade1Color,
       highlightColor: theme?.highlightColor ?? fallbackTheme.highlightColor,
+      leftBubbleColor: theme?.leftBubbleColor ?? fallbackTheme.leftBubbleColor,
+      leftBubbleTextColor: theme?.leftBubbleTextColor ?? fallbackTheme.leftBubbleTextColor,
+      rightBubbleColor: theme?.rightBubbleColor ?? fallbackTheme.rightBubbleColor,
+      rightBubbleTextColor: theme?.rightBubbleTextColor ?? fallbackTheme.rightBubbleTextColor
     );
   }
 

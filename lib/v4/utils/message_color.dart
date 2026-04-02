@@ -23,17 +23,17 @@ class MessageColor {
     required this.theme,
     required this.config,
   }) {
-    leftBubbleDefault = getColor('left_bubble_color', theme.baseColorShade4);
-    leftBubblePressed = getColor('left_bubble_pressed_color', theme.baseColorShade3);
-    leftBubbleText = getColor('left_bubble_text_color', theme.baseColor);
+    leftBubbleDefault = getColor('left_bubble_color', theme.leftBubbleColor);
+    leftBubblePressed = getColor('left_bubble_pressed_color', theme.leftBubbleColor.darken(15));
+    leftBubbleText = getColor('left_bubble_text_color', theme.leftBubbleTextColor);
     leftBubbleSubtleText = getColor('left_bubble_subtle_text_color', theme.baseColorShade2);
-    rightBubbleDefault = getColor('right_bubble_color', theme.primaryColor);
-    rightBubblePressed = getColor('right_bubble_pressed_color', theme.primaryColor.darken(15));
-    rightBubbleText = getColor('right_bubble_text_color', theme.baseInverseColor);
+    rightBubbleDefault = getColor('right_bubble_color', theme.rightBubbleColor);
+    rightBubblePressed = getColor('right_bubble_pressed_color', theme.rightBubbleColor.darken(15));
+    rightBubbleText = getColor('right_bubble_text_color', theme.rightBubbleTextColor);
     rightBubbleSubtleText = getColor('right_bubble_subtle_text_color', theme.primaryColor.blend(ColorBlendingOption.shade2));
-    leftBubblePreviewLinkColor = getColor('left_bubble_preview_link_color', Colors.white);
-    rightBubblePreviewLinkColor = getColor('right_bubble_preview_link_color', Colors.white);
-    bubbleDivider = getColor('bubble_divider_color', _colorFromHex("#C1C1C1"));
+    leftBubblePreviewLinkColor = getColor('left_bubble_preview_link_color', theme.leftBubbleTextColor);
+    rightBubblePreviewLinkColor = getColor('right_bubble_preview_link_color', theme.rightBubbleTextColor);
+    bubbleDivider = getColor('bubble_divider_color', theme.baseColorShade4);
   }
   
   Color getColor(String configName, Color defaultColor) {

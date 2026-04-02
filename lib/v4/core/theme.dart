@@ -18,6 +18,10 @@ class AmityTheme {
   final Color avatarBackgroundColor;
   final Color avatarBorderColor;
   final Color avatarTextColor;
+  final Color leftBubbleColor;
+  final Color leftBubbleTextColor;
+  final Color rightBubbleColor;
+  final Color rightBubbleTextColor;
 
   AmityTheme({
     required this.primaryColor,
@@ -37,6 +41,10 @@ class AmityTheme {
     required this.avatarBackgroundColor,
     required this.avatarBorderColor,
     required this.avatarTextColor,
+    required this.leftBubbleColor,
+    required this.leftBubbleTextColor,  
+    required this.rightBubbleColor,
+    required this.rightBubbleTextColor,
   });
 
   factory AmityTheme.fromJson(Map<String, dynamic> json, AmityTheme fallbackTheme) {
@@ -58,6 +66,10 @@ class AmityTheme {
       avatarBackgroundColor: _colorFromHex(json['avatar_background_color']) ?? fallbackTheme.avatarBackgroundColor,
       avatarBorderColor: _colorFromHex(json['avatar_border_color']) ?? fallbackTheme.avatarBorderColor,
       avatarTextColor: _colorFromHex(json['avatar_text_color']) ?? fallbackTheme.avatarTextColor,
+      leftBubbleColor: _colorFromHex(json['left_bubble_color']) ?? fallbackTheme.leftBubbleColor,
+      leftBubbleTextColor: _colorFromHex(json['left_bubble_text_color']) ?? fallbackTheme.leftBubbleTextColor,
+      rightBubbleColor: _colorFromHex(json['right_bubble_color']) ?? fallbackTheme.rightBubbleColor,
+      rightBubbleTextColor: _colorFromHex(json['right_bubble_text_color']) ?? fallbackTheme.rightBubbleTextColor,
     );
   }
 
@@ -100,6 +112,10 @@ class AmityThemeColor {
   final Color avatarBackgroundColor;
   final Color avatarBorderColor;
   final Color avatarTextColor;
+  final Color leftBubbleColor;
+  final Color leftBubbleTextColor;
+  final Color rightBubbleColor;
+  final Color rightBubbleTextColor;
 
   AmityThemeColor({
     required this.primaryColor,
@@ -119,6 +135,10 @@ class AmityThemeColor {
     required this.avatarBackgroundColor,
     required this.avatarBorderColor,
     required this.avatarTextColor,
+    required this.leftBubbleColor,
+    required this.leftBubbleTextColor,
+    required this.rightBubbleColor,
+    required this.rightBubbleTextColor,
   });
 }
 
@@ -143,6 +163,10 @@ final lightTheme = AmityTheme(
   avatarBackgroundColor: const Color(0xff000000),
   avatarBorderColor: const Color(0xffd9d9d9),
   avatarTextColor: const Color(0xffffffff),
+  leftBubbleColor: const Color(0xFFF1F1F1),
+  leftBubbleTextColor: const Color(0xFF000000),
+  rightBubbleColor: const Color(0xFF000000),
+  rightBubbleTextColor: const Color(0xFFFFFFFF),
 );
 
 final darkTheme = AmityTheme(
@@ -163,6 +187,10 @@ final darkTheme = AmityTheme(
   avatarBackgroundColor: const Color(0xff0f1217),
   avatarBorderColor: const Color(0xff2E3742),
   avatarTextColor: const Color(0xFFFFFFFF),
+  leftBubbleColor: const Color(0xFF222222),
+  leftBubbleTextColor: const Color(0xFFFFFFFF),
+  rightBubbleColor: const Color(0xFFFFFFFF),
+  rightBubbleTextColor: const Color(0xFF000000),
 );
 
 enum ColorBlendingOption {
