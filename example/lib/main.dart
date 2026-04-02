@@ -29,7 +29,10 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+final _kDebugTestAuthToken = "82fbe0213ed6a43a5d6fc0e15fcc0b54d6c89e9c";
+
 List<CameraDescription> camera = <CameraDescription>[];
+
 void main() async {
   ///Step 1: Initialize amity SDK with the following function
   WidgetsFlutterBinding.ensureInitialized();
@@ -365,7 +368,7 @@ class _UserListPageState extends State<UserListPage> {
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
                     String baseUrl = prefs.getString('customUrl') ?? "";
-                    String authToken = serverKey.isEmpty ? "4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6" : await getSecureModeAuthKey(httpUrl,_usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl,_usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
@@ -413,7 +416,7 @@ class _UserListPageState extends State<UserListPage> {
                       }
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
-                    String authToken = serverKey.isEmpty ? "4e1ae9707e31622a4cae9f6d5bf47c580b6f8bf6" : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
 
                     ///Step 3: login with Amity
