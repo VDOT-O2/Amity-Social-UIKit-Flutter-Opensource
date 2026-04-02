@@ -213,9 +213,11 @@ class AmityUIKit {
 
 class AmityUIKitProvider extends StatelessWidget {
   final Widget child;
-  const AmityUIKitProvider({Key? key, required this.child, this.navigationProvider}) : super(key: key);
+  const AmityUIKitProvider({Key? key, required this.child, this.navigationProvider, this.withMaterialApp = true})
+      : super(key: key);
 
   final NavigationProvider? navigationProvider;
+  final bool withMaterialApp = true;
 
   @override
   Widget build(BuildContext context) {
@@ -263,6 +265,11 @@ class AmityUIKitProvider extends StatelessWidget {
       child: Builder(builder: (context) {
         return Consumer<ConfigProvider>(builder: (context, configProvider, _) {
           configProvider.loadConfig();
+
+          if (!withMaterialApp) {
+            return child;
+          }
+
           return MaterialApp(
             theme: ThemeData(),
             debugShowCheckedModeBanner: false,
