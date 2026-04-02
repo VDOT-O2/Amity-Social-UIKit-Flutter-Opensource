@@ -29,7 +29,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kDebugTestAuthToken = "82fbe0213ed6a43a5d6fc0e15fcc0b54d6c89e9c";
+const _kDebugTestAuthToken = "c80d0345e75beb28e176f126e3ee3244ec654d2c";
 
 List<CameraDescription> camera = <CameraDescription>[];
 
