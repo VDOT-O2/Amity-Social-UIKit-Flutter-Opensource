@@ -217,7 +217,7 @@ class AmityUIKitProvider extends StatelessWidget {
       : super(key: key);
 
   final NavigationProvider? navigationProvider;
-  final bool withMaterialApp = true;
+  final bool withMaterialApp;
 
   @override
   Widget build(BuildContext context) {
