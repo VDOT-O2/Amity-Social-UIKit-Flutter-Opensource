@@ -1,4 +1,4 @@
-import 'package:amity_sdk/amity_sdk.dart';
+﻿import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
@@ -273,7 +273,7 @@ class _AmityCommentCreatorInternalState
                       style: TextStyle(
                         color: widget.theme.baseColorShade1,
                         fontSize: 15,
-                        fontFamily: 'SF Pro Text',
+                        fontFamily: AmityTextStyle.fontFamily,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -282,7 +282,7 @@ class _AmityCommentCreatorInternalState
                       style: TextStyle(
                         color: widget.theme.baseColorShade1,
                         fontSize: 15,
-                        fontFamily: 'SF Pro Text',
+                        fontFamily: AmityTextStyle.fontFamily,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

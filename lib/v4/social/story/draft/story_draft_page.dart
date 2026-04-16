@@ -2,6 +2,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/draft/amity_story_media_type.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/draft/bloc/story_draft_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/hyperlink/amity_story_hyperlink_component.dart';
@@ -930,7 +931,7 @@ class ShareButton extends BaseElement {
                   color: theme.baseColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  fontFamily: "SF Pro Text",
+                  fontFamily: AmityTextStyle.fontFamily,
                 ),
               ),
             ),

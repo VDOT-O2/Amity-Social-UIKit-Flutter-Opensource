@@ -1,6 +1,7 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/community_member_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/edit_community.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/setting_page.dart';
@@ -997,7 +998,7 @@ class Header extends StatelessWidget {
                         labelStyle: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'SF Pro Text',
+                          fontFamily: AmityTextStyle.fontFamily,
                         ),
                         tabs: const [
                           Tab(text: "Timeline"),

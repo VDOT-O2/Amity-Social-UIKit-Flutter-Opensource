@@ -1,4 +1,5 @@
-import 'package:amity_sdk/amity_sdk.dart';
+﻿import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/elements/amity_custom_snack_bar.dart';
@@ -92,7 +93,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       labelStyle: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'SF Pro Text',
+                        fontFamily: AmityTextStyle.fontFamily,
                       ),
                       tabs: const [
                         Tab(

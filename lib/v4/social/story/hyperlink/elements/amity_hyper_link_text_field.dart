@@ -1,3 +1,4 @@
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,7 @@ class AmityHyperlinkTextField extends StatelessWidget {
       style: TextStyle(
         color : textColor,
         fontSize: 16,
-        fontFamily: "SF Pro Text",
+        fontFamily: AmityTextStyle.fontFamily,
       ),
     );
   }

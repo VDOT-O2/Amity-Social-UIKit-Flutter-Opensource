@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/create/bloc/camera_permission_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/create/bloc/camera_permission_event.dart';
@@ -454,7 +455,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
                   color: Colors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  fontFamily: "'SF Pro Text'",
+                  fontFamily: AmityTextStyle.fontFamily,
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/bloc/view_story_bloc.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,7 @@ class AmityBottomSheetActionItem extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 15,
-                fontFamily: "SF Pro Text",
+                fontFamily: AmityTextStyle.fontFamily,
                 fontWeight: FontWeight.w600,
                 color: textColor ?? Colors.black,
               ),

@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/target/elements/amity_story_gradient_ring_element.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/target/utils/amity_story_target_ext.dart';
 import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
@@ -157,7 +158,7 @@ class AmityStoryTargetElement extends BaseElement {
                       style: TextStyle(
                         fontSize: 13,
                         color: theme.baseColor,
-                        fontFamily: "SF Pro Text",
+                        fontFamily: AmityTextStyle.fontFamily,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

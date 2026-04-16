@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/draft/amity_story_media_type.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/components/story_video_player/bloc/story_video_player_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/elements/amity_story_single_segment_timer_element.dart';
@@ -42,7 +43,7 @@ class CreateActionBottomSheet {
                 title: const Text(
                   "Post",
                   style: TextStyle(
-                    fontFamily: "SF Pro Text",
+                    fontFamily: AmityTextStyle.fontFamily,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
@@ -72,7 +73,7 @@ class CreateActionBottomSheet {
                 title: const Text(
                   "Story",
                   style: TextStyle(
-                    fontFamily: "SF Pro Text",
+                    fontFamily: AmityTextStyle.fontFamily,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),

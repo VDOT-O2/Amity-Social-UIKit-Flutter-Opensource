@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -48,7 +49,7 @@ class AmityStoryHyperlinkView extends StatelessWidget {
                         : getHyperlinkText(hyperlink),
                     maxLines: 1,
                     style: const TextStyle(
-                      fontFamily: "SF Pro Text",
+                      fontFamily: AmityTextStyle.fontFamily,
                       color: Colors.black,
                       fontSize: 14,
                     ),

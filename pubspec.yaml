@@ -136,6 +136,9 @@ flutter:
     - family: Material-Design-Iconic-Font
       fonts:
         - asset: assets/fonts/Material-Design-Iconic-Font.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
 
   #
   # For details regarding fonts in packages, see

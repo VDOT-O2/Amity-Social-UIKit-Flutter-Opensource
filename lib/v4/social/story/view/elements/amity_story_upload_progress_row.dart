@@ -1,3 +1,4 @@
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:flutter/material.dart';
 
 class AmityStoryUploadProgressRow extends StatelessWidget {
@@ -23,7 +24,7 @@ class AmityStoryUploadProgressRow extends StatelessWidget {
           SizedBox(width: 10),
           Text(
             "Uploading...",
-            style: TextStyle(color: Colors.white , fontSize: 15 , fontFamily: "SF Pro Text" , fontWeight: FontWeight.w400),
+            style: TextStyle(color: Colors.white , fontSize: 15 , fontFamily: AmityTextStyle.fontFamily , fontWeight: FontWeight.w400),
           ),
         ],
       ),
