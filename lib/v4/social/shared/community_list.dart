@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/v4/social/my_community/my_community_com
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
 import 'package:amity_uikit_beta_service/v4/utils/skeleton.dart';
+import 'package:amity_uikit_beta_service/v4/utils/url_builder.dart';
 import 'package:flutter/material.dart';
 
 Widget communityList(
@@ -79,7 +80,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
             width: 80,
             height: 80,
             child: CommunityImageAvatarElement(
-                avatarUrl: community.avatarImage?.fileUrl,
+                avatarUrl: UrlBuilder.appendParam(community.avatarImage?.fileUrl, name: 'size', value: 'medium'),
                 placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
                 elementId: AmityMyCommunityElement.communityAvatar.stringValue),
           ),
