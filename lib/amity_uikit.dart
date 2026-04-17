@@ -286,19 +286,19 @@ class AmityUIKitProvider extends StatelessWidget {
             supportedLocales: const [
               Locale('en'),
               Locale('pt'), // Base Portuguese locale
-              Locale('pt', 'BR'),  // Portuguese (Brazil)
-              Locale('es'),        // Base Spanish locale
-              Locale('es', 'CL'),  // Spanish (Chile)
-              Locale('es', 'CO'),  // Spanish (Colombia)
-              Locale('es', 'MX'),  // Spanish (Mexico)
-              Locale('es', 'PE'),  // Spanish (Peru)
+              Locale('pt', 'BR'), // Portuguese (Brazil)
+              Locale('es'), // Base Spanish locale
+              Locale('es', 'CL'), // Spanish (Chile)
+              Locale('es', 'CO'), // Spanish (Colombia)
+              Locale('es', 'MX'), // Spanish (Mexico)
+              Locale('es', 'PE'), // Spanish (Peru)
             ],
             // Ensure the app uses the device locale by default
             localeResolutionCallback: (deviceLocale, supportedLocales) {
               if (deviceLocale != null) {
                 for (var locale in supportedLocales) {
-                  print ("deviceLocale: ${deviceLocale.languageCode}");
-                  print ("supportedLocales: $supportedLocales}");
+                  print("deviceLocale: ${deviceLocale.languageCode}");
+                  print("supportedLocales: $supportedLocales}");
                   // Check for exact matches first
                   if (locale.languageCode == deviceLocale.languageCode &&
                       locale.countryCode == deviceLocale.countryCode) {
