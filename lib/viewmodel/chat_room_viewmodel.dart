@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomVM extends ChangeNotifier {
@@ -20,7 +21,7 @@ class ChatRoomVM extends ChangeNotifier {
 
   //     notifyListeners();
   //   }).onError((error, stackTrace) async {
-  //     log("error from channel");
+  //    AmityLog.debug("error from channel");
   //     await AmityDialog().showAlertErrorDialog(
   //         title: "Error!", message: messageController.error.toString());
   //   });
@@ -34,14 +35,14 @@ class ChatRoomVM extends ChangeNotifier {
   // )..addListener(
   //     () async {
   //       if (messageController.error == null) {
-  //         print("new update");
+  //        AmityLog.debug("new update");
   //         amitymessage.clear();
   //         amitymessage.addAll(messageController.loadedItems);
   //         // listenToMessages(channelId);
   //         notifyListeners();
   //       } else {
   //         // Error on pagination controller
-  //         log("error from messages");
+  //        AmityLog.debug("error from messages");
   //         await AmityDialog().showAlertErrorDialog(
   //             title: "Error!", message: messageController.error.toString());
   //       }
@@ -62,7 +63,7 @@ class ChatRoomVM extends ChangeNotifier {
   //       .getLiveCollection(pageSize: 20);
 
   //   messageLiveCollection!.getStreamController().stream.listen((event) {
-  //     print("EVENT:${event.length}");
+  //    AmityLog.debug("EVENT:${event.length}");
   //     notifyListeners();
   //   });
   // }
@@ -85,7 +86,7 @@ class ChatRoomVM extends ChangeNotifier {
 
       notifyListeners();
     }).onError((error, stackTrace) async {
-      log("error from channel");
+     AmityLog.debug("error from channel");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -94,8 +95,8 @@ class ChatRoomVM extends ChangeNotifier {
         .getLiveCollection();
 
     messageLiveCollection.getStreamController().stream.listen((event) {
-      print("evemt triggered");
-      print("event length: ${event.length}");
+      AmityLog.debug("event triggered");
+      AmityLog.debug("event length: ${event.length}");
       amitymessage.clear();
 
       amitymessage.addAll(event.reversed);
@@ -124,14 +125,14 @@ class ChatRoomVM extends ChangeNotifier {
       textEditingController.clear();
     }).onError((error, stackTrace) async {
       // Error on pagination controller
-      log("error from send message");
+     AmityLog.debug("error from send message");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
   }
 
   void scrollToBottom() {
-    log("scrollToBottom ");
+   AmityLog.debug("scrollToBottom ");
     // scrollController!.animateTo(
     //   1000000,
     //   curve: Curves.easeOut,

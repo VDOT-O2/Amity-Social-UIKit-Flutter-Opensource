@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -61,7 +62,7 @@ class ViewStoryBloc extends Bloc<ViewStoryEvent, ViewStoryState> {
           },
         ).onError(
           (error, stackTrace) {
-            print("Error in deleting story: $error");
+           AmityLog.debug("Error in deleting story: $error");
           },
         );
       },

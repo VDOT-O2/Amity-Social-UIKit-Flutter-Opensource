@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -116,8 +117,8 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
       memberStreamSubscription?.cancel();
       memberStreamSubscription = memberLiveCollection.getStreamController().stream.listen((event) {
         var count = event.length;
-        log("pageCount: $count");
-        log("1st member: ${event[0].user?.displayName}");
+       AmityLog.debug("pageCount: $count");
+       AmityLog.debug("1st member: ${event[0].user?.displayName}");
         add(CommunityMembershipPageMemberLoadedEvent(event));
       });
 

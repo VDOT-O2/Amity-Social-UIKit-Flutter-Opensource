@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -114,15 +115,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   Future<void> _initializeControllers() async {
-    print("_initializeControllers");
+   AmityLog.debug("_initializeControllers");
     _controllers = await Future.wait(
       widget.files.map((file) async {
         var videoData = file.data
             as VideoData; // Assuming VideoData is a type from your code
         var fileURL = await videoData.getVideo(AmityVideoQuality.MEDIUM);
-        print(fileURL);
+       AmityLog.debug("$fileURL");
 
-        print("  ");
+       AmityLog.debug("  ");
         var controller =
             VideoPlayerController.networkUrl(Uri.parse(fileURL.fileUrl!));
         await controller.initialize();
@@ -130,7 +131,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       }),
     );
     setState(() {
-      print("success");
+     AmityLog.debug("success");
     });
   }
 

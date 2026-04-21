@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/user_pending_request_component.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile_v2.dart';
 import 'package:amity_uikit_beta_service/viewmodel/notification_viewmodel.dart';
@@ -24,7 +25,7 @@ class NotificationAllTabScreen extends StatefulWidget {
 class _NotificationAllTabScreenState extends State<NotificationAllTabScreen> {
   @override
   void initState() {
-    log("init NotificationVM");
+   AmityLog.debug("init NotificationVM");
     Provider.of<NotificationVM>(context, listen: false).initVM();
     Provider.of<PendingVM>(context, listen: false).getMyPendingRequestList();
     super.initState();

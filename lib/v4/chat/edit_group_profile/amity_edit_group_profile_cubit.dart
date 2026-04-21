@@ -62,7 +62,7 @@ class AmityEditGroupProfileCubit extends Cubit<AmityEditGroupProfileState> {
         }
       } catch (e) {
         // Handle error - could emit an error state or show a toast
-        print('Failed to pick image: $e');
+       AmityLog.debug('Failed to pick image: $e');
       }
     }
   }

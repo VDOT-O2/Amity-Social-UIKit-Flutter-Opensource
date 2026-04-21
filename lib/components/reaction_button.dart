@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/global_feed.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/post_viewmodel.dart';
@@ -36,7 +37,7 @@ class ReactionWidget extends StatelessWidget {
               post.myReactions!.contains("like")
                   ? TextButton(
                       onPressed: () {
-                        print(post.myReactions);
+                       AmityLog.debug("${post.myReactions}");
                         HapticFeedback.heavyImpact();
                         Provider.of<PostVM>(context, listen: false)
                             .removePostReaction(post);
@@ -67,7 +68,7 @@ class ReactionWidget extends StatelessWidget {
                   : Container(
                       child: TextButton(
                         onPressed: () {
-                          print(post.myReactions);
+                         AmityLog.debug("${post.myReactions}");
                           HapticFeedback.heavyImpact();
                           Provider.of<PostVM>(context, listen: false)
                               .addPostReaction(post);

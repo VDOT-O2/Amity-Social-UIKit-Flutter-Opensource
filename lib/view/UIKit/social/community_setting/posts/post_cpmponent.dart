@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/create_postV2_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/edit_post_viewmodel.dart';
@@ -79,7 +80,7 @@ class PostMedia extends StatelessWidget {
                       child: IconButton(
                         icon: const Icon(Icons.close, color: Colors.white),
                         onPressed: () {
-                          log("delete file...");
+                         AmityLog.debug("delete file...");
 
                           Provider.of<CreatePostVMV2>(context, listen: false)
                               .deselectFile(files[index]);
@@ -182,7 +183,7 @@ class PostMedia extends StatelessWidget {
     String getFileImage(String filePath) {
       String extension = filePath.split('.').last;
 
-      print("getFileImage: $extension");
+     AmityLog.debug("getFileImage: $extension");
       switch (extension) {
         case 'audio':
           return 'assets/images/fileType/audio_large.png';
@@ -228,8 +229,8 @@ class PostMedia extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           var file = files[index];
-          print("file: ${file.fileInfo.toString()}");
-          print("path to render: ${file.file.path}");
+         AmityLog.debug("file: ${file.fileInfo.toString()}");
+         AmityLog.debug("path to render: ${file.file.path}");
           int rawprogress = isEditPost
               ? Provider.of<EditPostVM>(context).editPostMedie[index].progress
               : Provider.of<CreatePostVMV2>(context).files[index].progress;
@@ -307,7 +308,7 @@ class PostMedia extends StatelessWidget {
                   ),
                   trailing: GestureDetector(
                     onTap: () {
-                      log("delete file...");
+                     AmityLog.debug("delete file...");
                       isEditPost
                           ? Provider.of<EditPostVM>(context, listen: false)
                               .deselectFileAt(index)

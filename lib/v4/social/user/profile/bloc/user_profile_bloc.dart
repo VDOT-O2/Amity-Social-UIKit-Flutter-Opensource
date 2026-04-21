@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/user/follow/user_relationship_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/user/user_relationship_manager.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
@@ -143,7 +144,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
           .then((followInfo) {
         addEvent(UserMyFollowInfoEventUpdated(myFollowInfo: followInfo));
       }).onError((error, stackTrace) {
-        log(error.toString());
+       AmityLog.error('Failed to fetch my follow info', error, stackTrace: stackTrace);
       });
     } else {
       AmityCoreClient.newUserRepository()
@@ -152,7 +153,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
           .then((followInfo) {
         addEvent(UserFollowInfoEventUpdated(userFollowInfo: followInfo));
       }).onError((error, stackTrace) {
-        log(error.toString());
+       AmityLog.error('Failed to fetch user follow info', error, stackTrace: stackTrace);
       });
     }
   }
@@ -161,7 +162,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     AmityCoreClient.newUserRepository().getUser(userId).then((user) {
       addEvent(UserProfileEventUpdated(user: user));
     }).onError((error, stackTrace) {
-      debugPrint("Error fetching user info: $error");
+      AmityLog.error('Failed to fetch user info', error, stackTrace: stackTrace);
     });
   }
 }

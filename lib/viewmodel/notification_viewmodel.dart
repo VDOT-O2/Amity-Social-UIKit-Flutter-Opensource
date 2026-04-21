@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/model/amity_notification_model.dart';
 import 'package:amity_uikit_beta_service/repository/noti_repo_imp.dart';
 import 'package:amity_uikit_beta_service/utils/env_manager.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class NotificationVM extends ChangeNotifier {
   var actorMapper = {};
 
   void initVM() async {
-    log("NotificationVM: initVM");
+   AmityLog.debug("NotificationVM: initVM");
     var accessToken = Provider.of<UserVM>(
             NavigationService.navigatorKey.currentContext!,
             listen: false)
@@ -25,7 +26,7 @@ class NotificationVM extends ChangeNotifier {
 
     if (accessToken != null) {
       channelRepoImp.initRepo(accessToken);
-      log(">>>>updateNotification...");
+     AmityLog.debug(">>>>updateNotification...");
       await updateNotification();
     } else {
       AmityDialog().showAlertErrorDialog(
@@ -53,8 +54,8 @@ class NotificationVM extends ChangeNotifier {
 
   Future<void> mapActor(AmityNotificaion notification) async {
     if (actorMapper.containsKey(notification.actors![0].id)) {
-      print(">>>>>>>>${actorMapper[notification.actors![0].id]["avatarUrl"]}");
-      print(">>>>>>>>${actorMapper[notification.actors![0].id]["avatarUrl"]}");
+     AmityLog.debug(">>>>>>>>${actorMapper[notification.actors![0].id]["avatarUrl"]}");
+     AmityLog.debug(">>>>>>>>${actorMapper[notification.actors![0].id]["avatarUrl"]}");
       notification.actors?[0].imageUrl =
           actorMapper[notification.actors![0].id]["avatarUrl"];
       notification.actors?[0].name =
@@ -92,7 +93,7 @@ class NotificationVM extends ChangeNotifier {
         mapActor(notification);
         if (notification.targetId != null) {
           if (notification.targetType == "community") {
-            log(">>>>>>>>>>is community targetType");
+           AmityLog.debug(">>>>>>>>>>is community targetType");
             await AmitySocialClient.newCommunityRepository()
                 .getCommunity(notification.targetId!)
                 .then((value) {
@@ -106,21 +107,21 @@ class NotificationVM extends ChangeNotifier {
                     "https://api.${env!.region}.amity.co/api/v3/files/${value.avatarFileId}/download";
               }
             }).onError((error, stackTrace) {
-              log(error.toString());
+             AmityLog.debug(error.toString());
               AmityDialog().showAlertErrorDialog(
                   title: "Error!:getCommunity ", message: error.toString());
             });
           } else if (notification.targetType == "post") {
-            log(">>>>>>>>>>is post targetType");
+           AmityLog.debug(">>>>>>>>>>is post targetType");
             await AmitySocialClient.newPostRepository()
                 .getPost(notification.targetId!)
                 .then((value) {
-              log(">>>>CALL BACK FROM newPostRepository");
+             AmityLog.debug(">>>>CALL BACK FROM newPostRepository");
               if (value.children != null) {
                 if (value.children!.isNotEmpty) {
                   if (value.children![0].data is ImageData) {
                     var postData = value.children![0].data as ImageData;
-                    log("is imageData: ${postData.fileId}");
+                   AmityLog.debug("is imageData: ${postData.fileId}");
 
                     /// add target imageUrl for Post if it's image post'
                     notificationsObject!.data![i].targetImageUrl =
@@ -128,7 +129,7 @@ class NotificationVM extends ChangeNotifier {
                   } else if (value.children![0].data is VideoData) {
                     /// add target imageUrl for Post if it's video post
                     var postData = value.children![0].data as VideoData;
-                    log("is videoData: ${postData.fileId}");
+                   AmityLog.debug("is videoData: ${postData.fileId}");
                     if (postData.thumbnail != null) {
                       var thumbnailURL = postData.thumbnail!.fileUrl;
                       notificationsObject!.data![i].targetImageUrl =
@@ -138,13 +139,13 @@ class NotificationVM extends ChangeNotifier {
                 }
               }
             }).onError((error, stackTrace) {
-              log(error.toString());
+             AmityLog.debug(error.toString());
               AmityDialog().showAlertErrorDialog(
                   title: "Error! notification.targetType == post",
                   message: error.toString());
             });
           } else {
-            log(">>>>>Unhandle tagetType");
+           AmityLog.debug(">>>>>Unhandle tagetType");
           }
         }
       }

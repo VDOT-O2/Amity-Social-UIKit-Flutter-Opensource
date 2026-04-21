@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ class CommunityProfileBloc
               await updatedCommunity.getPostCount(AmityFeedType.REVIEWING);
           emit(state.copyWith(pendingPostCount: pendingPostCount));
         } catch (e) {
-          print("Error fetching pending post count: $e");
+         AmityLog.debug("Error fetching pending post count: $e");
         }
       }
     });

@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/category_list.dart';
 import 'package:amity_uikit_beta_service/view/social/community_feed.dart';
 import 'package:amity_uikit_beta_service/view/social/select_user_page.dart';
@@ -317,7 +318,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                       userIds: userIds,
                     );
                     if (createdCommunity != null) {
-                      print(
+                     AmityLog.debug(
                           "print create dcommunity page ${createdCommunity.displayName}");
                       Navigator.of(context).push(
                         MaterialPageRoute(

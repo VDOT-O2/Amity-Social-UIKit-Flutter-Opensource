@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/components/post_profile.dart';
 import 'package:amity_uikit_beta_service/components/reaction_button.dart';
 import 'package:amity_uikit_beta_service/components/skeleton.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/posts/edit_post_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/general_component.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/my_community_feed.dart';
@@ -211,7 +212,7 @@ class _PostWidgetState extends State<PostWidget> // with AutomaticKeepAliveClien
         switch (value) {
           case 'Report Post':
           case 'Unreport Post':
-            log("isflag by me $isFlaggedByMe");
+           AmityLog.debug("isflag by me $isFlaggedByMe");
             if (isFlaggedByMe) {
               Provider.of<PostVM>(context, listen: false).unflagPost(widget.post);
             } else {
@@ -293,7 +294,7 @@ class _PostWidgetState extends State<PostWidget> // with AutomaticKeepAliveClien
                 },
               );
             } else {
-              print("unhandle postType");
+             AmityLog.debug("unhandle postType");
             }
             break;
           case 'Block User':
@@ -755,7 +756,7 @@ class _PostWidgetState extends State<PostWidget> // with AutomaticKeepAliveClien
 //   final childrenPosts = widget.post.children;
 //   if (childrenPosts != null && childrenPosts.isNotEmpty) {
 //     if (childrenPosts[0].data is VideoData) {
-//       log("keep ${childrenPosts[0].parentPostId} alive");
+//      AmityLog.debug("keep ${childrenPosts[0].parentPostId} alive");
 //       return true;
 //     } else {
 //       return true;
@@ -1052,7 +1053,7 @@ class CommentActionComponent extends StatelessWidget {
                           )
                         : GestureDetector(
                             onTap: () {
-                              print("addCommentReaction");
+                             AmityLog.debug("addCommentReaction");
                               Provider.of<PostVM>(context, listen: false).removeCommentReaction(comments);
                             },
                             child: Row(

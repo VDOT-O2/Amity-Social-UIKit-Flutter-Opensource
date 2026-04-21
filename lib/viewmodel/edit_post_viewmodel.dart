@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/create_postV2_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class EditPostVM extends CreatePostVMV2 {
   int originalPostLength = 0;
   AmityDataType? postDataForEditMedie;
   void initForEditPost(AmityPost post) {
-    print("initForEditPost");
+   AmityLog.debug("initForEditPost");
     amityPost = post;
     if (amityPost!.children != null) {
       originalPostLength = amityPost!.children!.length;
@@ -28,10 +29,10 @@ class EditPostVM extends CreatePostVMV2 {
     textEditingController.text = textdata.text ?? "";
     var children = post.children;
     if (children != null) {
-      print(children.length);
-      print(children[0].type);
+      AmityLog.debug("Children Length: ${children.length}");
+      AmityLog.debug("Children Type: ${children[0].type}");
       if (children[0].type == AmityDataType.IMAGE) {
-        print(children[0].data!.fileId);
+        AmityLog.debug("Image File ID: ${children[0].data!.fileId}");
         editPostMedie = [];
         for (var child in children) {
           var uikitFile = UIKitFileSystem(
@@ -42,7 +43,7 @@ class EditPostVM extends CreatePostVMV2 {
           editPostMedie.add(uikitFile);
         }
 
-        log("ImageData: $editPostMedie");
+       AmityLog.debug("ImageData: $editPostMedie");
       } else if (children[0].type == AmityDataType.VIDEO) {
         var videoData = children[0].data as VideoData;
 
@@ -79,11 +80,11 @@ class EditPostVM extends CreatePostVMV2 {
     var builder = amityPost!.edit().text(textEditingController.text);
 
     if (editPostMedie.length != originalPostLength) {
-      print("Children Length is not equal");
+     AmityLog.debug("Children Length is not equal");
       if (editPostMedie.isNotEmpty) {
         var childPost = amityPost!.children![0];
         var postType = childPost.type;
-        print(postType);
+       AmityLog.debug("$postType");
         if (postType == AmityDataType.IMAGE) {
           var children = amityPost!.children;
           var images =
@@ -101,9 +102,9 @@ class EditPostVM extends CreatePostVMV2 {
           builder = builder.file(files);
         }
       } else {
-        print("Empty Children");
+       AmityLog.debug("Empty Children");
 
-        print(postDataForEditMedie);
+       AmityLog.debug("$postDataForEditMedie");
         if (postDataForEditMedie == AmityDataType.IMAGE) {
           builder = builder.image([]);
         } else if (postDataForEditMedie == AmityDataType.VIDEO) {

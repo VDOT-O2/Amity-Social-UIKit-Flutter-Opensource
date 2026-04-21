@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:amity_uikit_beta_service/components/custom_dialog.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,9 +98,9 @@ class AmityLoadingDialog {
   static bool _isDialogShowing = false;
 
   static Future<void> showLoadingDialog() {
-    print("show AmityLoadingDialog");
+   AmityLog.debug("show AmityLoadingDialog");
     _isDialogShowing = true;
-    print("set _isDialogShowing: $_isDialogShowing");
+   AmityLog.debug("set _isDialogShowing: $_isDialogShowing");
     final context = NavigationService.navigatorKey.currentContext!;
     final appTheme = Provider.of<ConfigProvider>(context, listen: false).getTheme(null, null);
     return showDialog<void>(

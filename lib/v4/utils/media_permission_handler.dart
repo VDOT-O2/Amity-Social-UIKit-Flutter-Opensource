@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -108,7 +109,7 @@ class MediaPermissionHandler {
         );
         return image;
       } catch (e) {
-        print('Error picking image: $e');
+       AmityLog.debug('Error picking image: $e');
         return null;
       }
     }
@@ -126,7 +127,7 @@ class MediaPermissionHandler {
         );
         return video;
       } catch (e) {
-        print('Error picking video: $e');
+       AmityLog.debug('Error picking video: $e');
         return null;
       }
     }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/community_member_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/edit_community.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/post_review_settimg_page.dart';
@@ -263,7 +264,7 @@ class CommunitySettingPage extends StatelessWidget {
                             onConfirm: () {
                               final communityVm = Provider.of<CommunityVM>(context, listen: false);
                               communityVm.deleteCommunity(community.communityId!, callback: (bool isSuccess) {
-                                log("onConfirm");
+                               AmityLog.debug("onConfirm");
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                                 Provider.of<MyCommunityVM>(context, listen: false).initMyCommunity();

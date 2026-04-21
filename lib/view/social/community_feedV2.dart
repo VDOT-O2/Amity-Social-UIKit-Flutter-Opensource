@@ -2,6 +2,7 @@
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/community_member_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/edit_community.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/setting_page.dart';
@@ -231,7 +232,7 @@ class _EditProfileButtonState extends State<EditProfileButton> {
                         });
                       }).onError((error, stackTrace) {
                         //handle error
-                        log(error.toString());
+                       AmityLog.error('Failed to leave community', error, stackTrace: stackTrace);
                       });
                     } else {
                       AmitySocialClient.newCommunityRepository()
@@ -245,7 +246,7 @@ class _EditProfileButtonState extends State<EditProfileButton> {
                               listen: false);
                           explorePageVM.getRecommendedCommunities();
                           explorePageVM.getTrendingCommunities();
-                          print(">>>>>>>>>>>>>>>callback");
+                         AmityLog.debug(">>>>>>>>>>>>>>>callback");
 
                           var myCommunityList = Provider.of<MyCommunityVM>(
                               context,
@@ -253,12 +254,12 @@ class _EditProfileButtonState extends State<EditProfileButton> {
                           myCommunityList.initMyCommunity();
 
                           for (var i in myCommunityList.amityCommunities) {
-                            print(">>>>>>>>>>>>>>>${i.displayName}");
+                           AmityLog.debug(">>>>>>>>>>>>>>>${i.displayName}");
                           }
-                          print(myCommunityList.amityCommunities);
+                         AmityLog.debug(">>>>>>>>>>>>>>>${myCommunityList.amityCommunities}");
                         });
                       }).onError((error, stackTrace) {
-                        log(error.toString());
+                       AmityLog.debug(error.toString());
                       });
                     }
                   }

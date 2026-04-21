@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/alert_dialog.dart';
@@ -35,7 +36,7 @@ class UserVM extends ChangeNotifier {
   //     ),
   //   )
   //       .then((value) {
-  //     log("success");
+  //    AmityLog.debug("success");
   //     if (value.statusCode == 200) {
   //       accessToken = value.data["accessToken"];
   //     }
@@ -48,10 +49,10 @@ class UserVM extends ChangeNotifier {
   Future<AmityUser?> getUserByID(String id) async {
     AmityUser? amityUser;
     await AmityCoreClient.newUserRepository().getUser(id).then((user) {
-      log("IsGlobalban: ${user.isGlobalBan}");
+     AmityLog.debug("IsGlobalban: ${user.isGlobalBan}");
       amityUser = user;
     }).onError((error, stackTrace) async {
-      log(error.toString());
+     AmityLog.debug(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -71,7 +72,7 @@ class UserVM extends ChangeNotifier {
   }
 
   Future<void> getUsers() async {
-    log("get user");
+   AmityLog.debug("get user");
     AmityCoreClient.newUserRepository()
         .getUsers()
         .sortBy(AmityUserSortOption.DISPLAY)
@@ -81,7 +82,7 @@ class UserVM extends ChangeNotifier {
       _userList.addAll(users);
       notifyListeners();
     }).catchError((error, stackTrace) async {
-      log(error.toString());
+     AmityLog.debug(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
       notifyListeners();
@@ -111,7 +112,7 @@ class UserVM extends ChangeNotifier {
             sortedUserListWithHeaders();
             notifyListeners();
           } else {
-            log("error: ${_amityUsersController.error.toString()}");
+           AmityLog.debug("error: ${_amityUsersController.error.toString()}");
             // await AmityDialog().showAlertErrorDialog(
             //     title: "Error!",
             //     message: _amityUsersController.error.toString());
@@ -130,7 +131,7 @@ class UserVM extends ChangeNotifier {
   void loadnextpage() async {
     if ((scrollcontroller.position.pixels >
         scrollcontroller.position.maxScrollExtent - 800)) {
-      log("hasmore: ${_amityUsersController.hasMoreItems}");
+     AmityLog.debug("hasmore: ${_amityUsersController.hasMoreItems}");
     }
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
@@ -138,7 +139,7 @@ class UserVM extends ChangeNotifier {
         !loadingNexPage) {
       loadingNexPage = true;
       notifyListeners();
-      log("loading Next Page...");
+     AmityLog.debug("loading Next Page...");
       sortedUserListWithHeaders();
       await _amityUsersController.fetchNextPage().then((value) {
         loadingNexPage = false;
@@ -154,7 +155,7 @@ class UserVM extends ChangeNotifier {
   List<AmityUser> get amityUsers => _amityUsers;
 
   void getUsersForCommunity(AmityUserSortOption amityUserSortOption) {
-    log("getUsersForCommunity");
+   AmityLog.debug("getUsersForCommunity");
     _amityUsersController = PagingController(
       pageFuture: (token) => AmityCoreClient.newUserRepository()
           .getUsers()
@@ -169,7 +170,7 @@ class UserVM extends ChangeNotifier {
             notifyListeners();
           } else {
             // handle error
-            log(_amityUsersController.error.toString());
+           AmityLog.debug(_amityUsersController.error.toString());
           }
         },
       );
@@ -183,7 +184,7 @@ class UserVM extends ChangeNotifier {
   List<Map<String, List<AmityUser>>> listWithHeaders = [];
 
   void sortedUserListWithHeaders() {
-    log("sorted");
+   AmityLog.debug("sorted");
     List<AmityUser> users = _userList;
 
     // Step 1: Sort the users list by display name (case insensitive)
@@ -233,9 +234,9 @@ class UserVM extends ChangeNotifier {
 
     // Print for debugging
     // for (var item in listWithHeaders) {
-    //   log(item.keys.first);
+    //  AmityLog.debug(item.keys.first);
     //   for (var user in item.values.first) {
-    //     log(user.displayName);
+    //    AmityLog.debug(user.displayName);
     //   }
     // }
   }
@@ -293,7 +294,7 @@ class UserVM extends ChangeNotifier {
         .relationship()
         .blockUser(userId)
         .then((value) {
-      print(value);
+     AmityLog.debug(value);
       AmitySuccessDialog.showTimedDialog("Blocked user");
       notifyListeners();
       onCallBack();
@@ -308,7 +309,7 @@ class UserVM extends ChangeNotifier {
         .relationship()
         .unblockUser(userId)
         .then((value) {
-      print(value);
+     AmityLog.debug(value);
       AmitySuccessDialog.showTimedDialog("Unblock user");
       notifyListeners();
     }).onError((error, stackTrace) {
@@ -335,7 +336,7 @@ class UserVM extends ChangeNotifier {
             sortedUserListWithHeaders();
             notifyListeners();
           } else {
-            log("error: ${_amityBlockedUsersController.error.toString()}");
+           AmityLog.debug("error: ${_amityBlockedUsersController.error.toString()}");
 
             // await AmityDialog().showAlertErrorDialog(
             //     title: "Error!",
@@ -355,7 +356,7 @@ class UserVM extends ChangeNotifier {
   void blockedUserloadnextpage() async {
     if ((blockedUserscrollcontroller.position.pixels >
         blockedUserscrollcontroller.position.maxScrollExtent - 800)) {
-      log("hasmore: ${_amityBlockedUsersController.hasMoreItems}");
+     AmityLog.debug("hasmore: ${_amityBlockedUsersController.hasMoreItems}");
     }
     if ((blockedUserscrollcontroller.position.pixels >
             blockedUserscrollcontroller.position.maxScrollExtent - 800) &&
@@ -363,7 +364,7 @@ class UserVM extends ChangeNotifier {
         !loadingNexPage) {
       loadingNexPage = true;
       notifyListeners();
-      log("loading Next Page...");
+     AmityLog.debug("loading Next Page...");
       sortedUserListWithHeaders();
       await _amityBlockedUsersController.fetchNextPage().then((value) {
         loadingNexPage = false;

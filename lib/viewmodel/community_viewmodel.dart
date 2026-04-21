@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,7 +35,7 @@ class CommunityVM extends ChangeNotifier {
   }
 
   void initAmityTrendingCommunityList() async {
-    log("initAmityTrendingCommunityList");
+   AmityLog.debug("initAmityTrendingCommunityList");
 
     if (_amityTrendingCommunities.isNotEmpty) {
       _amityTrendingCommunities.clear();
@@ -82,7 +83,7 @@ class CommunityVM extends ChangeNotifier {
       }
 
       AmityCommunity createdCommunity = await communityBuilder.create();
-      print("Created community ${createdCommunity.displayName}");
+     AmityLog.debug("Created community ${createdCommunity.displayName}");
       notifyListeners();
       Navigator.of(context).pop();
       final userProvider = Provider.of<UserVM>(context, listen: false);
@@ -90,7 +91,7 @@ class CommunityVM extends ChangeNotifier {
 
       return createdCommunity;
     } catch (error) {
-      print("Failed to create community: $error");
+     AmityLog.debug("Failed to create community: $error");
       return null;
     }
   }
@@ -133,7 +134,7 @@ class CommunityVM extends ChangeNotifier {
   }
 
   void initAmityRecommendCommunityList() async {
-    log("initAmityRecommendCommunityList");
+   AmityLog.debug("initAmityRecommendCommunityList");
     if (_amityRecommendCommunities.isNotEmpty) {
       _amityRecommendCommunities.clear();
       notifyListeners();
@@ -204,7 +205,7 @@ class CommunityVM extends ChangeNotifier {
   }
 
   void initAmityMyCommunityList() async {
-    log("initAmityMyCommunityList");
+   AmityLog.debug("initAmityMyCommunityList");
     if (_amityMyCommunities.isNotEmpty) {
       _amityMyCommunities.clear();
       notifyListeners();
@@ -247,11 +248,11 @@ class CommunityVM extends ChangeNotifier {
         amityUploadResult.when(
           progress: (uploadInfo, cancelToken) {
             int progress = uploadInfo.getProgressPercentage();
-            log(progress.toString());
+           AmityLog.debug(progress.toString());
           },
           complete: (file) {
             //check if the upload result is complete
-            log("complete");
+           AmityLog.debug("complete");
             AmityLoadingDialog.hideLoadingDialog();
             final AmityImage uploadedImage = file;
             amityImages = uploadedImage;
@@ -293,11 +294,11 @@ class CommunityVM extends ChangeNotifier {
           amityUploadResult.when(
             progress: (uploadInfo, cancelToken) {
               int progress = uploadInfo.getProgressPercentage();
-              log(progress.toString());
+             AmityLog.debug(progress.toString());
             },
             complete: (file) {
               //check if the upload result is complete
-              log("complete");
+             AmityLog.debug("complete");
               final AmityImage uploadedImage = file;
               amityImages = uploadedImage;
               //proceed result with uploadedImage
@@ -360,7 +361,7 @@ class CommunityVM extends ChangeNotifier {
         .update()
         .then((value) {
       //handle result
-      log("success");
+     AmityLog.debug("success");
     }).onError((error, stackTrace) async {
       //handle error
       await AmityDialog()
@@ -382,7 +383,7 @@ class CommunityVM extends ChangeNotifier {
         .update()
         .then((value) {
       //handle result
-      log("success");
+     AmityLog.debug("success");
     }).onError((error, stackTrace) async {
       //handle error
       await AmityDialog()

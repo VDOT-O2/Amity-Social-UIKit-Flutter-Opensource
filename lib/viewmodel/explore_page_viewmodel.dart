@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 class ExplorePageVM with ChangeNotifier {
@@ -13,20 +14,21 @@ class ExplorePageVM with ChangeNotifier {
   final categoryScrollcontroller = ScrollController();
 
   void getRecommendedCommunities() async {
-    print("getRecommendedCommunities...");
+   AmityLog.debug("getRecommendedCommunities...");
     await AmitySocialClient.newCommunityRepository()
         .getRecommendedCommunities()
         .then((List<AmityCommunity> communities) {
       _recommendedCommunities = communities.take(5).toList();
-      print(_recommendedCommunities);
+     AmityLog.debug("Recommended Communities: $_recommendedCommunities");
       notifyListeners();
     }).onError((error, stackTrace) {
-      // handle error
+      // handle error\
+      AmityLog.error("Error fetching recommended communities", error, stackTrace: stackTrace);
     });
   }
 
   void getTrendingCommunities() {
-    print("getTrendingCommunities...");
+   AmityLog.debug("getTrendingCommunities...");
     AmitySocialClient.newCommunityRepository()
         .getTrendingCommunities()
         .then((List<AmityCommunity> communities) => {
@@ -35,6 +37,7 @@ class ExplorePageVM with ChangeNotifier {
             })
         .onError((error, stackTrace) => {
               // handle error
+              AmityLog.error("Error fetching trending communities", error, stackTrace: stackTrace)
             });
   }
 
@@ -80,7 +83,7 @@ class ExplorePageVM with ChangeNotifier {
     if ((communityScrollcontroller.position.pixels >=
         (communityScrollcontroller.position.maxScrollExtent - 100))) {
       if (isLoadingFinish) {
-        print("load more");
+       AmityLog.debug("load more");
         _communityController.fetchNextPage();
         isLoadingFinish = false;
         notifyListeners();
@@ -128,7 +131,7 @@ class ExplorePageVM with ChangeNotifier {
     if ((categoryScrollcontroller.position.pixels >=
         (categoryScrollcontroller.position.maxScrollExtent - 100))) {
       if (isLoadingFinish) {
-        print("load more");
+       AmityLog.debug("load more");
         _communityCategoryController.fetchNextPage();
         isLoadingFinish = false;
         notifyListeners();

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/bloc/post_composer_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_composer_page.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
@@ -40,7 +41,7 @@ extension PostComposerFilePicker on AmityPostComposerPage {
       
     } catch (e) {
       // If conversion fails, return original file
-      print('Failed to convert HEIC/HEIF to JPG: $e');
+     AmityLog.debug('Failed to convert HEIC/HEIF to JPG: $e');
     }
     
     return xFile;

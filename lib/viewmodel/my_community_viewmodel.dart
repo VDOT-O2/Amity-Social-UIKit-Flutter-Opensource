@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 class MyCommunityVM with ChangeNotifier {
@@ -36,7 +37,7 @@ class MyCommunityVM with ChangeNotifier {
 
       notifyListeners();
     }).onError((error, stackTrace) {
-      log("error:${error.error.toString()}");
+     AmityLog.debug("error:${error.error.toString()}");
       // await AmityDialog().showAlertErrorDialog(
       //     title: "Error!",
       //     message: _communityController.error.toString());
@@ -60,7 +61,7 @@ class MyCommunityVM with ChangeNotifier {
 
       notifyListeners();
     }).onError((error, stackTrace) {
-      // log("error:${error.error.toString()}");
+      //AmityLog.debug("error:${error.error.toString()}");
       // await AmityDialog().showAlertErrorDialog(
       //     title: "Error!",
       //     message: _communityController.error.toString());
@@ -70,7 +71,7 @@ class MyCommunityVM with ChangeNotifier {
   void loadNextPage() async {
     if ((scrollcontroller.position.pixels >
         scrollcontroller.position.maxScrollExtent - 800)) {
-      print("hasMore: ${communityLiveCollection.hasNextPage()}");
+     AmityLog.debug("hasMore: ${communityLiveCollection.hasNextPage()}");
     }
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
@@ -78,7 +79,7 @@ class MyCommunityVM with ChangeNotifier {
         !loadingNextPage) {
       loadingNextPage = true;
       notifyListeners();
-      log("loading Next Page...");
+     AmityLog.debug("loading Next Page...");
 
       await communityLiveCollection.loadNext().then((value) {
         loadingNextPage = false;
@@ -127,7 +128,7 @@ class SearchCommunityVM with ChangeNotifier {
             // Call any additional methods like sortedUserListWithHeaders here if needed.
             notifyListeners();
           } else {
-            log("error: ${communityController.error.toString()}");
+           AmityLog.debug("error: ${communityController.error.toString()}");
             // await AmityDialog().showAlertErrorDialog(
             //     title: "Error!", message: communityController.error.toString());
           }
@@ -145,7 +146,7 @@ class SearchCommunityVM with ChangeNotifier {
   void loadNextPage() async {
     if ((scrollcontroller.position.pixels >
         scrollcontroller.position.maxScrollExtent - 800)) {
-      print("hasMore: ${communityController.hasMoreItems}");
+     AmityLog.debug("hasMore: ${communityController.hasMoreItems}");
     }
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
@@ -153,7 +154,7 @@ class SearchCommunityVM with ChangeNotifier {
         !loadingNextPage) {
       loadingNextPage = true;
       notifyListeners();
-      log("loading Next Page...");
+     AmityLog.debug("loading Next Page...");
       // Call any additional methods like sortedUserListWithHeaders here if needed.
       await communityController.fetchNextPage().then((value) {
         loadingNextPage = false;

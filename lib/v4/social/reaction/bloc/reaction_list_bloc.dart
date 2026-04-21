@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -167,7 +168,7 @@ class ReactionListBloc extends Bloc<ReactionListEvent, ReactionListState> {
         }
       }
     } catch (e) {
-      print('Error fetching message reactions: $e');
+     AmityLog.debug('Error fetching message reactions: $e');
     }
   }
 

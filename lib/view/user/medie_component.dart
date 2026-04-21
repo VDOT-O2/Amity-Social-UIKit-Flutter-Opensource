@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/video_player.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/imag_viewer.dart';
 import 'package:amity_uikit_beta_service/viewmodel/community_feed_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
@@ -70,7 +71,7 @@ class MediaGalleryPage extends StatelessWidget {
   Widget _mediaButton(BuildContext context, String text, MediaType type) {
     return TextButton(
       onPressed: () {
-        print(type);
+       AmityLog.debug("$type");
         if (galleryFeed == GalleryFeed.user) {
           Provider.of<UserFeedVM>(context, listen: false)
               .doSelectMedieType(type);
@@ -211,14 +212,14 @@ class MediaGalleryPage extends StatelessWidget {
         },
       );
     } else {
-      print("galleryFeed == GalleryFeed.community === CommuFeedVM");
+     AmityLog.debug("galleryFeed == GalleryFeed.community === CommuFeedVM");
       return Consumer<CommuFeedVM>(
         builder: (context, vm, child) {
           if (vm.getCommunityImagePosts().isEmpty) {
-            print("empty");
+           AmityLog.debug("empty");
             return noPostWidget;
           } else {
-            print("not Empty");
+           AmityLog.debug("not Empty");
             return gridView; // Placeholder for tab bar can be integrated here
           }
         },

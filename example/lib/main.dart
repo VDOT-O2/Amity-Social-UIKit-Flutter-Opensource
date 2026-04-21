@@ -6,6 +6,7 @@ import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
 import 'package:amity_uikit_beta_service/v4/chat/home/chat_home_page.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_tray_behavior.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_membership/community_membership_page_behavior.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/global_feed_component_behavior.dart';
@@ -203,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       await prefs.setString('customMqttUrl', _customMqttUrl.text);
                       await prefs.setString('customUploadUrl', _customUploadUrl.text);
                     }
-                    log("save pref");
+                    AmityLog.debug("save pref");
 
                     await AmityUIKit().setup(
                       apikey: _apiKey.text,
@@ -276,7 +277,7 @@ class _UserListPageState extends State<UserListPage> {
         if (currentState == null) {
           return;
         }
-        
+
         currentState.pushReplacement(
           MaterialPageRoute(builder: (context) => SecondPage(username: username)),
         );
@@ -340,7 +341,7 @@ class _UserListPageState extends State<UserListPage> {
                 return ListTile(
                   title: Text(_usernames[index]),
                   onLongPress: () async {
-                    log("login");
+                    AmityLog.debug("login");
 
                     final prefs = await SharedPreferences.getInstance();
                     String? selectedRegionString = prefs.getString('selectedRegion');
@@ -373,12 +374,12 @@ class _UserListPageState extends State<UserListPage> {
                       userId: _usernames[index],
                       authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
                       callback: (isSuccess, error) {
-                        log("callback:$isSuccess");
+                        AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {
-                          log("success");
+                          AmityLog.debug("success");
                           //ignore call back
                         } else {
-                          log("fail");
+                          AmityLog.debug("fail");
                           AmityDialog().showAlertErrorDialog(title: "Error", message: error.toString());
                         }
                       },
@@ -388,7 +389,7 @@ class _UserListPageState extends State<UserListPage> {
                     ));
                   },
                   onTap: () async {
-                    log("login");
+                    AmityLog.debug("login");
 
                     final prefs = await SharedPreferences.getInstance();
                     String? selectedRegionString = prefs.getString('selectedRegion');
@@ -420,16 +421,16 @@ class _UserListPageState extends State<UserListPage> {
                       userId: _usernames[index],
                       authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
                       callback: (isSuccess, error) {
-                        log("callback:$isSuccess");
+                        AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {
-                          log("success");
+                          AmityLog.debug("success");
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => SecondPage(username: _usernames[index]),
                             ),
                           );
                         } else {
-                          log("fail");
+                          AmityLog.debug("fail");
                           AmityDialog().showAlertErrorDialog(title: "Error", message: error.toString());
                         }
                       },
@@ -617,7 +618,7 @@ class SocialPage extends StatelessWidget {
   void configThemeColor(BuildContext context, AppColors appColors) {
     // Place your AmitySLEUIKit configuration code here
     // For demonstration, the primary color is being used. Adapt as needed.
-    print("configThemeColor");
+    AmityLog.debug("configThemeColor");
     AmityUIKit().configAmityThemeColor(context, (config) {
       config.appColors = appColors;
     });

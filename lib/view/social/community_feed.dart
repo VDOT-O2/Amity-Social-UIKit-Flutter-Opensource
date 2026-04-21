@@ -2,6 +2,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/utils/dynamicSilverAppBar.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/target/amity_story_tab_component_type.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/community_member_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/edit_community.dart';
@@ -345,7 +346,7 @@ class _EditProfileButtonState extends State<EditProfileButton> {
                         });
                       }).onError((error, stackTrace) {
                         //handle error
-                        log(error.toString());
+                       AmityLog.error('Failed to leave community', error, stackTrace: stackTrace);
                       });
                     } else {
                       AmitySocialClient.newCommunityRepository()
@@ -361,7 +362,7 @@ class _EditProfileButtonState extends State<EditProfileButton> {
                           myCommunityList.initMyCommunity();
                         });
                       }).onError((error, stackTrace) {
-                        log(error.toString());
+                       AmityLog.debug(error.toString());
                       });
                     }
                   }
