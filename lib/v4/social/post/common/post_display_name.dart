@@ -83,7 +83,7 @@ class PostDisplayName extends StatelessWidget {
           ),
           Row(
             children: [
-              if (isModerator) const CommunityModeratorBadge(),
+              if (isModerator)  CommunityModeratorBadge(theme: theme),
               if (isModerator)
                 Container(
                     padding: const EdgeInsets.only(left: 2),

@@ -64,12 +64,10 @@ class AmityCommentCreatorInternal extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AmityCommentCreatorInternalState createState() =>
-      _AmityCommentCreatorInternalState();
+  _AmityCommentCreatorInternalState createState() => _AmityCommentCreatorInternalState();
 }
 
-class _AmityCommentCreatorInternalState
-    extends State<AmityCommentCreatorInternal> {
+class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInternal> {
   late MentionTextEditingController controller;
   late ScrollController scrollController;
   final focusNode = FocusNode();
@@ -105,8 +103,7 @@ class _AmityCommentCreatorInternalState
               if (state.replyTo != null) renderReplyPanel(state.replyTo!),
               SafeArea(
                 top: false,
-                child: renderComposer(context, state, widget.referenceId,
-                    widget.referenceType, widget.communityId),
+                child: renderComposer(context, state, widget.referenceId, widget.referenceType, widget.communityId),
               ),
             ],
           );
@@ -115,12 +112,8 @@ class _AmityCommentCreatorInternalState
     );
   }
 
-  Widget renderComposer(
-      BuildContext context,
-      CommentCreatorState state,
-      String referenceId,
-      AmityCommentReferenceType referenceType,
-      String? communityId) {
+  Widget renderComposer(BuildContext context, CommentCreatorState state, String referenceId,
+      AmityCommentReferenceType referenceType, String? communityId) {
     AmityUser user = AmityCoreClient.getCurrentUser();
 
     return Padding(
@@ -132,8 +125,7 @@ class _AmityCommentCreatorInternalState
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.only(
-                    top: 0, left: 12, right: 8, bottom: 8),
+                padding: const EdgeInsets.only(top: 0, left: 12, right: 8, bottom: 8),
                 child: SizedBox(
                   width: 32,
                   height: 32,
@@ -143,8 +135,7 @@ class _AmityCommentCreatorInternalState
                           avatarUrl: avatarUrl ?? "",
                           displayName: user.displayName ?? "",
                           isDeletedUser: user.isDeleted ?? false,
-                          characterTextStyle:
-                              AmityTextStyle.titleBold(Colors.white),
+                          characterTextStyle: AmityTextStyle.titleBold(Colors.white),
                           avatarSize: const Size(32, 32))),
                 ),
               ),
@@ -153,8 +144,7 @@ class _AmityCommentCreatorInternalState
                   constraints: const BoxConstraints(maxHeight: 135),
                   height: state.currentHeight,
                   alignment: Alignment.centerLeft,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                   decoration: ShapeDecoration(
                     color: widget.theme.baseColorShade4,
                     shape: RoundedRectangleBorder(
@@ -178,9 +168,7 @@ class _AmityCommentCreatorInternalState
                         controller: controller,
                         scrollController: scrollController,
                         onChanged: (value) {
-                          context
-                              .read<CommentCreatorBloc>()
-                              .add(CommentCreatorTextChage(text: value.trim()));
+                          context.read<CommentCreatorBloc>().add(CommentCreatorTextChage(text: value.trim()));
                         },
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
@@ -188,10 +176,11 @@ class _AmityCommentCreatorInternalState
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 0, vertical: 0),
-                          hintText: context.l10n.comment_create_hint,
                           border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          hintText: context.l10n.comment_create_hint,
                           hintStyle: TextStyle(
                             color: widget.theme.baseColorShade2,
                             fontSize: 15,
@@ -199,13 +188,9 @@ class _AmityCommentCreatorInternalState
                           ),
                         ),
                         suggestionOverlayBottomPaddingWhenKeyboardClosed:
-                            state.currentHeight +
-                                16.0 +
-                                (state.replyTo != null ? 40.0 : 0.0),
+                            state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
                         suggestionOverlayBottomPaddingWhenKeyboardOpen:
-                            state.currentHeight +
-                                16.0 +
-                                (state.replyTo != null ? 40.0 : 0.0),
+                            state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
                       ),
                     ),
                   ),
@@ -217,8 +202,7 @@ class _AmityCommentCreatorInternalState
                         referenceId: referenceId,
                         referenceType: referenceType,
                         text: controller.text,
-                        mentionMetadataList:
-                            controller.getAmityMentionMetadata(),
+                        mentionMetadataList: controller.getAmityMentionMetadata(),
                         mentionUserIds: controller.getMentionUserIds(),
                         toastBloc: context.read<AmityToastBloc>(),
                         context: context,
@@ -226,11 +210,9 @@ class _AmityCommentCreatorInternalState
                   controller.clear();
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.only(bottom: 12, right: 12, left: 8),
+                  padding: const EdgeInsets.only(bottom: 12, right: 12, left: 8),
                   clipBehavior: Clip.antiAlias,
-                  decoration:
-                      BoxDecoration(color: widget.theme.backgroundColor),
+                  decoration: BoxDecoration(color: widget.theme.backgroundColor),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,

@@ -1,10 +1,13 @@
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
+import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CommunityModeratorBadge extends StatelessWidget {
-  const CommunityModeratorBadge({super.key});
+  const CommunityModeratorBadge({super.key, required this.theme});
+
+  final AmityThemeColor theme;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class CommunityModeratorBadge extends StatelessWidget {
       padding: const EdgeInsets.only(left: 6, right: 6),
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: const Color(0xFFD9E5FC),
+        color: theme.baseColorShade4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -26,21 +29,20 @@ class CommunityModeratorBadge extends StatelessWidget {
           children: [
             Container(
               child: SvgPicture.asset(
-                  'assets/Icons/amity_ic_community_moderator.svg',
-                  package: 'amity_uikit_beta_service',
-                  width: 12,
-                  height: 10,
+                'assets/Icons/amity_ic_community_moderator.svg',
+                package: 'amity_uikit_beta_service',
+                colorFilter: ColorFilter.mode(
+                  theme.primaryColor,
+                  BlendMode.srcIn,
                 ),
-            ),
-        
-            const SizedBox(width: 3),
-
-            Container(
-              //color: Colors.blue,
-              child: Text(
-                context.l10n.general_moderator,
-                style: AmityTextStyle.captionSmall(const Color(0xFF1054DE)),
+                width: 12,
+                height: 10,
               ),
+            ),
+            const SizedBox(width: 3),
+            Text(
+              context.l10n.general_moderator,
+              style: AmityTextStyle.captionSmall(theme.primaryColor),
             ),
           ],
         ),

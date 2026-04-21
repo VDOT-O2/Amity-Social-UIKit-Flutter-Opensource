@@ -131,7 +131,8 @@ class AmityStoryTargetElement extends BaseElement {
                       ? Positioned(
                           right: 0,
                           bottom: 0,
-                          child: SvgPicture.asset(badge, package: 'amity_uikit_beta_service', height: 14),
+                          child: SvgPicture.asset(badge, 
+                          package: 'amity_uikit_beta_service', height: 14),
                         )
                       : const SizedBox(),
                 ],

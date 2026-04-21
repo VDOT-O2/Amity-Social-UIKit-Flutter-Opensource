@@ -78,8 +78,7 @@ class AmityCommunityCoverView extends BaseElement {
                             package: 'amity_uikit_beta_service',
                             height: 18,
                             width: 18,
-                            colorFilter: const ColorFilter.mode(
-                                Colors.white, BlendMode.srcIn),
+                            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                           ),
                         ),
                       ),
@@ -94,9 +93,7 @@ class AmityCommunityCoverView extends BaseElement {
         return SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: renderAvatarImage()),
+          child: ImageFiltered(imageFilter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), child: renderAvatarImage()),
         );
     }
   }
@@ -104,15 +101,15 @@ class AmityCommunityCoverView extends BaseElement {
   Widget renderAvatarImage() {
     final url = community?.avatarImage?.getUrl(AmityImageSize.LARGE);
     return (url != null)
-        ? Container(width: double.infinity,
+        ? Container(
+            width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(url),
                 fit: BoxFit.cover,
               ),
-            )
-          )
+            ))
         : Container(
             width: double.infinity,
             height: double.infinity,

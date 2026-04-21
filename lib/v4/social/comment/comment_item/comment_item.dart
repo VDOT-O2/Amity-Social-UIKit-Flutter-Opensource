@@ -30,8 +30,7 @@ import 'package:flutter_svg/svg.dart';
 class CommentItem extends BaseElement {
   final ScrollController parentScrollController;
   final CommentAction commentAction;
-  final MentionTextEditingController controller =
-      MentionTextEditingController();
+  final MentionTextEditingController controller = MentionTextEditingController();
   final ScrollController scrollController = ScrollController();
   final bool shouldAllowInteraction;
 
@@ -42,22 +41,16 @@ class CommentItem extends BaseElement {
     required this.shouldAllowInteraction,
     required this.parentScrollController,
     required this.commentAction,
-  }) : super(
-            key: key,
-            pageId: pageId,
-            componentId: componentId,
-            elementId: 'comment');
+  }) : super(key: key, pageId: pageId, componentId: componentId, elementId: 'comment');
 
   @override
   Widget buildElement(BuildContext context) {
-    return BlocBuilder<CommentItemBloc, CommentItemState>(
-        builder: (context, state) {
+    return BlocBuilder<CommentItemBloc, CommentItemState>(builder: (context, state) {
       final plainText = state.editedText;
       var mentionList = <AmityUserMentionMetadata>[];
 
       if (state.comment.metadata != null) {
-        final mentionedGetter =
-            AmityMentionMetadataGetter(metadata: state.comment.metadata!);
+        final mentionedGetter = AmityMentionMetadataGetter(metadata: state.comment.metadata!);
         mentionList = mentionedGetter.getMentionedUsers();
       }
 
@@ -66,13 +59,12 @@ class CommentItem extends BaseElement {
         controller.populate(plainText, mentionList);
       }
 
-      return buildCommentItem(context, state.comment, state.isReacting,
-          state.isExpanded, state.isEditing);
+      return buildCommentItem(context, state.comment, state.isReacting, state.isExpanded, state.isEditing);
     });
   }
 
-  Widget buildCommentItem(BuildContext context, AmityComment comment,
-      bool isReacting, bool isExpanded, bool isEditing) {
+  Widget buildCommentItem(
+      BuildContext context, AmityComment comment, bool isReacting, bool isExpanded, bool isEditing) {
     // Check if comment is deleted
     if (comment.isDeleted ?? false) {
       return buildDeletedComment(context, comment);
@@ -81,11 +73,8 @@ class CommentItem extends BaseElement {
     var isModerator = false;
     var communityId = null;
     if (comment.target is CommunityCommentTarget) {
-      var roles =
-          (comment.target as CommunityCommentTarget).creatorMember?.roles;
-      if (roles != null &&
-          (roles.contains("moderator") ||
-              roles.contains("community-moderator"))) {
+      var roles = (comment.target as CommunityCommentTarget).creatorMember?.roles;
+      if (roles != null && (roles.contains("moderator") || roles.contains("community-moderator"))) {
         isModerator = true;
       }
       communityId = (comment.target as CommunityCommentTarget).communityId;
@@ -107,8 +96,7 @@ class CommentItem extends BaseElement {
             onTap: () {
               final userId = comment.user?.userId;
               if (userId != null && userId.isNotEmpty) {
-                AmityUIKit4Manager.behavior.commentTrayBehavior
-                    .goToUserProfilePage(context, userId);
+                AmityUIKit4Manager.behavior.commentTrayBehavior.goToUserProfilePage(context, userId);
               }
             },
             child: SizedBox(
@@ -157,12 +145,9 @@ class CommentItem extends BaseElement {
                                       child: GestureDetector(
                                         onTap: () {
                                           final userId = comment.user?.userId;
-                                          if (userId != null &&
-                                              userId.isNotEmpty) {
-                                            AmityUIKit4Manager
-                                                .behavior.commentTrayBehavior
-                                                .goToUserProfilePage(
-                                                    context, userId);
+                                          if (userId != null && userId.isNotEmpty) {
+                                            AmityUIKit4Manager.behavior.commentTrayBehavior
+                                                .goToUserProfilePage(context, userId);
                                           }
                                         },
                                         child: Row(
@@ -172,37 +157,29 @@ class CommentItem extends BaseElement {
                                                 comment.user?.displayName ?? "",
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
-                                                style: AmityTextStyle.custom(
-                                                    15,
-                                                    FontWeight.w500,
-                                                    theme.baseColor),
+                                                style: AmityTextStyle.custom(15, FontWeight.w500, theme.baseColor),
                                               ),
                                             ),
-                                            if (comment.user?.isBrand ?? false)
-                                              brandBadge(),
+                                            if (comment.user?.isBrand ?? false) brandBadge(),
                                           ],
                                         ),
                                       ),
                                     ),
                                     (isModerator)
-                                        ? const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 0),
-                                            child: CommunityModeratorBadge(),
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+                                            child: CommunityModeratorBadge(theme: theme),
                                           )
                                         : Container(),
-                                    getCommentTextContent(
-                                        context, comment, theme)
+                                    getCommentTextContent(context, comment, theme)
                                   ],
                                 )
                               : SizedBox(
                                   width: double.infinity,
                                   child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           width: double.infinity,
@@ -218,39 +195,27 @@ class CommentItem extends BaseElement {
                                                 controller: scrollController,
                                                 child: MentionTextField(
                                                   theme: theme,
-                                                  style: AmityTextStyle.body(
-                                                      theme.baseColor),
+                                                  style: AmityTextStyle.body(theme.baseColor),
                                                   suggestionMaxRow: 2,
-                                                  suggestionDisplayMode:
-                                                      SuggestionDisplayMode
-                                                          .inline,
-                                                  mentionContentType:
-                                                      MentionContentType
-                                                          .comment,
+                                                  suggestionDisplayMode: SuggestionDisplayMode.inline,
+                                                  mentionContentType: MentionContentType.comment,
                                                   communityId: communityId,
                                                   controller: controller,
-                                                  scrollController:
-                                                      scrollController,
+                                                  scrollController: scrollController,
                                                   onChanged: (value) {},
-                                                  keyboardType:
-                                                      TextInputType.multiline,
+                                                  keyboardType: TextInputType.multiline,
                                                   maxLines: null,
                                                   minLines: 1,
-                                                  textAlignVertical:
-                                                      TextAlignVertical.bottom,
+                                                  textAlignVertical: TextAlignVertical.bottom,
                                                   decoration: InputDecoration(
                                                     isDense: true,
-                                                    contentPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: 0,
-                                                            vertical: 0),
-                                                    hintText: context.l10n
-                                                        .comment_create_hint,
                                                     border: InputBorder.none,
-                                                    hintStyle:
-                                                        AmityTextStyle.body(
-                                                            theme.baseColor),
+                                                    enabledBorder: InputBorder.none,
+                                                    focusedBorder: InputBorder.none,
+                                                    contentPadding:
+                                                        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                                    hintText: context.l10n.comment_create_hint,
+                                                    hintStyle: AmityTextStyle.body(theme.baseColor),
                                                   ),
                                                 ),
                                               ),
@@ -294,13 +259,10 @@ class CommentItem extends BaseElement {
                                       padding: const EdgeInsets.all(12),
                                       child: MentionTextField(
                                         theme: theme,
-                                        style: AmityTextStyle.body(
-                                            theme.baseColor),
+                                        style: AmityTextStyle.body(theme.baseColor),
                                         suggestionMaxRow: 2,
-                                        suggestionDisplayMode:
-                                            SuggestionDisplayMode.inline,
-                                        mentionContentType:
-                                            MentionContentType.comment,
+                                        suggestionDisplayMode: SuggestionDisplayMode.inline,
+                                        mentionContentType: MentionContentType.comment,
                                         communityId: communityId,
                                         controller: controller,
                                         scrollController:
@@ -309,18 +271,15 @@ class CommentItem extends BaseElement {
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         minLines: 1,
-                                        textAlignVertical: TextAlignVertical
-                                            .top, // Align text at the top
+                                        textAlignVertical: TextAlignVertical.top, // Align text at the top
                                         decoration: InputDecoration(
                                           isDense: true,
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 0, vertical: 0),
-                                          hintText:
-                                              context.l10n.comment_create_hint,
+                                          enabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
                                           border: InputBorder.none,
-                                          hintStyle: AmityTextStyle.body(
-                                              theme.baseColor),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                          hintText: context.l10n.comment_create_hint,
+                                          hintStyle: AmityTextStyle.body(theme.baseColor),
                                         ),
                                       ),
                                     ),
@@ -349,7 +308,7 @@ class CommentItem extends BaseElement {
   Widget buildDeletedComment(BuildContext context, AmityComment comment) {
     final isReplyComment = comment.parentId != null;
     final localize = context.l10n;
-    
+
     if (isReplyComment) {
       // Deleted reply comment
       return Container(
@@ -453,12 +412,9 @@ class CommentItem extends BaseElement {
     }
   }
 
-  Widget getCommentTextContent(
-      BuildContext context, AmityComment comment, AmityThemeColor theme) {
+  Widget getCommentTextContent(BuildContext context, AmityComment comment, AmityThemeColor theme) {
     // Get the text content from the comment.
-    final String textContent = comment.data is CommentTextData
-        ? (comment.data as CommentTextData).text ?? ""
-        : "";
+    final String textContent = comment.data is CommentTextData ? (comment.data as CommentTextData).text ?? "" : "";
 
     // Define normal and mention styles.
     final normalStyle = TextStyle(
@@ -476,8 +432,7 @@ class CommentItem extends BaseElement {
 
     if (comment.metadata != null && comment.metadata!['mentioned'] != null) {
       // Obtain the mention metadata from the comment.
-      final mentionedGetter =
-          AmityMentionMetadataGetter(metadata: comment.metadata!);
+      final mentionedGetter = AmityMentionMetadataGetter(metadata: comment.metadata!);
       mentionedUsers = mentionedGetter.getMentionedUsers();
 
       // Sort mention metadata by starting index.
@@ -496,8 +451,7 @@ class CommentItem extends BaseElement {
     );
   }
 
-  Widget renderCommentBottom(
-      BuildContext context, AmityComment comment, bool isReacting) {
+  Widget renderCommentBottom(BuildContext context, AmityComment comment, bool isReacting) {
     return shouldAllowInteraction
         ? Row(
             mainAxisSize: MainAxisSize.min,
@@ -549,8 +503,7 @@ class CommentItem extends BaseElement {
                   ),
                 ),
               ),
-              renderReactionPreview(
-                  context, comment, isReacting, shouldAllowInteraction),
+              renderReactionPreview(context, comment, isReacting, shouldAllowInteraction),
             ],
           )
         : Row(
@@ -558,14 +511,12 @@ class CommentItem extends BaseElement {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              renderReactionPreview(
-                  context, comment, isReacting, shouldAllowInteraction),
+              renderReactionPreview(context, comment, isReacting, shouldAllowInteraction),
             ],
           );
   }
 
-  Widget renderReactionButton(
-      BuildContext context, AmityComment comment, bool isReacting) {
+  Widget renderReactionButton(BuildContext context, AmityComment comment, bool isReacting) {
     final hasMyReaction = comment.hasMyReactions();
     if (isReacting) {
       return (hasMyReaction)
@@ -633,13 +584,10 @@ class CommentItem extends BaseElement {
         padding: const EdgeInsets.only(top: 12, bottom: 4),
         child: GestureDetector(
           onTap: () {
-            context
-                .read<CommentListBloc>()
-                .add(CommentListEventExpandItem(commentId: comment.commentId!));
+            context.read<CommentListBloc>().add(CommentListEventExpandItem(commentId: comment.commentId!));
           },
           child: Container(
-            padding:
-                const EdgeInsets.only(top: 5, left: 8, right: 12, bottom: 5),
+            padding: const EdgeInsets.only(top: 5, left: 8, right: 12, bottom: 5),
             decoration: ShapeDecoration(
               color: theme.backgroundColor,
               shape: RoundedRectangleBorder(
@@ -653,8 +601,7 @@ class CommentItem extends BaseElement {
               children: [
                 Container(
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -693,13 +640,11 @@ class CommentItem extends BaseElement {
     }
   }
 
-  Widget renderReplyExpanded(
-      AmityComment comment, ScrollController scrollController) {
+  Widget renderReplyExpanded(AmityComment comment, ScrollController scrollController) {
     final referenceId = comment.referenceId!;
     final referenceType = comment.referenceType!;
     return BlocProvider(
-      create: (context) =>
-          CommentListBloc(referenceId, referenceType, comment.commentId!),
+      create: (context) => CommentListBloc(referenceId, referenceType, comment.commentId!),
       child: Container(
         padding: const EdgeInsets.only(top: 12),
         child: Column(
@@ -707,9 +652,7 @@ class CommentItem extends BaseElement {
           children: [
             SizedBox(
               width: double.infinity,
-              child: ReplyList(
-                  shouldAllowInteraction: shouldAllowInteraction,
-                  scrollController: scrollController),
+              child: ReplyList(shouldAllowInteraction: shouldAllowInteraction, scrollController: scrollController),
             ),
           ],
         ),
@@ -717,8 +660,8 @@ class CommentItem extends BaseElement {
     );
   }
 
-  Widget renderReactionPreview(BuildContext context, AmityComment comment,
-      bool isReacting, bool shouldAllowInteraction) {
+  Widget renderReactionPreview(
+      BuildContext context, AmityComment comment, bool isReacting, bool shouldAllowInteraction) {
     final hasMyReactions = comment.hasMyReactions();
     var reactionCount = comment.reactionCount ?? 0;
     if (isReacting) {
@@ -727,9 +670,7 @@ class CommentItem extends BaseElement {
     if (reactionCount > 0) {
       return Expanded(
         child: Row(
-          mainAxisAlignment: shouldAllowInteraction
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
+          mainAxisAlignment: shouldAllowInteraction ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             getReactionPreview(
               context,
@@ -759,14 +700,13 @@ class CommentItem extends BaseElement {
       children: [
         getReactionCount(reactionCount),
         const SizedBox(width: 4),
-        getReactionIcon(
-            context, commentId, hasReactions, isReacting, hasMyReactions),
+        getReactionIcon(context, commentId, hasReactions, isReacting, hasMyReactions),
       ],
     );
   }
 
-  Widget getReactionIcon(BuildContext context, String commentId,
-      bool hasReactions, bool isReacting, bool hasMyReactions) {
+  Widget getReactionIcon(
+      BuildContext context, String commentId, bool hasReactions, bool isReacting, bool hasMyReactions) {
     void showReactionsBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -843,20 +783,15 @@ class CommentItem extends BaseElement {
     }
   }
 
-  void showCommentActionsForModerators(
-      BuildContext context, AmityComment comment) {
+  void showCommentActionsForModerators(BuildContext context, AmityComment comment) {
     onEdit() => context.read<CommentItemBloc>().add(CommentItemEdit());
-    onDelete() => context
-        .read<CommentItemBloc>()
-        .add(CommentItemDelete(comment: comment));
+    onDelete() => context.read<CommentItemBloc>().add(CommentItemDelete(comment: comment));
     final localize = context.l10n;
 
     List<BottomSheetMenuOption> userActions = [];
 
     // Edit
-    final editActionTitle = (comment.parentId == null)
-        ? localize.comment_edit
-        : localize.comment_reply_edit;
+    final editActionTitle = (comment.parentId == null) ? localize.comment_edit : localize.comment_reply_edit;
     final editAction = BottomSheetMenuOption(
         title: editActionTitle,
         icon: "assets/Icons/amity_ic_edit_comment.svg",
@@ -869,9 +804,8 @@ class CommentItem extends BaseElement {
     userActions.add(editAction);
 
     // Delete
-    final deleteActionTitle = (comment.parentId == null)
-        ? context.l10n.comment_delete
-        : context.l10n.comment_reply_delete;
+    final deleteActionTitle =
+        (comment.parentId == null) ? context.l10n.comment_delete : context.l10n.comment_reply_delete;
     final deleteAction = BottomSheetMenuOption(
         title: deleteActionTitle,
         icon: "assets/Icons/amity_ic_delete.svg",
@@ -880,15 +814,11 @@ class CommentItem extends BaseElement {
         onTap: () {
           Navigator.pop(context);
 
-          final alertTitle = (comment.parentId == null)
-              ? localize.comment_delete
-              : localize.comment_reply_delete;
-          final alertContent = (comment.parentId == null)
-              ? localize.post_comment.toLowerCase()
-              : localize.comment_reply.toLowerCase();
+          final alertTitle = (comment.parentId == null) ? localize.comment_delete : localize.comment_reply_delete;
+          final alertContent =
+              (comment.parentId == null) ? localize.post_comment.toLowerCase() : localize.comment_reply.toLowerCase();
 
-          showConfirmationAlert(context, alertTitle, alertContent,
-              localize.general_delete, onDelete);
+          showConfirmationAlert(context, alertTitle, alertContent, localize.general_delete, onDelete);
         });
     userActions.add(deleteAction);
 
@@ -911,13 +841,10 @@ class CommentItem extends BaseElement {
     final isFlaggedByMe = comment.isFlaggedByMe;
     var reportButtonLabel = "";
     if (isFlaggedByMe) {
-      reportButtonLabel = (comment.parentId == null)
-          ? context.l10n.comment_unreport
-          : context.l10n.comment_reply_unreport;
+      reportButtonLabel =
+          (comment.parentId == null) ? context.l10n.comment_unreport : context.l10n.comment_reply_unreport;
     } else {
-      reportButtonLabel = (comment.parentId == null)
-          ? context.l10n.comment_report
-          : context.l10n.comment_reply_report;
+      reportButtonLabel = (comment.parentId == null) ? context.l10n.comment_report : context.l10n.comment_reply_report;
     }
 
     final reportOption = BottomSheetMenuOption(
@@ -939,20 +866,16 @@ class CommentItem extends BaseElement {
       listener: (context, state) {},
       builder: (context, state) {
         final commentText = getTextComment(comment);
-        final hasChanges = state.editedText.trim() != commentText.trim() &&
-            state.editedText.trim().isNotEmpty;
+        final hasChanges = state.editedText.trim() != commentText.trim() && state.editedText.trim().isNotEmpty;
         return Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () => {
-                context.read<CommentItemBloc>().add(CommentItemCancelEdit())
-              },
+              onTap: () => {context.read<CommentItemBloc>().add(CommentItemCancelEdit())},
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: ShapeDecoration(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(width: 1, color: theme.baseColorShade2),
@@ -966,8 +889,7 @@ class CommentItem extends BaseElement {
                   children: [
                     Container(
                       decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -993,20 +915,15 @@ class CommentItem extends BaseElement {
                     context.read<CommentItemBloc>().add(CommentItemUpdate(
                         commentId: comment.commentId!,
                         text: controller.text,
-                        mentionMetadataList:
-                            controller.getAmityMentionMetadata(),
+                        mentionMetadataList: controller.getAmityMentionMetadata(),
                         mentionUserIds: controller.getMentionUserIds()))
                   }
               },
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: ShapeDecoration(
-                  color: (hasChanges)
-                      ? theme.primaryColor
-                      : theme.primaryColor.withAlpha(100),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                  color: (hasChanges) ? theme.primaryColor : theme.primaryColor.withAlpha(100),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -1015,8 +932,7 @@ class CommentItem extends BaseElement {
                   children: [
                     Container(
                       decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
