@@ -34,7 +34,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
   final TextEditingController _groupNameController = TextEditingController();
   // Define ValueNotifier for selected privacy option
   final ValueNotifier<String> _selectedNotifier =
-      ValueNotifier<String>('Public');
+      ValueNotifier<String>('Private');
   final ScrollController _selectedUsersController = ScrollController();
   // Add state variable for selected image
   final ValueNotifier<String?> _selectedImagePath =
@@ -320,13 +320,13 @@ class AmityCreateGroupChatPage extends NewBasePage {
                               builder: (context, selected, _) {
                                 return Column(
                                   children: [
-                                    _buildOption(
-                                      title: context.l10n.chat_privacy_public,
-                                      description: context.l10n.chat_privacy_public_desc,
-                                      iconPath:
-                                          'assets/Icons/amity_ic_create_group_public_button.svg',
-                                      selected: selected,
-                                    ),
+                                    // _buildOption(
+                                    //   title: context.l10n.chat_privacy_public,
+                                    //   description: context.l10n.chat_privacy_public_desc,
+                                    //   iconPath:
+                                    //       'assets/Icons/amity_ic_create_group_public_button.svg',
+                                    //   selected: selected,
+                                    // ),
                                     _buildOption(
                                       title: context.l10n.chat_privacy_private,
                                       description: context.l10n.chat_privacy_private_desc,
@@ -340,15 +340,15 @@ class AmityCreateGroupChatPage extends NewBasePage {
                         ],
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: theme.backgroundShade1Color,
-                      ),
-                      child: Text(
-                          context.l10n.chat_privacy_warning,
-                          style: AmityTextStyle.caption(theme.baseColorShade1)),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.all(16),
+                    //   decoration: BoxDecoration(
+                    //     color: theme.backgroundShade1Color,
+                    //   ),
+                    //   child: Text(
+                    //       context.l10n.chat_privacy_warning,
+                    //       style: AmityTextStyle.caption(theme.baseColorShade1)),
+                    // ),
 
                     // Selected Users Grid List
                     ValueListenableBuilder<List<AmityUser>>(
