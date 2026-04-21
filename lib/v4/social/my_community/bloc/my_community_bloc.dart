@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:equatable/equatable.dart';
@@ -12,28 +13,31 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
   final int pageSize = 20;
   late CommunityLiveCollection communityLiveCollection;
   late StreamSubscription<List<AmityCommunity>> _subscription;
+  var isInitialLoad = true;
 
   MyCommunityBloc() : super(const MyCommunityState()) {
     communityLiveCollection = AmitySocialClient.newCommunityRepository()
         .getCommunities()
         .filter(AmityCommunityFilter.MEMBER)
+        .includeDeleted(false)
         .sortBy(AmityCommunitySortOption.DISPLAY_NAME)
         .getLiveCollection(pageSize: 20);
 
     _subscription = communityLiveCollection
         .getStreamController()
         .stream
-        .throttleTime(const Duration(milliseconds: 200))
+        .throttleTime(const Duration(milliseconds: 300))
         .listen((communities) async {
-      if (communityLiveCollection.isFetching == true && communities.isEmpty) {
+      if ((communityLiveCollection.isFetching == true || isInitialLoad) && communities.isEmpty) {
         add(MyCommunityEventLoading());
-      } else if (communities.isNotEmpty) {
+      } else {
         var state = MyCommunityLoaded(
           list: communities,
           hasMoreItems: communityLiveCollection.hasNextPage(),
           isFetching: communityLiveCollection.isFetching,
         );
         add(MyCommunityEventLoaded(state));
+        isInitialLoad = false;
       }
     });
 

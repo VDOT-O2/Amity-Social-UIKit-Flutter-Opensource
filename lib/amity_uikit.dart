@@ -67,7 +67,8 @@ class AmityUIKit {
     String? customSocketEndpoint,
     String? customMqttEndpoint,
     String? customUploadEndpoint,
-    bool showLogs = true,
+    bool showSDKLogs = false,
+    bool showUIKitLogs = false,
   }) async {
     Stopwatch stopwatch = Stopwatch()..start();
     AmityRegionalHttpEndpoint? amityEndpoint;
@@ -117,7 +118,7 @@ class AmityUIKit {
     await AmityCoreClient.setup(
         option: AmityCoreClientOption(
           apiKey: apikey,
-          showLogs: showLogs,
+          showLogs: showSDKLogs,
           httpEndpoint: amityEndpoint!,
           mqttEndpoint: amityMqttEndpoint!,
           uploadEndpoint: amityUploadEndpoint!,
@@ -125,7 +126,7 @@ class AmityUIKit {
         sycInitialization: true);
 
         
-    AmityLog.logLevel = showLogs ? AmityLogLevel.debug : AmityLogLevel.error;
+    AmityLog.logLevel = showUIKitLogs ? AmityLogLevel.debug : AmityLogLevel.error;
 
     stopwatch.stop();
    AmityLog.debug('setupAmityClient execution time: ${stopwatch.elapsedMilliseconds} ms');

@@ -28,20 +28,24 @@ class AmityMyCommunitiesComponent extends NewBaseComponent {
 
         return BlocBuilder<MyCommunityBloc, MyCommunityState>(
           builder: (context, state) {
-           
             if (state is MyCommunityLoading) {
               AmityLog.debug("MyCommunityState: Loading");
               return communitySkeletonList(theme, configProvider);
             } else if (state is MyCommunityLoaded) {
-               AmityLog.debug(
-                "MyCommunityState: ${state.list.length} communities, hasMoreItems: ${state.hasMoreItems}, isFetching: ${state.isFetching}");
+              AmityLog.debug(
+                  "MyCommunityState: ${state.list.length} communities, hasMoreItems: ${state.hasMoreItems}, isFetching: ${state.isFetching}");
 
               return Column(children: [
-                Expanded(
-                  child: communityList(context, scrollController, state.list, theme, () {
-                    context.read<MyCommunityBloc>().add(MyCommunityEventLoadMore());
-                  }),
-                ),
+                if (state.list.isEmpty)
+                  ... [
+                    const Text('There are no communities.'),
+                ] else ...[
+                  Expanded(
+                    child: communityList(context, scrollController, state.list, theme, () {
+                      context.read<MyCommunityBloc>().add(MyCommunityEventLoadMore());
+                    }),
+                  ),
+                ]
               ]);
             } else {
               return Container();
