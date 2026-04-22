@@ -29,7 +29,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kDebugTestAuthToken = 'c80d0345e75beb28e176f126e3ee3244ec654d2c';
+const _kDebugTestAuthToken = '2985dfa679d3f16f51d710088b51c4daa59ceaf8';
 
 List<CameraDescription> camera = <CameraDescription>[];
 void main() async {
@@ -360,8 +360,9 @@ class _UserListPageState extends State<UserListPage> {
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
                     String baseUrl = prefs.getString('customUrl') ?? "";
-                    String authToken =
-                        serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty
+                        ? _kDebugTestAuthToken
+                        : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
@@ -407,8 +408,9 @@ class _UserListPageState extends State<UserListPage> {
                       }
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
-                    String authToken =
-                        serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
+                    String authToken = serverKey.isEmpty
+                        ? _kDebugTestAuthToken
+                        : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
