@@ -85,7 +85,7 @@ class AmityUIKit {
           amityMqttEndpoint = AmityRegionalMqttEndpoint.custom(customMqttEndpoint);
           amityUploadEndpoint = AmityUploadEndpoint.custom(customUploadEndpoint);
         } else {
-         AmityLog.debug("please provide custom Endpoint");
+          AmityLog.debug("please provide custom Endpoint");
         }
 
         break;
@@ -115,6 +115,8 @@ class AmityUIKit {
 
     cameras = await availableCameras();
 
+    AmityLog.debug('setupAmityClient - availableCameras execution time: ${stopwatch.elapsedMilliseconds} ms');
+
     await AmityCoreClient.setup(
         option: AmityCoreClientOption(
           apiKey: apikey,
@@ -125,11 +127,10 @@ class AmityUIKit {
         ),
         sycInitialization: true);
 
-        
     AmityLog.logLevel = showUIKitLogs ? AmityLogLevel.debug : AmityLogLevel.error;
 
     stopwatch.stop();
-   AmityLog.debug('setupAmityClient execution time: ${stopwatch.elapsedMilliseconds} ms');
+    AmityLog.debug('setupAmityClient execution time: ${stopwatch.elapsedMilliseconds} ms');
   }
 
   Future<void> registerDevice(
@@ -142,7 +143,7 @@ class AmityUIKit {
     await Provider.of<AmityVM>(context, listen: false)
         .login(userID: userId, displayName: displayName, authToken: authToken)
         .then((value) async {
-     AmityLog.debug("login success");
+      AmityLog.debug("login success");
 
       // await Provider.of<UserVM>(context, listen: false)
       //     .initAccessToken()
@@ -166,13 +167,13 @@ class AmityUIKit {
       //   }
       // });
     }).onError((error, stackTrace) {
-     AmityLog.debug("registerDevice...Error:$error");
+      AmityLog.debug("registerDevice...Error:$error");
       if (callback != null) {
         callback(false, error.toString());
       }
     });
     stopwatch.stop();
-   AmityLog.debug('registerDevice execution time: ${stopwatch.elapsedMilliseconds} ms');
+    AmityLog.debug('registerDevice execution time: ${stopwatch.elapsedMilliseconds} ms');
   }
 
   Future<void> registerNotification(String fcmToken, Function(bool isSuccess, String? error) callback) async {
@@ -182,7 +183,7 @@ class AmityUIKit {
     // await AmityCoreClient.unregisterDeviceNotification();
     //AmityLog.debug("unregisterDeviceNotification");
     await AmityCoreClient.registerDeviceNotification(fcmToken).then((value) {
-     AmityLog.debug("registerNotification succesfully ✅");
+      AmityLog.debug("registerNotification succesfully ✅");
       callback(true, null);
     }).onError((error, stackTrace) {
       callback(false, "Initialize push notification fail...❌");
@@ -211,9 +212,9 @@ class AmityUIKit {
   Future<void> joinInitialCommunity(List<String> communityIds) async {
     for (var i = 0; i < communityIds.length; i++) {
       AmitySocialClient.newCommunityRepository().joinCommunity(communityIds[i]).then((value) {
-       AmityLog.debug("join community:${communityIds[i]} success");
+        AmityLog.debug("join community:${communityIds[i]} success");
       }).onError((error, stackTrace) {
-       AmityLog.debug(error.toString());
+        AmityLog.debug(error.toString());
       });
     }
   }

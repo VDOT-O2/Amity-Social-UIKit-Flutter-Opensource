@@ -140,6 +140,7 @@ Widget communitySkeletonList(AmityThemeColor theme, ConfigProvider configProvide
       child: Shimmer(
         linearGradient: configProvider.getShimmerGradient(),
         child: ListView.separated(
+          padding: const EdgeInsets.only(top: 16),
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) {
             return Divider(

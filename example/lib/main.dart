@@ -30,6 +30,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+const _kDebugTestAuthToken = '2985dfa679d3f16f51d710088b51c4daa59ceaf8';
+
 List<CameraDescription> camera = <CameraDescription>[];
 void main() async {
   ///Step 1: Initialize amity SDK with the following function
@@ -213,6 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       customSocketEndpoint: _customSocketUrl.text,
                       customMqttEndpoint: _customMqttUrl.text,
                       customUploadEndpoint: _customUploadUrl.text,
+                      // showSDKLogs: true,
+                      showUIKitLogs: true,
                     );
                     // Navigate to the next page
                     Navigator.push(
@@ -372,7 +376,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
+                      authToken: authToken.isEmpty ? _kDebugTestAuthToken : authToken,
                       callback: (isSuccess, error) {
                         AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {
@@ -419,7 +423,7 @@ class _UserListPageState extends State<UserListPage> {
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? 'b2727d322115a9d1b6ef906393c9b01e5ba78210' : authToken,
+                      authToken: authToken.isEmpty ? _kDebugTestAuthToken : authToken,
                       callback: (isSuccess, error) {
                         AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {

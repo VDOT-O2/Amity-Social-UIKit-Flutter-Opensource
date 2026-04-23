@@ -51,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await AmityUIKit().setup(
           apikey: _cachedApiKey,
           region: _cachedRegion,
+          showUIKitLogs: true,
         );
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AmityApp()));
@@ -65,7 +66,8 @@ class _SplashScreenState extends State<SplashScreen> {
             customEndpoint: _cachedHttpUrl,
             customSocketEndpoint: _cachedSocketUrl,
             customMqttEndpoint: _cachedMqttUrl,
-            customUploadEndpoint: _cachedUploadUrl);
+            customUploadEndpoint: _cachedUploadUrl,
+            showUIKitLogs: true,);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AmityApp()));
       } else {

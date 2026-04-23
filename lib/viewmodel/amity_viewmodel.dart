@@ -17,16 +17,18 @@ class AmityVM extends ChangeNotifier {
   }
 
   /// Handles the login response and error cases
-  Future<void> _handleLoginResponse(Future<AmityUser> loginFuture) async {
-    await loginFuture.then((value) async {
+  Future<bool> _handleLoginResponse(Future<AmityUser> loginFuture) async {
+    return await loginFuture.then((value) async {
       AmityLog.debug("login - success");
       currentamityUser = value;
       notifyListeners();
+      return true;
     }).catchError((error, stackTrace) async {
-      AmityLog.debug("login - error");
-      AmityLog.debug(error.toString());
+      currentamityUser = null;
+      AmityLog.error("login - error", error, stackTrace: stackTrace);
       //        await AmityDialog()
       //            .showAlertErrorDialog(title: "Error!", message: error.toString());
+      return false;
     });
   }
 
@@ -54,6 +56,12 @@ class AmityVM extends ChangeNotifier {
 
     // Submit and handle the response
     await _handleLoginResponse(loginBuilder.submit());
+  }
+
+  Future logout() async {
+    await AmityCoreClient.logout();
+    currentamityUser = null;
+    notifyListeners();
   }
 
   Future<void> refreshCurrentUserData() async {

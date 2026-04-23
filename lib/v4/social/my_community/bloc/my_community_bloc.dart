@@ -26,7 +26,7 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
     _subscription = communityLiveCollection
         .getStreamController()
         .stream
-        .throttleTime(const Duration(milliseconds: 300))
+        .debounceTime(const Duration(milliseconds: 150))
         .listen((communities) async {
       if ((communityLiveCollection.isFetching == true || isInitialLoad) && communities.isEmpty) {
         add(MyCommunityEventLoading());

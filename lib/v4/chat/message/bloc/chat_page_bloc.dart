@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.da
 import 'package:amity_uikit_beta_service/v4/chat/message/replying_message.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_thumbnail/flutter_video_thumbnail.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/transformers.dart';
 
 part 'chat_page_events.dart';
 part 'chat_page_state.dart';
@@ -43,6 +45,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     _setupScrollListener();
 
     on<ChatPageEventRefresh>((event, emit) async {
+      AmityLog.debug("ChatPageEventRefresh triggered");
       emit(state.copyWith(
           messages: const [],
           isFetching: true,
@@ -53,6 +56,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         liveCollection?.reset();
         liveCollection?.loadNext();
       } catch (e) {
+        AmityLog.error("Error refreshing chat page", e);
         emit(state.copyWith(
             messages: const [],
             isFetching: false,
@@ -63,6 +67,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageHeaderEventChanged>((event, emit) async {
+      AmityLog.debug("ChatPageHeaderEventChanged: channelMember=${event.channelMember.user?.displayName}");
       emit(state.copyWith(
         avatarUrl: event.channelMember.user?.avatarUrl,
         userDisplayName: event.channelMember.user?.displayName,
@@ -129,6 +134,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageEventChanged>((event, emit) async {
+      AmityLog.debug("ChatPageEventChanged: ${event.messages.length} messages, stateMessages: ${state.messages.length}");
+      
       AmityMessage? newMessage;
       if (event.messages.isNotEmpty && state.messages.isNotEmpty) {
         final firstEventMessage = event.messages.first;
@@ -254,6 +261,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageNewMessageUpdated>((event, emit) async {
+      AmityLog.debug("ChatPageNewMessageUpdated: newMessage=${event.newMessage?.messageId}");
       emit(state.copyWith(newMessage: event.newMessage));
     });
 
@@ -668,12 +676,19 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       // User will be updated in the HeaderEventChanged handler
     }
 
-    liveCollection?.getStreamController().stream.listen((event) {
+    liveCollection?.getStreamController().stream.debounceTime(const Duration(milliseconds: 150)).listen((event) {
+        final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
+            ? (event.first.data as MessageTextData).text
+            : "N/A";
+
+      AmityLog.debug("ChatPageEventChanged: $lastMessageText (${event.length} total)");
+
       addEvent(
           ChatPageEventChanged(messages: event, isFetching: state.isFetching));
     });
 
     liveCollection?.observeLoadingState().listen((event) {
+      AmityLog.debug("ChatPageEventLoadingStateUpdated: isFetching=$event");
       addEvent(ChatPageEventLoadingStateUpdated(isFetching: event));
     });
 

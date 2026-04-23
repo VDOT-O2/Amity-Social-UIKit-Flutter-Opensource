@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/v4/social/my_community/bloc/my_communit
 import 'package:amity_uikit_beta_service/v4/social/shared/community_list.dart';
 import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,9 +37,8 @@ class AmityMyCommunitiesComponent extends NewBaseComponent {
                   "MyCommunityState: ${state.list.length} communities, hasMoreItems: ${state.hasMoreItems}, isFetching: ${state.isFetching}");
 
               return Column(children: [
-                if (state.list.isEmpty)
-                  ... [
-                    const Text('There are no communities.'),
+                if (state.list.isEmpty) ...[
+                  const Text('There are no communities.'),
                 ] else ...[
                   Expanded(
                     child: communityList(context, scrollController, state.list, theme, () {
@@ -48,6 +48,8 @@ class AmityMyCommunitiesComponent extends NewBaseComponent {
                 ]
               ]);
             } else {
+              AmityLog.debug("MyCommunityState: Unknown state ${state.runtimeType}");
+
               return Container();
             }
           },
