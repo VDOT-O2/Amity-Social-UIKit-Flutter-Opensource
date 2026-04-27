@@ -142,6 +142,7 @@ extension ThemeConfig on ConfigRepository {
       baseColorShade2: theme?.baseColorShade2 ?? fallbackTheme.baseColorShade2,
       baseColorShade3: theme?.baseColorShade3 ?? fallbackTheme.baseColorShade3,
       baseColorShade4: theme?.baseColorShade4 ?? fallbackTheme.baseColorShade4,
+      vdotGreen: theme?.vdotGreen ?? fallbackTheme.vdotGreen,
       avatarBackgroundColor: theme?.avatarBackgroundColor ?? fallbackTheme.avatarBackgroundColor,
       avatarBorderColor: theme?.avatarBorderColor ?? fallbackTheme.avatarBorderColor,
       avatarTextColor: theme?.avatarTextColor ?? fallbackTheme.avatarTextColor,
