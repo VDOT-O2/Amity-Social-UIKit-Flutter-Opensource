@@ -15,24 +15,16 @@ import 'package:shimmer/shimmer.dart';
 
 class AmityStoryGlobalTabComponent extends NewBaseComponent {
   String? pageId;
-  AmityStoryGlobalTabComponent({
-    super.key,
-    this.pageId,
-  }) : super(pageId: pageId, componentId: "story_tab_component");
+  AmityStoryGlobalTabComponent({super.key, this.pageId}) : super(pageId: pageId, componentId: "story_tab_component");
   @override
   Widget buildComponent(BuildContext context) {
-    return AmityStoryGlobalTabBuilder(
-      theme: theme,
-    );
+    return AmityStoryGlobalTabBuilder(theme: theme);
   }
 }
 
 class AmityStoryGlobalTabBuilder extends StatefulWidget {
   final AmityThemeColor theme;
-  const AmityStoryGlobalTabBuilder({
-    super.key,
-    required this.theme,
-  });
+  const AmityStoryGlobalTabBuilder({super.key, required this.theme});
 
   @override
   State<AmityStoryGlobalTabBuilder> createState() => _AmityStoryGlobalTabBuilderState();
@@ -99,13 +91,15 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                     target: target,
                     onClick: (targetId, storyTarget) {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                          return AmityViewStoryPage(
-                            targets: state.storyTargets,
-                            selectedTarget: target,
-                            type: AmityViewStoryGlobalFeed(communityId: community!.communityId!),
-                          );
-                        }),
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AmityViewStoryPage(
+                              targets: state.storyTargets,
+                              selectedTarget: target,
+                              type: AmityViewStoryGlobalFeed(communityId: community!.communityId!),
+                            );
+                          },
+                        ),
                       );
                       // }
                     },
@@ -122,116 +116,117 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
 
   Widget loadingSkeleton() {
     return Container(
-        width: double.infinity,
-        height: 90,
-        color: Colors.white,
-        child: Row(
-          children: [
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 80,
-              child: Column(
-                children: [
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-                    ),
+      width: double.infinity,
+      height: 90,
+      color: Colors.white,
+      child: Row(
+        children: [
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   ),
-                  const SizedBox(height: 5),
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                        width: 100,
-                        height: 10,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 80,
-              child: Column(
-                children: [
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-                    ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   ),
-                  const SizedBox(height: 5),
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                        width: 100,
-                        height: 10,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 80,
-              child: Column(
-                children: [
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-                    ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   ),
-                  const SizedBox(height: 5),
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                        width: 100,
-                        height: 10,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 80,
-              child: Column(
-                children: [
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
-                    ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   ),
-                  const SizedBox(height: 5),
-                  Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 243, 242, 242),
-                    highlightColor: const Color.fromARGB(255, 225, 225, 225),
-                    child: Container(
-                        width: 100,
-                        height: 10,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 243, 242, 242),
+                  highlightColor: const Color.fromARGB(255, 225, 225, 225),
+                  child: Container(
+                      width: 100,
+                      height: 10,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10))),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

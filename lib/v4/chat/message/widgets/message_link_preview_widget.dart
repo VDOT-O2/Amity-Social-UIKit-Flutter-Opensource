@@ -1,4 +1,5 @@
 import 'package:amity_uikit_beta_service/utils/processed_text_cache.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
 import 'package:amity_uikit_beta_service/v4/utils/skeleton.dart';
 import 'package:amity_uikit_beta_service/v4/utils/message_color.dart';
@@ -160,7 +161,7 @@ class _MessageLinkPreviewWidgetState extends State<MessageLinkPreviewWidget> {
           });
         }
       } catch (e) {
-        print("Error getting link metadata: $e");
+       AmityLog.debug("Error getting link metadata: $e");
         // Error fetching metadata
 
         // Mark as completed to prevent timeout from triggering setState

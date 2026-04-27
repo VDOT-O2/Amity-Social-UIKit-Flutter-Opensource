@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as img;
@@ -34,7 +35,7 @@ class HeifConverterUtil {
         return file; // Not a HEIF file, return as-is
       }
 
-      print('Converting HEIF file with color normalization: ${file.path}');
+     AmityLog.debug('Converting HEIF file with color normalization: ${file.path}');
 
       // First, convert the HEIF file to a temporary JPEG
       // Note: The heif_converter library will handle the basic conversion
@@ -44,11 +45,11 @@ class HeifConverterUtil {
       final inputFile = File(file.path);
       final normalizedFile = await normalizeToSrgb(inputFile, quality: 95);
       
-      print('Successfully normalized image to sRGB: ${normalizedFile.path}');
+     AmityLog.debug('Successfully normalized image to sRGB: ${normalizedFile.path}');
       return XFile(normalizedFile.path);
       
     } catch (e) {
-      print('Error in HEIF conversion with normalization: $e');
+     AmityLog.debug('Error in HEIF conversion with normalization: $e');
       return file; // Return original on error
     }
   }

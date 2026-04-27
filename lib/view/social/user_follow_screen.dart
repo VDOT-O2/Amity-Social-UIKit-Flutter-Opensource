@@ -1,3 +1,4 @@
+﻿import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/view/social/user_follower_component.dart';
 import 'package:amity_uikit_beta_service/view/social/user_following_component.dart';
 import 'package:amity_uikit_beta_service/viewmodel/follower_following_viewmodel.dart';
@@ -57,7 +58,7 @@ class _FollowScreenState extends State<FollowScreen> {
               labelStyle: const TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'SF Pro Text',
+                fontFamily: AmityTextStyle.fontFamily,
               ),
               tabs: const [
                 Tab(

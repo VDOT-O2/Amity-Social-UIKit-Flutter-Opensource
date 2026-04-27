@@ -1,4 +1,4 @@
-import 'package:amity_sdk/amity_sdk.dart';
+﻿import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
@@ -482,7 +482,7 @@ class AmityReactionList extends NewBaseComponent {
                       color: theme.baseColor,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'SF Pro Text',
+                      fontFamily: AmityTextStyle.fontFamily,
                     ),
                   ),
                   if (referenceType == AmityReactionReferenceType.MESSAGE &&

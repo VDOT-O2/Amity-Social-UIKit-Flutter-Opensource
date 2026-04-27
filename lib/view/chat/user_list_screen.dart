@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class UserListState extends State<UserList> {
     }
     int length =
         Provider.of<UserVM>(context, listen: false).getUserList().length;
-    log("check length of user list $length");
+   AmityLog.debug("check length of user list $length");
     return length;
   }
 
@@ -195,7 +196,7 @@ class UserWidget extends StatelessWidget {
                     Provider.of<UserVM>(context, listen: false)
                         .getUserList()[index]
                         .userId!);
-                log("click index $index ${Provider.of<UserVM>(context, listen: false).selectedUserList}");
+               AmityLog.debug("click index $index ${Provider.of<UserVM>(context, listen: false).selectedUserList}");
               },
               leading: FadeAnimation(child: getAvatarImage(user.avatarUrl!)),
               title: Text(

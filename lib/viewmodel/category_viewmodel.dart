@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 class CategoryVM extends ChangeNotifier {
@@ -57,7 +58,7 @@ class CategoryVM extends ChangeNotifier {
   final scrollcontroller = ScrollController();
 
   void initCategoryList({List<String>? ids}) async {
-    print("initCategoryList");
+   AmityLog.debug("initCategoryList");
     _communityCategoryController = PagingController(
       pageFuture: (token) => AmitySocialClient.newCommunityRepository()
           .getCategories()
@@ -73,7 +74,7 @@ class CategoryVM extends ChangeNotifier {
             _amityCategories.clear();
             _amityCategories.addAll(_communityCategoryController.loadedItems);
             //update widgets
-            print(
+           AmityLog.debug(
                 "has more item: ${_communityCategoryController.hasMoreItems}");
             notifyListeners();
           } else {
@@ -94,13 +95,13 @@ class CategoryVM extends ChangeNotifier {
   }
 
   void pagination() {
-    // print("pag");
-    // print(scrollcontroller.position.pixels);
-    // print(scrollcontroller.position.maxScrollExtent);
-    // print(_communityCategoryController.hasMoreItems);
+    //AmityLog.debug("pag");
+    //AmityLog.debug(scrollcontroller.position.pixels);
+    //AmityLog.debug(scrollcontroller.position.maxScrollExtent);
+    //AmityLog.debug(_communityCategoryController.hasMoreItems);
     if ((scrollcontroller.position.pixels >=
         (scrollcontroller.position.maxScrollExtent - 100))) {
-      print("load more");
+     AmityLog.debug("load more");
       _communityCategoryController.fetchNextPage();
       notifyListeners();
     }

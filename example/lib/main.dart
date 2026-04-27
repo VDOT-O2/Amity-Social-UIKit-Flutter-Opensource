@@ -6,6 +6,7 @@ import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
 import 'package:amity_uikit_beta_service/v4/chat/home/chat_home_page.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_tray_behavior.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_membership/community_membership_page_behavior.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/global_feed_component_behavior.dart';
@@ -29,10 +30,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kDebugTestAuthToken = "c80d0345e75beb28e176f126e3ee3244ec654d2c";
+const _kDebugTestAuthToken = '2985dfa679d3f16f51d710088b51c4daa59ceaf8';
 
 List<CameraDescription> camera = <CameraDescription>[];
-
 void main() async {
   ///Step 1: Initialize amity SDK with the following function
   WidgetsFlutterBinding.ensureInitialized();
@@ -198,19 +198,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     await prefs.setString('apiKey', _apiKey.text);
                     await prefs.setString('serverKey', _serverKey.text);
-                    await prefs.setString(
-                        'selectedRegion', _selectedRegion.toString());
+                    await prefs.setString('selectedRegion', _selectedRegion.toString());
 
                     if (_selectedRegion == AmityEndpointRegion.custom) {
                       await prefs.setString('customUrl', _customHttpUrl.text);
-                      await prefs.setString(
-                          'customSocketUrl', _customSocketUrl.text);
-                      await prefs.setString(
-                          'customMqttUrl', _customMqttUrl.text);
-                      await prefs.setString(
-                          'customUploadUrl', _customUploadUrl.text);
+                      await prefs.setString('customSocketUrl', _customSocketUrl.text);
+                      await prefs.setString('customMqttUrl', _customMqttUrl.text);
+                      await prefs.setString('customUploadUrl', _customUploadUrl.text);
                     }
-                    log("save pref");
+                    AmityLog.debug("save pref");
 
                     await AmityUIKit().setup(
                       apikey: _apiKey.text,
@@ -219,6 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       customSocketEndpoint: _customSocketUrl.text,
                       customMqttEndpoint: _customMqttUrl.text,
                       customUploadEndpoint: _customUploadUrl.text,
+                      // showSDKLogs: true,
+                      showUIKitLogs: true,
                     );
                     // Navigate to the next page
                     Navigator.push(
@@ -277,12 +275,15 @@ class _UserListPageState extends State<UserListPage> {
   _checkSession() async {
     AmityUIKit().observeSessionState().listen((event) {
       if (event == SessionState.Established) {
-        final username = AmityUIKit().getCurrentUser().displayName ??
-            AmityUIKit().getCurrentUser().userId ??
-            "";
-        NavigationService.navigatorKey.currentState!.pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => SecondPage(username: username)),
+        final username = AmityUIKit().getCurrentUser().displayName ?? AmityUIKit().getCurrentUser().userId ?? "";
+        final currentState = NavigationService.navigatorKey.currentState;
+
+        if (currentState == null) {
+          return;
+        }
+
+        currentState.pushReplacement(
+          MaterialPageRoute(builder: (context) => SecondPage(username: username)),
         );
       }
     });
@@ -344,7 +345,7 @@ class _UserListPageState extends State<UserListPage> {
                 return ListTile(
                   title: Text(_usernames[index]),
                   onLongPress: () async {
-                    log("login");
+                    AmityLog.debug("login");
 
                     final prefs = await SharedPreferences.getInstance();
                     String? selectedRegionString = prefs.getString('selectedRegion');
@@ -368,32 +369,31 @@ class _UserListPageState extends State<UserListPage> {
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
                     String baseUrl = prefs.getString('customUrl') ?? "";
-                    String authToken = serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl,_usernames[index], serverKey);
+                    String authToken =
+                        serverKey.isEmpty ? "" : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? null : authToken,
+                      authToken: authToken.isEmpty ? _kDebugTestAuthToken : authToken,
                       callback: (isSuccess, error) {
-                        log("callback:$isSuccess");
+                        AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {
-                          log("success");
+                          AmityLog.debug("success");
                           //ignore call back
                         } else {
-                          log("fail");
-                          AmityDialog().showAlertErrorDialog(
-                              title: "Error", message: error.toString());
+                          AmityLog.debug("fail");
+                          AmityDialog().showAlertErrorDialog(title: "Error", message: error.toString());
                         }
                       },
                     );
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          const Scaffold(body: CommunityPage()),
+                      builder: (context) => const Scaffold(body: CommunityPage()),
                     ));
                   },
                   onTap: () async {
-                    log("login");
+                    AmityLog.debug("login");
 
                     final prefs = await SharedPreferences.getInstance();
                     String? selectedRegionString = prefs.getString('selectedRegion');
@@ -416,28 +416,26 @@ class _UserListPageState extends State<UserListPage> {
                       }
                     }
                     String serverKey = prefs.getString('serverKey') ?? "";
-                    String authToken = serverKey.isEmpty ? _kDebugTestAuthToken : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
-
+                    String authToken =
+                        serverKey.isEmpty ? "" : await getSecureModeAuthKey(httpUrl, _usernames[index], serverKey);
 
                     ///Step 3: login with Amity
                     await AmityUIKit().registerDevice(
                       context: context,
                       userId: _usernames[index],
-                      authToken: authToken.isEmpty ? null : authToken,
+                      authToken: authToken.isEmpty ? _kDebugTestAuthToken : authToken,
                       callback: (isSuccess, error) {
-                        log("callback:$isSuccess");
+                        AmityLog.debug("callback:$isSuccess");
                         if (isSuccess) {
-                          log("success");
+                          AmityLog.debug("success");
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  SecondPage(username: _usernames[index]),
+                              builder: (context) => SecondPage(username: _usernames[index]),
                             ),
                           );
                         } else {
-                          log("fail");
-                          AmityDialog().showAlertErrorDialog(
-                              title: "Error", message: error.toString());
+                          AmityLog.debug("fail");
+                          AmityDialog().showAlertErrorDialog(title: "Error", message: error.toString());
                         }
                       },
                     );
@@ -461,7 +459,7 @@ class _UserListPageState extends State<UserListPage> {
       },
       body: '{"userId": "$userId"}',
     );
-    
+
     if (response.statusCode == 200) {
       return response.body.replaceAll("\"", "");
     } else {
@@ -624,7 +622,7 @@ class SocialPage extends StatelessWidget {
   void configThemeColor(BuildContext context, AppColors appColors) {
     // Place your AmitySLEUIKit configuration code here
     // For demonstration, the primary color is being used. Adapt as needed.
-    print("configThemeColor");
+    AmityLog.debug("configThemeColor");
     AmityUIKit().configAmityThemeColor(context, (config) {
       config.appColors = appColors;
     });
@@ -700,8 +698,7 @@ class SocialPage extends StatelessWidget {
               onTap: () {
                 // Navigate or perform action based on 'Newsfeed' tap
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      const Scaffold(body: CreateCommunityPage()),
+                  builder: (context) => const Scaffold(body: CreateCommunityPage()),
                 ));
               },
             ),
@@ -909,7 +906,7 @@ class _CreateMessagePageState extends State<CreateMessagePage> {
 
   Map<String, dynamic>? _parseCustomData() {
     if (_customDataController.text.isEmpty) return null; // Return null instead of empty map
-    
+
     try {
       // Parse JSON string to Map
       final decoded = json.decode(_customDataController.text);
@@ -973,24 +970,23 @@ class _CreateMessagePageState extends State<CreateMessagePage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                
                 final customData = _parseCustomData();
                 if (customData != null && _channelIdController.text.isNotEmpty) {
                   try {
                     // Create custom message using Amity SDK
                     // Check if parentId is provided
                     final parentId = _parentIdController.text.trim().isEmpty ? null : _parentIdController.text.trim();
-                    
+
                     final messageCreator = AmityChatClient.newMessageRepository()
                         .createCustomMessage(_channelIdController.text, customData);
-                    
+
                     // If parentId is provided, set it as reply to parent
                     if (parentId != null) {
                       messageCreator.parentId(parentId);
                     }
-                    
+
                     final result = await messageCreator.send();
-                    
+
                     // Show success dialog
                     showDialog(
                       context: context,
@@ -1014,11 +1010,10 @@ class _CreateMessagePageState extends State<CreateMessagePage> {
                         ],
                       ),
                     );
-                    
+
                     // Clear form
                     _parentIdController.clear();
                     _customDataController.clear();
-                    
                   } catch (e) {
                     // Show error dialog
                     showDialog(
@@ -1037,7 +1032,8 @@ class _CreateMessagePageState extends State<CreateMessagePage> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please fill in Channel ID and provide valid Custom Data (non-empty JSON)')),
+                    const SnackBar(
+                        content: Text('Please fill in Channel ID and provide valid Custom Data (non-empty JSON)')),
                   );
                 }
               },
@@ -1070,13 +1066,12 @@ class _EditMessagePageState extends State<EditMessagePage> {
 
   Future<AmityMessage> editCustomMessage(String messageId, Map<String, dynamic> customData) async {
     // Use the Amity SDK to edit custom message using the customData() method
-    return await AmityChatClient.newMessageRepository()
-        .editCustomMessage(messageId, customData).update();
+    return await AmityChatClient.newMessageRepository().editCustomMessage(messageId, customData).update();
   }
 
   Map<String, dynamic>? _parseEditData() {
     if (_editDataController.text.isEmpty) return null; // Return null instead of empty map
-    
+
     try {
       // Parse JSON string to Map
       final decoded = json.decode(_editDataController.text);
@@ -1110,7 +1105,6 @@ class _EditMessagePageState extends State<EditMessagePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            
             TextFormField(
               controller: _messageIdController,
               decoration: const InputDecoration(
@@ -1133,15 +1127,11 @@ class _EditMessagePageState extends State<EditMessagePage> {
             ElevatedButton(
               onPressed: () async {
                 final editData = _parseEditData();
-                if (editData != null && 
-                    _messageIdController.text.isNotEmpty) {
+                if (editData != null && _messageIdController.text.isNotEmpty) {
                   try {
                     // Use the actual editCustomMessage method
-                    final result = await editCustomMessage(
-                      _messageIdController.text, 
-                      editData
-                    );
-                    
+                    final result = await editCustomMessage(_messageIdController.text, editData);
+
                     // Show success dialog
                     showDialog(
                       context: context,
@@ -1164,11 +1154,10 @@ class _EditMessagePageState extends State<EditMessagePage> {
                         ],
                       ),
                     );
-                    
+
                     // Clear form
                     _messageIdController.clear();
                     _editDataController.clear();
-                    
                   } catch (e) {
                     // Show error dialog
                     showDialog(
@@ -1180,14 +1169,16 @@ class _EditMessagePageState extends State<EditMessagePage> {
                           TextButton(
                             onPressed: () => Navigator.pop(context),
                             child: const Text('OK'),
-                          ),  
+                          ),
                         ],
                       ),
                     );
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please fill in Channel ID, Message ID and provide valid Edit Data (non-empty JSON)')),
+                    const SnackBar(
+                        content:
+                            Text('Please fill in Channel ID, Message ID and provide valid Edit Data (non-empty JSON)')),
                   );
                 }
               },
@@ -1199,4 +1190,3 @@ class _EditMessagePageState extends State<EditMessagePage> {
     );
   }
 }
-

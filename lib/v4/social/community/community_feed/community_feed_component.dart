@@ -1,6 +1,7 @@
-import 'package:amity_sdk/amity_sdk.dart';
+﻿import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_feed/bloc/community_feed_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/amity_global_feed_component.dart';
@@ -34,15 +35,12 @@ class CommunityFeedComponent extends NewBaseComponent {
   @override
   Widget buildComponent(BuildContext context) {
     return BlocProvider<CommunityFeedBloc>(
-      create: (context) => CommunityFeedBloc(
-          communityId: communityId, scrollController: scrollController),
+      create: (context) => CommunityFeedBloc(communityId: communityId, scrollController: scrollController),
       child: BlocBuilder<CommunityFeedBloc, CommunityFeedState>(
         builder: (context, state) {
           // Check if content is not scrollable and load more if possible
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (scrollController.hasClients && 
-                !state.isLoading &&
-                scrollController.position.maxScrollExtent <= 0) {
+            if (scrollController.hasClients && !state.isLoading && scrollController.position.maxScrollExtent <= 0) {
               context.read<CommunityFeedBloc>().feedLiveCollection.loadNext();
             }
           });
@@ -68,19 +66,17 @@ class CommunityFeedComponent extends NewBaseComponent {
           } else {
             return SliverMainAxisGroup(
               slivers: [
-                SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        childCount: state.announcements.length,
-                        (context, index) {
-                  return _getAnnouncementPost(index, state);
-                })),
-                if (state.announcements.isNotEmpty)
+                if (state.announcements.isNotEmpty) ...[
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate(childCount: state.announcements.length, (context, index) {
+                    return _getAnnouncementPost(index, state);
+                  })),
                   const SliverToBoxAdapter(
                     child: SizedBox(height: 8),
                   ),
+                ],
                 SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        childCount: state.posts.length, (context, index) {
+                    delegate: SliverChildBuilderDelegate(childCount: state.posts.length, (context, index) {
                   return _getPost(index, state);
                 })),
                 if (state.isLoading && state.posts.isNotEmpty)
@@ -160,6 +156,10 @@ class CommunityFeedComponent extends NewBaseComponent {
                   child: SvgPicture.asset(
                     'assets/Icons/amity_ic_feed_empty.svg',
                     package: 'amity_uikit_beta_service',
+                    colorFilter: ColorFilter.mode(
+                      theme.primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],
@@ -173,8 +173,8 @@ class CommunityFeedComponent extends NewBaseComponent {
               style: TextStyle(
                 color: theme.baseColorShade3,
                 fontSize: 17,
-                fontFamily: 'SF Pro Text',
-                fontWeight: FontWeight.w600,
+                fontFamily: AmityTextStyle.fontFamily,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -218,10 +218,9 @@ class CommunityFeedComponent extends NewBaseComponent {
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
                 key: uniqueKey,
-                category:
-                    (state.pins.map((e) => e.postId).contains(amityPost.postId))
-                        ? AmityPostCategory.announcementAndPin
-                        : AmityPostCategory.announcement,
+                category: (state.pins.map((e) => e.postId).contains(amityPost.postId))
+                    ? AmityPostCategory.announcementAndPin
+                    : AmityPostCategory.announcement,
                 hideTarget: true,
                 hideMenu: !state.isJoined,
                 action: AmityPostAction(
@@ -259,10 +258,9 @@ class CommunityFeedComponent extends NewBaseComponent {
             AmityPostContentComponent(
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
-                category:
-                    (state.pins.map((e) => e.postId).contains(amityPost.postId))
-                        ? AmityPostCategory.pin
-                        : AmityPostCategory.general,
+                category: (state.pins.map((e) => e.postId).contains(amityPost.postId))
+                    ? AmityPostCategory.pin
+                    : AmityPostCategory.general,
                 key: uniqueKey,
                 hideTarget: true,
                 hideMenu: !state.isJoined,

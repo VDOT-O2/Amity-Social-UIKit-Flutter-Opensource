@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/user/medie_component.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class CommuFeedVM extends ChangeNotifier {
   MediaType _selectedMediaType = MediaType.photos;
   void doSelectMedieType(MediaType mediaType) {
     _selectedMediaType = mediaType;
-    log(_selectedMediaType.toString());
+    AmityLog.debug(_selectedMediaType.toString());
     notifyListeners();
   }
 
@@ -65,16 +66,14 @@ class CommuFeedVM extends ChangeNotifier {
 
   int postCount = 0;
   void getPostCount(AmityCommunity community) async {
-    await AmitySocialClient.newCommunityRepository()
-        .getCommunity(community.communityId!)
-        .then((value) {
-      print("get community");
+    await AmitySocialClient.newCommunityRepository().getCommunity(community.communityId!).then((value) {
+      AmityLog.debug("get community");
       notifyListeners();
     });
     community.getPostCount(AmityFeedType.PUBLISHED).then((value) async {
       //success
       postCount = value;
-      print("postCount $postCount");
+      AmityLog.debug("postCount $postCount");
 
       // Update UI
     }).onError((error, stackTrace) {
@@ -87,7 +86,7 @@ class CommuFeedVM extends ChangeNotifier {
     community.getPostCount(AmityFeedType.REVIEWING).then((value) {
       //success
       reviewingPostCount = value;
-      print(reviewingPostCount);
+      AmityLog.debug("reviewingPostCount $reviewingPostCount");
       // Update UI
     }).onError((error, stackTrace) {
       // Handle error
@@ -106,7 +105,7 @@ class CommuFeedVM extends ChangeNotifier {
       pageSize: 20,
     )..addListener(
         () async {
-          log("initAmityCommunityFeed ID: $communityId");
+          AmityLog.debug("initAmityCommunityFeed ID: $communityId");
           if (_controllerCommu.error == null) {
             //handle results, we suggest to clear the previous items
             //and add with the latest _controller.loadedItems
@@ -142,8 +141,7 @@ class CommuFeedVM extends ChangeNotifier {
     await checkIsCurrentUserIsAdmin(communityId);
   }
 
-  Future<void> initAmityPendingCommunityFeed(
-      String communityId, AmityFeedType amityFeedType) async {
+  Future<void> initAmityPendingCommunityFeed(String communityId, AmityFeedType amityFeedType) async {
     //inititate the PagingController
     _controllerPendingPost = PagingController(
       pageFuture: (token) => AmitySocialClient.newFeedRepository()
@@ -155,13 +153,12 @@ class CommuFeedVM extends ChangeNotifier {
       pageSize: 20,
     )..addListener(
         () async {
-          log(">>>PENDINGListener");
+          AmityLog.debug(">>>PENDINGListener");
           if (_controllerPendingPost.error == null) {
             //handle results, we suggest to clear the previous items
             //and add with the latest _controller.loadedItems
             _amityCommunityPendingFeedPosts.clear();
-            _amityCommunityPendingFeedPosts
-                .addAll(_controllerPendingPost.loadedItems);
+            _amityCommunityPendingFeedPosts.addAll(_controllerPendingPost.loadedItems);
 
             //update widgets
             notifyListeners();
@@ -207,14 +204,13 @@ class CommuFeedVM extends ChangeNotifier {
       pageSize: 20,
     )..addListener(
         () async {
-          log("communityListener");
+          AmityLog.debug("communityListener");
           if (_controllerVideoCommu.error == null) {
             //handle results, we suggest to clear the previous items
             //and add with the latest _controller.loadedItems
-            print(">>> video ${_controllerVideoCommu.loadedItems.length}");
+            AmityLog.debug(">>> video ${_controllerVideoCommu.loadedItems.length}");
             _amityCommunityVideoFeedPosts.clear();
-            _amityCommunityVideoFeedPosts
-                .addAll(_controllerVideoCommu.loadedItems);
+            _amityCommunityVideoFeedPosts.addAll(_controllerVideoCommu.loadedItems);
 
             //update widgets
             notifyListeners();
@@ -262,11 +258,10 @@ class CommuFeedVM extends ChangeNotifier {
       pageSize: 20,
     )..addListener(
         () async {
-          log("communityListener");
+          AmityLog.debug("communityListener");
           if (_controllerImageCommu.error == null) {
             _amityCommunityImageFeedPosts.clear();
-            _amityCommunityImageFeedPosts
-                .addAll(_controllerImageCommu.loadedItems);
+            _amityCommunityImageFeedPosts.addAll(_controllerImageCommu.loadedItems);
 
             //update widgets
             notifyListeners();
@@ -300,9 +295,8 @@ class CommuFeedVM extends ChangeNotifier {
   }
 
   void loadnextpage() {
-    print("load next page");
-    if ((scrollcontroller.position.pixels ==
-            scrollcontroller.position.maxScrollExtent) &&
+    AmityLog.debug("load next page");
+    if ((scrollcontroller.position.pixels == scrollcontroller.position.maxScrollExtent) &&
         _controllerCommu.hasMoreItems) {
       _controllerCommu.fetchNextPage();
     }
@@ -310,14 +304,10 @@ class CommuFeedVM extends ChangeNotifier {
 
   void loadCoomunityMember() {}
 
-  void deletePost(AmityPost post, int postIndex,
-      Function(bool success, String message) callback) async {
-    AmitySocialClient.newPostRepository()
-        .deletePost(postId: post.postId!)
-        .then((value) {
+  void deletePost(AmityPost post, int postIndex, Function(bool success, String message) callback) async {
+    AmitySocialClient.newPostRepository().deletePost(postId: post.postId!).then((value) {
       // Find the post by postId and remove it
-      int postIndex =
-          _amityCommunityFeedPosts.indexWhere((p) => p.postId == post.postId);
+      int postIndex = _amityCommunityFeedPosts.indexWhere((p) => p.postId == post.postId);
       if (postIndex != -1) {
         _amityCommunityFeedPosts.removeAt(postIndex);
         notifyListeners();
@@ -327,31 +317,25 @@ class CommuFeedVM extends ChangeNotifier {
       }
     }).onError((error, stackTrace) async {
       String errorMessage = error.toString();
-      await AmityDialog()
-          .showAlertErrorDialog(title: "Error!", message: errorMessage);
+      await AmityDialog().showAlertErrorDialog(title: "Error!", message: errorMessage);
       callback(false, errorMessage);
     });
   }
 
   void deletePendingPost(AmityPost post, int postIndex) async {
-    log("deleting post....");
-    AmitySocialClient.newPostRepository()
-        .deletePost(postId: post.postId!)
-        .then((value) {
+    AmityLog.debug("deleting post....");
+    AmitySocialClient.newPostRepository().deletePost(postId: post.postId!).then((value) {
       _amityCommunityPendingFeedPosts.removeAt(postIndex);
       notifyListeners();
     }).onError((error, stackTrace) async {
-      await AmityDialog()
-          .showAlertErrorDialog(title: "Error!", message: error.toString());
+      await AmityDialog().showAlertErrorDialog(title: "Error!", message: error.toString());
     });
   }
 
   Future<void> checkIsCurrentUserIsAdmin(String communityId) async {
-    log("LOG1 :checkIsCurrentUserIsAdmin");
-    await AmitySocialClient.newCommunityRepository()
-        .getCurentUserRoles(communityId)
-        .then((value) {
-      log("LOG1$value");
+    AmityLog.debug("LOG1 :checkIsCurrentUserIsAdmin");
+    await AmitySocialClient.newCommunityRepository().getCurentUserRoles(communityId).then((value) {
+      AmityLog.debug("LOG1$value");
       for (var role in value!) {
         if (role == "community-moderator") {
           isCurrentUserIsAdmin = true;
@@ -359,18 +343,12 @@ class CommuFeedVM extends ChangeNotifier {
       }
       notifyListeners();
     }).onError((error, stackTrace) {
-      log("LOG1:$error");
+      AmityLog.debug("LOG1:$error");
     });
   }
 
-  void acceptPost(
-      {required String postId,
-      required String communityId,
-      required Function(bool) callback}) {
-    AmitySocialClient.newPostRepository()
-        .reviewPost(postId: postId)
-        .approve()
-        .then((value) {
+  void acceptPost({required String postId, required String communityId, required Function(bool) callback}) {
+    AmitySocialClient.newPostRepository().reviewPost(postId: postId).approve().then((value) {
       //success
       //optional: to remove the approved post from the current post collection
       //you will need manually remove the approved post from the collection
@@ -379,19 +357,13 @@ class CommuFeedVM extends ChangeNotifier {
       notifyListeners();
       initAmityCommunityFeed(communityId);
     }).onError((error, stackTrace) {
-      print(error);
+      AmityLog.error("Error accepting post", error, stackTrace: stackTrace);
       //handle error
     });
   }
 
-  void declinePost(
-      {required String postId,
-      required String communityId,
-      required Function(bool) callback}) {
-    AmitySocialClient.newPostRepository()
-        .reviewPost(postId: postId)
-        .decline()
-        .then((value) {
+  void declinePost({required String postId, required String communityId, required Function(bool) callback}) {
+    AmitySocialClient.newPostRepository().reviewPost(postId: postId).decline().then((value) {
       //success
       //optional: to remove the approved post from the current post collection
       //you will need manually remove the approved post from the collection
@@ -400,7 +372,7 @@ class CommuFeedVM extends ChangeNotifier {
       notifyListeners();
       initAmityCommunityFeed(communityId);
     }).onError((error, stackTrace) {
-      print(error);
+      AmityLog.error("Error declining post", error, stackTrace: stackTrace);
       //handle error
     });
   }

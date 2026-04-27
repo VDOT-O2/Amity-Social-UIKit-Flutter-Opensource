@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/v4/social/my_community/my_community_com
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
 import 'package:amity_uikit_beta_service/v4/utils/skeleton.dart';
+import 'package:amity_uikit_beta_service/v4/utils/url_builder.dart';
 import 'package:flutter/material.dart';
 
 Widget communityList(
@@ -15,8 +16,7 @@ Widget communityList(
   void Function() loadMore,
 ) {
   scrollController.addListener(() {
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       loadMore();
     }
   });
@@ -31,7 +31,7 @@ Widget communityList(
         separatorBuilder: (context, index) {
           return Divider(
             color: theme.baseColorShade4,
-            thickness: 0.5,
+            thickness: 1.0,
             indent: 16,
             endIndent: 16,
             height: 25,
@@ -57,18 +57,15 @@ Widget communityList(
   );
 }
 
-Widget communityRow(
-    BuildContext context, AmityCommunity community, AmityThemeColor theme) {
-  var categoriesName =
-      community.categories?.map((category) => category?.name).toList();
+Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeColor theme) {
+  var categoriesName = community.categories?.map((category) => category?.name).toList();
 
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
     onTap: () {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) =>
-              AmityCommunityProfilePage(communityId: community.communityId!),
+          builder: (context) => AmityCommunityProfilePage(communityId: community.communityId!),
         ),
       );
     },
@@ -83,9 +80,8 @@ Widget communityRow(
             width: 80,
             height: 80,
             child: CommunityImageAvatarElement(
-                avatarUrl: community.avatarImage?.fileUrl,
-                placeHolderPath:
-                    "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
+                avatarUrl: UrlBuilder.appendParam(community.avatarImage?.fileUrl, name: 'size', value: 'medium'),
+                placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
                 elementId: AmityMyCommunityElement.communityAvatar.stringValue),
           ),
         ),
@@ -136,8 +132,7 @@ Widget communityRow(
   );
 }
 
-Widget communitySkeletonList(
-    AmityThemeColor theme, ConfigProvider configProvider) {
+Widget communitySkeletonList(AmityThemeColor theme, ConfigProvider configProvider) {
   return Container(
     decoration: BoxDecoration(color: theme.backgroundColor),
     child: Container(
@@ -145,6 +140,7 @@ Widget communitySkeletonList(
       child: Shimmer(
         linearGradient: configProvider.getShimmerGradient(),
         child: ListView.separated(
+          padding: const EdgeInsets.only(top: 16),
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) {
             return Divider(

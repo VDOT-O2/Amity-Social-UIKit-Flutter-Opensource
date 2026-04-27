@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class ChannelVM extends ChangeNotifier {
   }
 
   Future<void> initVM() async {
-    log("initVM");
+   AmityLog.debug("initVM");
     var accessToken = Provider.of<UserVM>(
             NavigationService.navigatorKey.currentContext!,
             listen: false)
@@ -33,7 +34,7 @@ class ChannelVM extends ChangeNotifier {
         ///get channel where channel id == new message channelId
         var channel = _amityChannelList.firstWhere((amityMessage) =>
             amityMessage.channelId == messages.messages?[0].channelId);
-        log("${channel.channelId} got new message from ${messages.messages![0].userId}");
+       AmityLog.debug("${channel.channelId} got new message from ${messages.messages![0].userId}");
         channel.lastActivity = messages.messages![0].createdAt;
 
         channel.setLatestMessage(
@@ -58,12 +59,12 @@ class ChannelVM extends ChangeNotifier {
 
       await refreshChannels();
     } else {
-      log("accessToken is null");
+     AmityLog.debug("accessToken is null");
     }
   }
 
   Future<void> refreshChannels() async {
-    log("refreshChannels...");
+   AmityLog.debug("refreshChannels...");
     await channelRepoImp.fetchChannelsList((data, error) async {
       if (error == null && data != null) {
         _amityChannelList.clear();
@@ -84,7 +85,7 @@ class ChannelVM extends ChangeNotifier {
           }
         }
       } else {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error!);
       }
@@ -106,7 +107,7 @@ class ChannelVM extends ChangeNotifier {
         channelId: channelId,
         callback: (data, error) async {
           if (data != null) {
-            log(">>>>>>>>>>>>>${data.channels![0].channelId}");
+           AmityLog.debug(">>>>>>>>>>>>>${data.channels![0].channelId}");
             amitySingleChannel = data.channels!.first;
             notifyListeners();
           } else {
@@ -116,7 +117,7 @@ class ChannelVM extends ChangeNotifier {
         },
       );
     } else {
-      log("accessToken is null");
+     AmityLog.debug("accessToken is null");
     }
   }
 
@@ -129,16 +130,16 @@ class ChannelVM extends ChangeNotifier {
           if (data.messages!.isNotEmpty) {
             var latestMessage =
                 data.messages![0].data?.text ?? "Not Text message: 📷";
-            log("get latest message from ${channel.channelId} as $latestMessage");
+           AmityLog.debug("get latest message from ${channel.channelId} as $latestMessage");
             channel.setLatestMessage(latestMessage);
             notifyListeners();
           } else {
-            log("No latest message");
+           AmityLog.debug("No latest message");
             channel.setLatestMessage("No message yet");
             notifyListeners();
           }
         } else {
-          log("error from : _addLatestMessage => $error");
+         AmityLog.debug("error from : _addLatestMessage => $error");
         }
       },
     );
@@ -150,10 +151,10 @@ class ChannelVM extends ChangeNotifier {
     await channelRepoImp.createGroupChannel(displayName, userIds,
         (data, error) async {
       if (data != null) {
-        log("createGroupChannel: success");
+       AmityLog.debug("createGroupChannel: success");
         callback(data, null);
       } else {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error!);
         callback(null, error);
@@ -166,11 +167,11 @@ class ChannelVM extends ChangeNotifier {
     await channelRepoImp.createConversationChannel(userIds,
         (data, error) async {
       if (data != null) {
-        log("createConversationChannel: success $data");
+       AmityLog.debug("createConversationChannel: success $data");
 
         callback(data, null);
       } else {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error!);
         callback(null, error);
@@ -183,7 +184,7 @@ class ChannelVM extends ChangeNotifier {
       channelUserMap[channelUser.channelId! + channelUser.userId!] =
           channelUser;
     }
-    log("mapReadSegment complete");
+   AmityLog.debug("mapReadSegment complete");
   }
 
   void removeUnreadCount(String channelId) async {
@@ -202,7 +203,7 @@ class ChannelVM extends ChangeNotifier {
     } catch (error) {
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
-      log(error.toString());
+     AmityLog.debug(error.toString());
     }
   }
 }

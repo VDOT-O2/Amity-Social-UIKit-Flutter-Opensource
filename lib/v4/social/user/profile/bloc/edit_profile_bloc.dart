@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,7 +126,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     AmityCoreClient.newUserRepository().getUser(userId).then((user) {
       addEvent(UserProfileFetchEvent(user: user));
     }).onError((error, stackTrace) {
-      log(error.toString());
+     AmityLog.error('Failed to fetch user info', error, stackTrace: stackTrace);
     });
   }
 

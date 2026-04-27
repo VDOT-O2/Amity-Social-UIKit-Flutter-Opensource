@@ -1,5 +1,6 @@
-import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+﻿import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/social/community_search_result/community_search_result.dart';
 import 'package:amity_uikit_beta_service/v4/social/global_search/bloc/global_search_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/global_search/view_model/global_search_view_model.dart';
@@ -104,14 +105,14 @@ class AmitySocialGlobalSearchPage extends NewBasePage {
                               labelStyle: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
+                                fontFamily: AmityTextStyle.fontFamily,
                                 color: theme.primaryColor,
-                                fontFamily: 'SF Pro Text',
                               ),
                               unselectedLabelStyle: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
                                 color: theme.baseColorShade3,
-                                fontFamily: 'SF Pro Text',
+                                fontFamily: AmityTextStyle.fontFamily,
                               ),
                               tabs: [
                                 Tab(text: context.l10n.title_communities),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/link_preview.dart';
 import 'package:amity_uikit_beta_service/components/video_player.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/global_feed.dart';
 import 'package:amity_uikit_beta_service/view/social/imag_viewer.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
@@ -79,7 +80,7 @@ class AmityPostWidgetState extends State<AmityPostWidget> {
     //     setState(() {
     //       isLoading = false;
     //       videoUrl = video.fileUrl;
-    //       log(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+    //      AmityLog.debug(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
     //     });
     //   }
     // });
@@ -1266,11 +1267,11 @@ Future<Uint8List?> downloadFile(String url) async {
     if (response.statusCode == 200) {
       return response.bodyBytes;
     } else {
-      log('Failed to download file: ${response.statusCode}');
+     AmityLog.debug('Failed to download file: ${response.statusCode}');
       return null;
     }
   } catch (e) {
-    log('Error occurred while downloading file: $e');
+   AmityLog.debug('Error occurred while downloading file: $e');
     return null;
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class MessageVM extends ChangeNotifier {
       notifyListeners();
     });
 
-    log("initVM");
+   AmityLog.debug("initVM");
     var accessToken = Provider.of<UserVM>(
             NavigationService.navigatorKey.currentContext!,
             listen: false)
@@ -39,10 +40,10 @@ class MessageVM extends ChangeNotifier {
     if (accessToken != null) {
       await channelRepoImp.initRepo(accessToken);
       await channelRepoImp.listenToChannel((messages) async {
-        log(messages.messages![0].channelId.toString());
-        log(channelId);
+       AmityLog.debug(messages.messages![0].channelId.toString());
+       AmityLog.debug(channelId);
         if (messages.messages?[0].channelId == channelId) {
-          log("get new messgae...: ${messages.messages?[0].data?.text}");
+         AmityLog.debug("get new messgae...: ${messages.messages?[0].data?.text}");
           amityMessageList?.add(messages.messages!.first);
           channel.messageCount = channel.messageCount! + 1;
           channel.setUnreadCount(channel.unreadCount - 1);
@@ -70,21 +71,21 @@ class MessageVM extends ChangeNotifier {
                       (currentMessageCount < totalMessageCount)) {
                     ispaginationLoading = true;
 
-                    log("ispaginationLoading = false");
+                   AmityLog.debug("ispaginationLoading = false");
                     var token = data!.paging!.previous;
 
-                    log("minScrollExtent");
+                   AmityLog.debug("minScrollExtent");
                     await channelRepoImp.fetchChannelById(
                       channelId: channelId,
                       paginationToken: token,
                       callback: (pagingData, error) async {
                         if (error == null) {
-                          log("paging data: $pagingData");
+                         AmityLog.debug("paging data: $pagingData");
 
                           if (pagingData!.paging!.previous == null) {
                             scrollController!.removeListener(() {
                               removeListener(() {
-                                log("remove listener");
+                               AmityLog.debug("remove listener");
                               });
                             });
                           } else {
@@ -93,26 +94,26 @@ class MessageVM extends ChangeNotifier {
 
                           var reversedMessage = pagingData.messages!.reversed;
                           for (var message in reversedMessage) {
-                            log(message.data!.text.toString());
+                           AmityLog.debug(message.data!.text.toString());
                             amityMessageList?.insert(0, message);
                           }
                           notifyListeners();
                           ispaginationLoading = false;
                         } else {
                           ispaginationLoading = false;
-                          log(error);
+                         AmityLog.debug(error);
                           await AmityDialog().showAlertErrorDialog(
                               title: "Error!", message: error);
                         }
                       },
                     );
                   } else {
-                    log("pagination is not ready: $currentMessageCount/$totalMessageCount");
+                   AmityLog.debug("pagination is not ready: $currentMessageCount/$totalMessageCount");
                   }
                 }
               });
               amityMessageList = [];
-              log("success");
+             AmityLog.debug("success");
               amityMessageList?.clear();
               for (var message in data!.messages!) {
                 amityMessageList?.add(message);
@@ -123,7 +124,7 @@ class MessageVM extends ChangeNotifier {
                 channelId,
                 callback: (data, error) {
                   if (error == null) {
-                    log("set unread count = 0");
+                   AmityLog.debug("set unread count = 0");
                     Provider.of<ChannelVM>(
                             NavigationService.navigatorKey.currentContext!,
                             listen: false)
@@ -134,13 +135,13 @@ class MessageVM extends ChangeNotifier {
 
               notifyListeners();
             } else {
-              log(error);
+             AmityLog.debug(error);
               await AmityDialog()
                   .showAlertErrorDialog(title: "Error!", message: error);
             }
           });
     } else {
-      log("accessToken is null");
+     AmityLog.debug("accessToken is null");
     }
   }
 
@@ -149,9 +150,9 @@ class MessageVM extends ChangeNotifier {
     textEditingController.clear();
     channelRepoImp.sendTextMessage(channelId, text, (data, error) async {
       if (data != null) {
-        log("sendMessage: success");
+       AmityLog.debug("sendMessage: success");
       } else {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error!);
       }
@@ -159,7 +160,7 @@ class MessageVM extends ChangeNotifier {
   }
 
   void scrollToBottom() {
-    log("scrollToBottom ");
+   AmityLog.debug("scrollToBottom ");
     // scrollController!.animateTo(
     //   1000000,
     //   curve: Curves.easeOut,

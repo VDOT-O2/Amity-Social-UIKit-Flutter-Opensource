@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/components/post_profile.dart';
 import 'package:amity_uikit_beta_service/components/skeleton.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/general_component.dart';
 import 'package:amity_uikit_beta_service/view/social/global_feed.dart';
 import 'package:amity_uikit_beta_service/view/social/post_content_widget.dart';
@@ -155,7 +156,7 @@ class CommentScreenState extends State<CommentScreen> {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      log(widget.amityPost.myReactions!
+                                     AmityLog.debug(widget.amityPost.myReactions!
                                           .toString());
                                       Provider.of<PostVM>(context,
                                               listen: false)
@@ -476,14 +477,14 @@ class CommentTextField extends StatelessWidget {
                       .createComment(postId, commentTextEditController.text);
                 } else {
                   ///Create Comment with Reply
-                  print("reply comment");
+                 AmityLog.debug("reply comment");
                   var replyingComment =
                       Provider.of<ReplyVM>(context, listen: false)
                           .replyToObject
                           ?.replyToComment
                           .commentId;
                   HapticFeedback.heavyImpact();
-                  print(replyingComment!);
+                 AmityLog.debug(replyingComment!);
                   Provider.of<ReplyVM>(context, listen: false)
                       .createReplyComment(
                           postId: postId,
@@ -510,14 +511,14 @@ class CommentTextField extends StatelessWidget {
           //             .createComment(postId, commentTextEditController.text);
           //       } else {
           //         ///Create Comment with Reply
-          //         print("reply comment");
+          //        AmityLog.debug("reply comment");
           //         var replyingComment =
           //             Provider.of<ReplyVM>(context, listen: false)
           //                 .replyToObject
           //                 ?.replyToComment
           //                 .commentId;
           //         HapticFeedback.heavyImpact();
-          //         print(replyingComment!);
+          //        AmityLog.debug(replyingComment!);
           //         Provider.of<ReplyVM>(context, listen: false).createReplyComment(
           //             postId: postId,
           //             commentId: replyingComment,
@@ -661,7 +662,7 @@ class _EditCommentPageState extends State<EditCommentPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-              print(textEditingController.text);
+             AmityLog.debug(textEditingController.text);
               HapticFeedback.heavyImpact();
               Provider.of<PostVM>(context, listen: false)
                   .updateComment(widget.comment, textEditingController.text);

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator_action.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_item/comment_action.dart';
@@ -83,7 +84,7 @@ class AmityPostDetailPage extends NewBasePage {
       final community = target.targetCommunity;
       isJoinedCommunity = community?.isJoined ?? true;
       communityId = target.targetCommunityId;
-      log("communityId: $communityId");
+     AmityLog.debug("communityId: $communityId");
     }
     return Column(
       children: [

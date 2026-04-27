@@ -336,14 +336,14 @@
 //   }
 
 //   Future<void> _handleCameraTap() async {
-//     print("pick image");
+//    AmityLog.debug("pick image");
 //     var mediaPickerVM = Provider.of<MediaPickerVM>(context, listen: false);
 //     await mediaPickerVM.pickImagesfromCamera();
 //     for (var image in mediaPickerVM.selectedFiles) {
 //       if (Provider.of<CreatePostVM>(context, listen: false)
 //               .getProgress(image.path) ==
 //           null) {
-//         print("image:${image.path}");
+//        AmityLog.debug("image:${image.path}");
 //         var file = File(image.path);
 //         Provider.of<CreatePostVM>(context, listen: false)
 //             .uploadFile(file, onSuccess: () {}, onError: (String) {});
@@ -352,14 +352,14 @@
 //   }
 
 //   Future<void> _handleImageTap() async {
-//     print("pick image");
+//    AmityLog.debug("pick image");
 //     var mediaPickerVM = Provider.of<MediaPickerVM>(context, listen: false);
 //     await mediaPickerVM.pickMultipleImages();
 //     for (var image in mediaPickerVM.selectedFiles) {
 //       if (Provider.of<CreatePostVM>(context, listen: false)
 //               .getProgress(image.path) ==
 //           null) {
-//         print("image:${image.path}");
+//        AmityLog.debug("image:${image.path}");
 //         var file = File(image.path);
 //         Provider.of<CreatePostVM>(context, listen: false)
 //             .uploadFile(file, onSuccess: () {}, onError: (String) {});
@@ -368,14 +368,14 @@
 //   }
 
 //   Future<void> _handleVideoTap() async {
-//     print("video");
+//    AmityLog.debug("video");
 //     var mediaPickerVM = Provider.of<MediaPickerVM>(context, listen: false);
 //     await mediaPickerVM.pickVideo();
 //     for (var video in mediaPickerVM.selectedFiles) {
 //       if (Provider.of<CreatePostVM>(context, listen: false)
 //               .getProgress(video.path) ==
 //           null) {
-//         print("video:${video.path}");
+//        AmityLog.debug("video:${video.path}");
 //         var file = File(video.path);
 //         Provider.of<CreatePostVM>(context, listen: false)
 //             .uploadFile(file, onSuccess: () {}, onError: (String) {});
@@ -384,18 +384,18 @@
 //   }
 
 //   Future<void> _handleFileTap() async {
-//     print("file");
+//    AmityLog.debug("file");
 //     var mediaPickerVM = Provider.of<MediaPickerVM>(context, listen: false);
 //     await mediaPickerVM.pickFile();
 //     for (var file in mediaPickerVM.selectedFiles) {
 //       if (Provider.of<CreatePostVM>(context, listen: false)
 //               .getProgress(file.path) ==
 //           null) {
-//         print("file:${file.path}");
+//        AmityLog.debug("file:${file.path}");
 //         var fileObj = File(file.path);
 //         Provider.of<CreatePostVM>(context, listen: false).uploadFile(fileObj,
 //             onSuccess: () {
-//           print("success");
+//          AmityLog.debug("success");
 //         }, onError: (error) {
 //           // AmityDialog().showAlertErrorDialog(title: error, message: error);
 //         });

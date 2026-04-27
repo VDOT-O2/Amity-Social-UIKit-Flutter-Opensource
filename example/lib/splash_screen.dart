@@ -1,4 +1,5 @@
 import 'package:amity_uikit_beta_service/amity_uikit.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,17 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
     _cachedMqttUrl = prefs.getString('customMqttUrl') ?? "";
     _cachedUploadUrl = prefs.getString('customUploadUrl') ?? "";
 
-    print('cachedApiKey: $_cachedApiKey');
-    print('cachedRegion: $_cachedRegion');
-    print('cachedHttpUrl: $_cachedHttpUrl');
-    print('cachedSocketUrl: $_cachedSocketUrl');
-    print('cachedMqttUrl: $_cachedMqttUrl');
+    AmityLog.debug('cachedApiKey: $_cachedApiKey');
+    AmityLog.debug('cachedRegion: $_cachedRegion');
+    AmityLog.debug('cachedHttpUrl: $_cachedHttpUrl');
+    AmityLog.debug('cachedSocketUrl: $_cachedSocketUrl');
+    AmityLog.debug('cachedMqttUrl: $_cachedMqttUrl');
 
     if (_cachedApiKey.isNotEmpty) {
       if (_cachedRegion != AmityEndpointRegion.custom) {
         await AmityUIKit().setup(
           apikey: _cachedApiKey,
           region: _cachedRegion,
+          showUIKitLogs: true,
         );
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AmityApp()));
@@ -64,7 +66,8 @@ class _SplashScreenState extends State<SplashScreen> {
             customEndpoint: _cachedHttpUrl,
             customSocketEndpoint: _cachedSocketUrl,
             customMqttEndpoint: _cachedMqttUrl,
-            customUploadEndpoint: _cachedUploadUrl);
+            customUploadEndpoint: _cachedUploadUrl,
+            showUIKitLogs: true,);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AmityApp()));
       } else {

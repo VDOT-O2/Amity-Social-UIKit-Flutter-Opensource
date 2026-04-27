@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/user_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _UserListPageState extends State<UserListPage> {
   @override
   void initState() {
     if (widget.preSelectMember != null) {
-      log(widget.preSelectMember.toString());
+     AmityLog.debug(widget.preSelectMember.toString());
       Provider.of<UserVM>(context, listen: false)
           .setSelectedUsersList(widget.preSelectMember!);
       Provider.of<UserVM>(context, listen: false).initUserList("");

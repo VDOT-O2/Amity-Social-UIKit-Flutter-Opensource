@@ -75,9 +75,31 @@ class _ReactionRowState extends State<ReactionRow> {
     setState(() => highlightedIndex = null);
   }
 
+  Future _onTap(TapDownDetails details) async {
+    _updateHighlight(details.globalPosition);
+    if (highlightedIndex != null) {
+      final reactionItem = widget.reactions[highlightedIndex!];
+
+      await Future.delayed(Duration(milliseconds: 100));
+      setState(() => highlightedIndex = null);
+
+      if (!mounted) {
+        return;
+      }
+      await Future.delayed(Duration(milliseconds: 100));
+
+      if (reactionItem.isSelected) {
+        widget.onReactionSelected(reactionItem.reaction, true);
+      } else {
+        widget.onReactionSelected(reactionItem.reaction, false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapDown: _onTap,
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
@@ -232,7 +254,10 @@ extension MessagePopup on MessageBubbleView {
                     ReactionRow(
                       onReactionSelected:
                           (AmityReactionType reaction, bool isSelected) async {
-                        HapticFeedback.heavyImpact();
+                        HapticFeedback.heavyImpact();           
+                        Navigator.of(context).pop();            
+                         
+                        await Future.delayed(const Duration(milliseconds: 100));
 
                         if (isSelected) {
                           await message.react().removeReaction(reaction.name);
@@ -246,7 +271,6 @@ extension MessagePopup on MessageBubbleView {
                           }
                           await message.react().addReaction(reaction.name);
                         }
-                        Navigator.of(context).pop();
                       },
                       reactions: reactionItems,
                       theme: theme,

@@ -3,6 +3,7 @@ import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/expandable_text.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/preview_link_widget.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/amity_post_content_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/common/post_action.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/common/post_children_content_image.dart';
@@ -39,17 +40,41 @@ class PostItem extends NewBaseComponent {
   @override
   Widget buildComponent(BuildContext context) {
     return BlocProvider(
-      create: (context) => PostItemBloc(context, post),
-      child:
-          BlocBuilder<PostItemBloc, PostItemState>(builder: (context, state) {
-        return renderPost(
-            context: context,
-            post: state.post,
-            category: category,
-            hideTarget: hideTarget,
-            isReacting: state.isReacting);
-      }),
-    );
+        create: (context) => PostItemBloc(context, post),
+        child: Builder(builder: (context) {
+          AmityLog.debug("Building PostItem for postId: ${post.postId}, initial reactions: ${post.myReactions?.length ?? 0}");
+
+          onAddReaction(reactionType) {
+            context.read<PostItemBloc>().add(AddReactionToPost(post: post, reactionType: reactionType));
+          }
+
+          onRemoveReaction(reactionType) {
+            context.read<PostItemBloc>().add(RemoveReactionToPost(post: post, reactionType: reactionType));
+          }
+
+          onPostUpdated(post) {
+            context.read<PostItemBloc>().add(PostItemLoaded(post: post));
+          }
+
+          var postAction = (action != null)
+              ? action!.copyWith(
+                  onAddReaction: onAddReaction, onRemoveReaction: onRemoveReaction, onPostUpdated: onPostUpdated)
+              : AmityPostAction(
+                  onAddReaction: onAddReaction,
+                  onRemoveReaction: onRemoveReaction,
+                  onPostDeleted: (String) {},
+                  onPostUpdated: onPostUpdated);
+
+          return BlocBuilder<PostItemBloc, PostItemState>(builder: (context, state) {
+            return renderPost(
+                context: context,
+                post: state.post,
+                category: category,
+                hideTarget: hideTarget,
+                isReacting: state.isReacting,
+                postAction: postAction);
+          });
+        }));
   }
 
   Widget renderPost({
@@ -57,51 +82,12 @@ class PostItem extends NewBaseComponent {
     required AmityPost post,
     required AmityPostCategory category,
     required bool hideTarget,
+    required AmityPostAction postAction,
     bool isReacting = false,
   }) {
-    onAddReaction(reactionType) {
-      context
-          .read<PostItemBloc>()
-          .add(AddReactionToPost(post: post, reactionType: reactionType));
-    }
-
-    onRemoveReaction(reactionType) {
-      context
-          .read<PostItemBloc>()
-          .add(RemoveReactionToPost(post: post, reactionType: reactionType));
-    }
-
-    onPostUpdated(post) {
-      context.read<PostItemBloc>().add(PostItemLoaded(post: post));
-    }
-
-    var postAction = (action != null)
-        ? action!.copyWith(
-            onAddReaction: onAddReaction,
-            onRemoveReaction: onRemoveReaction,
-            onPostUpdated: onPostUpdated)
-        : AmityPostAction(
-            onAddReaction: onAddReaction,
-            onRemoveReaction: onRemoveReaction,
-            onPostDeleted: (String) {},
-            onPostUpdated: onPostUpdated);
-
-    var page = AmityPostDetailPage(
-      postId: post.postId!,
-      category: category,
-      hideMenu: hideMenu,
-      action: postAction,
-    );
-
-    goToDetail() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => page,
-      ));
-    }
-
     return GestureDetector(
       onTap: () {
-        goToDetail();
+        _goToDetail(context, post, postAction);
       },
       child: Container(
         width: double.infinity,
@@ -123,16 +109,12 @@ class PostItem extends NewBaseComponent {
             if (post.children?.isEmpty ?? true && post.data is TextData)
               Container(
                 padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-                child: PreviewLinkWidget(
-                  text: (post.data as TextData).text ?? '',
-                  theme: theme
-                ),
+                child: PreviewLinkWidget(text: (post.data as TextData).text ?? '', theme: theme),
               ),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child:
-                  getChildrenPostContent(context, post, hideMenu, goToDetail),
+              child: getChildrenPostContent(context, post, hideMenu, () => _goToDetail(context, post, postAction)),
             ),
             hideMenu
                 ? PostBottomNonMember()
@@ -170,8 +152,7 @@ class PostItem extends NewBaseComponent {
 
     if (post.metadata != null && post.metadata!['mentioned'] != null) {
       // Obtain the mention metadata from the post.
-      final mentionedGetter =
-          AmityMentionMetadataGetter(metadata: post.metadata!);
+      final mentionedGetter = AmityMentionMetadataGetter(metadata: post.metadata!);
       mentionedUsers = mentionedGetter.getMentionedUsers();
 
       // Sort mention metadata by starting index (if not already sorted).
@@ -188,8 +169,7 @@ class PostItem extends NewBaseComponent {
             maxLines: 8,
             style: normalStyle,
             linkStyle: mentionStyle,
-            onMentionTap: (userId) => _goToUserProfilePage(context, userId)
-            ));
+            onMentionTap: (userId) => _goToUserProfilePage(context, userId)));
   }
 
   Widget getImagePostContent(List<ImageData> images) {
@@ -201,9 +181,7 @@ class PostItem extends NewBaseComponent {
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        child: AmityNetworkImage(
-            imageUrl: imageUrl,
-            placeHolderPath: 'assets/Icons/amity_ic_image_placeholder.svg'),
+        child: AmityNetworkImage(imageUrl: imageUrl, placeHolderPath: 'assets/Icons/amity_ic_image_placeholder.svg'),
       ),
     );
   }
@@ -212,8 +190,7 @@ class PostItem extends NewBaseComponent {
     return Container();
   }
 
-  Widget getChildrenPostContent(BuildContext context, AmityPost post,
-      bool hideMenu, Function goToDetail) {
+  Widget getChildrenPostContent(BuildContext context, AmityPost post, bool hideMenu, Function goToDetail) {
     final noChildrenPost = post.children?.isEmpty ?? true;
     if (noChildrenPost) {
       return Container();
@@ -233,10 +210,7 @@ class PostItem extends NewBaseComponent {
     }
   }
 
-  Widget getPostBottom(
-      {required AmityPost post,
-      required AmityPostAction action,
-      bool isReacting = false}) {
+  Widget getPostBottom({required AmityPost post, required AmityPostAction action, bool isReacting = false}) {
     return PostItemBottom(
       post: post,
       action: action,
@@ -279,18 +253,15 @@ class PostItem extends NewBaseComponent {
                     files[index].data!.fileInfo.fileUrl!,
                   );
                 },
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
                 // Reduced padding
                 tileColor: Colors.white.withOpacity(0.0),
                 leading: Container(
                   height: 100, // Reduced height to make it slimmer
                   width: 40, // Added width to align the image
-                  alignment:
-                      Alignment.centerLeft, // Center alignment for the image
+                  alignment: Alignment.centerLeft, // Center alignment for the image
                   child: Image(
-                    image: AssetImage(fileImage,
-                        package: 'amity_uikit_beta_service'),
+                    image: AssetImage(fileImage, package: 'amity_uikit_beta_service'),
                   ),
                 ),
                 title: Column(
@@ -359,6 +330,17 @@ class PostItem extends NewBaseComponent {
       default:
         return 'assets/images/fileType/default.png';
     }
+  }
+
+  void _goToDetail(BuildContext context, AmityPost post, AmityPostAction postAction) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AmityPostDetailPage(
+        postId: post.postId!,
+        category: category,
+        hideMenu: hideMenu,
+        action: postAction,
+      ),
+    ));
   }
 
   void _goToUserProfilePage(BuildContext context, String userId) {

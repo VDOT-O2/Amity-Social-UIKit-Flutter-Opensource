@@ -109,7 +109,7 @@ class CommunityProfileTab extends BaseElement {
 
     var items = <Widget>[];
     items.add(profileTab());
-    items.add(pinTab());
+    // items.add(pinTab());
 
     if (isImageTabEnabled) {
       items.add(imageTab());

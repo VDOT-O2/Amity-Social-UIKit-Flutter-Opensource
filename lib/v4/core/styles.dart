@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 /// Custom TextStyle class for Amity with default font family
+
 class AmityTextStyle {
+  static const String fontFamily = 'SF Pro Text';
+
   static TextStyle headline(Color color, {double? textHeight}) {
     return getStyle(20, FontWeight.w700, color, textHeight);
   }
 
   static TextStyle titleBold(Color color, {double? textHeight}) {
     return getStyle(17, FontWeight.w600, color, textHeight);
+  }
+
+    static TextStyle titleSemiBold(Color color, {double? textHeight}) {
+    return getStyle(17, FontWeight.w500, color, textHeight);
   }
 
   static TextStyle title(Color color, {double? textHeight}) {

@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/community_feed.dart';
 import 'package:amity_uikit_beta_service/viewmodel/feed_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/my_community_viewmodel.dart';
@@ -244,9 +245,9 @@ class CommunityWidget extends StatelessWidget {
                                 listen: false);
 
                             for (var i in myCommunityList.amityCommunities) {
-                              print(i.displayName);
+                             AmityLog.debug("${i.displayName}");
                             }
-                            print(myCommunityList.amityCommunities);
+                           AmityLog.debug("${myCommunityList.amityCommunities}");
                             globalFeedProvider.initAmityGlobalfeed(
                                 // isCustomPostRanking: widget.isCustomPostRanking
                                 isCustomPostRanking: false);
@@ -257,7 +258,7 @@ class CommunityWidget extends StatelessWidget {
                             community.communityId ?? "",
                             type: communityType,
                             callback: (isSuccess) {
-                              print(">>>>>>>>>>>>>>>callback");
+                             AmityLog.debug(">>>>>>>>>>>>>>>callback");
                               var globalFeedProvider =
                                   Provider.of<FeedVM>(context, listen: false);
                               var myCommunityList = Provider.of<MyCommunityVM>(
@@ -265,9 +266,9 @@ class CommunityWidget extends StatelessWidget {
                                   listen: false);
 
                               for (var i in myCommunityList.amityCommunities) {
-                                print(">>>>>>>>>>>>>>>${i.displayName}");
+                               AmityLog.debug(">>>>>>>>>>>>>>>${i.displayName}");
                               }
-                              print(myCommunityList.amityCommunities);
+                             AmityLog.debug("${myCommunityList.amityCommunities}");
                               globalFeedProvider.initAmityGlobalfeed(
                                   // isCustomPostRanking: widget.isCustomPostRanking
                                   isCustomPostRanking: false);

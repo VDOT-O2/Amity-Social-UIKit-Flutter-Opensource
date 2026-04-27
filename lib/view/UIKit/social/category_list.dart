@@ -30,10 +30,10 @@ class CategoryListState extends State<CategoryList> {
   //   if (community.categoryIds != null) {
   //     Provider.of<CategoryVM>(context, listen: false)
   //         .setSelectedCategory(community.categoryIds![0]);
-  //     // log("checking community category ids ${community.categoryIds}");
+  //     //AmityLog.debug("checking community category ids ${community.categoryIds}");
   //     // for (var id in community.categoryIds!) {
   //     //   if (categoryIds.contains(id)) {
-  //     //     log("category id has a match ${id}");
+  //     //    AmityLog.debug("category id has a match ${id}");
   //     //     selectedCategoryIds.add(id);
   //     //   }
   //     // }

@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
+
 import '../model/amity_channel_model.dart';
 import '../model/amity_message_model.dart';
 import '../model/amity_response_model.dart';
@@ -21,17 +23,17 @@ class AmityChatRepoImp implements AmityChatRepo {
         AmityMessage?,
         String?,
       ) callback}) async {
-    log("fetchChannelById...");
+   AmityLog.debug("fetchChannelById...");
   }
 
   @override
   Future<void> listenToChannel(Function(AmityMessage) callback) async {
-    log("listenToChannelById...");
+   AmityLog.debug("listenToChannelById...");
   }
 
   //   @override
   // Future<void> listenToChannelList(Function(AmityMessage) callback) async {
-  //   log("listenToChannelById...");
+  //  AmityLog.debug("listenToChannelById...");
   //   socket.on('channel.didCreate', (data) async {
   //     var messageObj = await AmityMessage.fromJson(data);
 
@@ -41,20 +43,20 @@ class AmityChatRepoImp implements AmityChatRepo {
 
   @override
   Future<void> reactMessage(String messageId) async {
-    log("reactMessage...");
+   AmityLog.debug("reactMessage...");
   }
 
   @override
   Future<void> sendImageMessage(String channelId, String text,
       Function(AmityMessage?, String?) callback) async {
-    log("sendImageMessage...");
+   AmityLog.debug("sendImageMessage...");
   }
 
   @override
   Future<void> sendTextMessage(String channelId, String text,
       Function(AmityMessage?, String?) callback) async {
-    log("sendTextMessage...");
-    log("fetchChannelById...");
+   AmityLog.debug("sendTextMessage...");
+   AmityLog.debug("fetchChannelById...");
   }
 
   void disposeRepo() {
@@ -62,11 +64,11 @@ class AmityChatRepoImp implements AmityChatRepo {
 
   Future<void> fetchChannelsList(
       Function(ChannelList? data, String? error) callback) async {
-    log("fetchChannels...");
+   AmityLog.debug("fetchChannels...");
   }
 
   Future<void> listenToChannelList(Function(Channels) callback) async {
-    log("listenToChannelListUpdate...");
+   AmityLog.debug("listenToChannelListUpdate...");
   }
 
   Future<void> startReading(String channelId,
@@ -76,12 +78,12 @@ class AmityChatRepoImp implements AmityChatRepo {
   Future<void> createGroupChannel(String displayName, List<String> userIds,
       Function(ChannelList? data, String? error) callback,
       {String? avatarFileId}) async {
-    log("createChannels...");
+   AmityLog.debug("createChannels...");
   }
 
   Future<void> createConversationChannel(List<String> userIds,
       Function(ChannelList? data, String? error) callback) async {
-    log("createChannels...");
+   AmityLog.debug("createChannels...");
   }
 
   Future<void> stopReading(String channelId,
@@ -94,6 +96,6 @@ class AmityChatRepoImp implements AmityChatRepo {
   Future<void> getChannelById(
       {required String channelId,
       required Function(ChannelList? data, String? error) callback}) async {
-    log("getChannelById...");
+   AmityLog.debug("getChannelById...");
   }
 }

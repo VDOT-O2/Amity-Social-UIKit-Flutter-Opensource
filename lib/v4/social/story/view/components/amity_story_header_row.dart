@@ -1,5 +1,6 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/bloc/view_story_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/components/story_video_player/bloc/story_video_player_bloc.dart';
@@ -136,7 +137,7 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                         fontSize: 15,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
-                                        fontFamily: "SF Pro Text",
+                                        fontFamily: AmityTextStyle.fontFamily,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -162,7 +163,7 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.white,
-                                      fontFamily: "SF Pro Text",
+                                      fontFamily: AmityTextStyle.fontFamily,
                                     ),
                                   ),
                                   Container(
@@ -182,7 +183,7 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                       style: const TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
-                                        fontFamily: "SF Pro Text",
+                                        fontFamily: AmityTextStyle.fontFamily,
                                         color: Colors.white,
                                       ),
                                       maxLines: 1,

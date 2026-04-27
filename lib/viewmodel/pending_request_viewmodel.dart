@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 import '../components/alert_dialog.dart';
@@ -14,7 +15,7 @@ class PendingVM extends ChangeNotifier {
   late PagingController<AmityFollowRelationship> _pendingListController;
 
   Future<void> getMyPendingRequestList() async {
-    log("getMyFollowingList....");
+   AmityLog.debug("getMyFollowingList....");
 
     _pendingListController = PagingController(
       pageFuture: (token) => AmityCoreClient.newUserRepository()
@@ -47,7 +48,7 @@ class PendingVM extends ChangeNotifier {
         .status(AmityFollowStatusFilter.PENDING)
         .getPagingData()
         .then((value) {
-      log("getFollowerListOf....Successs");
+     AmityLog.debug("getFollowerListOf....Successs");
       _pendingList = value.data;
     }).onError((error, stackTrace) {
       AmityDialog()
@@ -80,7 +81,7 @@ class PendingVM extends ChangeNotifier {
         .accept(userId = userId)
         .then((value) {
       //success
-      log("acceptFollowRequest: Success");
+     AmityLog.debug("acceptFollowRequest: Success");
       _pendingList.removeAt(index);
       notifyListeners();
     }).onError((error, stackTrace) {
@@ -97,7 +98,7 @@ class PendingVM extends ChangeNotifier {
         .decline(userId = userId)
         .then((value) {
       //success
-      log("declineFollowRequest: Success");
+     AmityLog.debug("declineFollowRequest: Success");
       _pendingList.removeAt(index);
       notifyListeners();
     }).onError((error, stackTrace) {

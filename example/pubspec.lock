@@ -903,10 +903,10 @@ packages:
     dependency: transitive
     description:
       name: mqtt_client
-      sha256: fde192a91f1d71b540574490f7f7e35302298f1342a4daf350c0ddc15e9d01f2
+      sha256: fd22ea00a4c7b5623e01000a91a256d62a8bacba38e9812170458070c52affed
       url: "https://pub.dev"
     source: hosted
-    version: "10.11.10"
+    version: "10.11.9"
   nested:
     dependency: transitive
     description:

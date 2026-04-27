@@ -8,14 +8,16 @@ import 'package:amity_uikit_beta_service/l10n/generated/app_localizations.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/bloc/global_feed_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/social_home_page/bloc/social_home_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/create/bloc/create_story_page_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/hyperlink/bloc/hyperlink_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/view/components/story_video_player/bloc/story_video_player_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
-import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/create_story/bloc/create_story_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/viewmodel/category_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/chat_room_viewmodel.dart';
 import 'package:amity_uikit_beta_service/viewmodel/community_feed_viewmodel.dart';
@@ -65,6 +67,8 @@ class AmityUIKit {
     String? customSocketEndpoint,
     String? customMqttEndpoint,
     String? customUploadEndpoint,
+    bool showSDKLogs = false,
+    bool showUIKitLogs = false,
   }) async {
     Stopwatch stopwatch = Stopwatch()..start();
     AmityRegionalHttpEndpoint? amityEndpoint;
@@ -81,7 +85,7 @@ class AmityUIKit {
           amityMqttEndpoint = AmityRegionalMqttEndpoint.custom(customMqttEndpoint);
           amityUploadEndpoint = AmityUploadEndpoint.custom(customUploadEndpoint);
         } else {
-          log("please provide custom Endpoint");
+          AmityLog.debug("please provide custom Endpoint");
         }
 
         break;
@@ -111,17 +115,22 @@ class AmityUIKit {
 
     cameras = await availableCameras();
 
+    AmityLog.debug('setupAmityClient - availableCameras execution time: ${stopwatch.elapsedMilliseconds} ms');
+
     await AmityCoreClient.setup(
         option: AmityCoreClientOption(
           apiKey: apikey,
-          showLogs: true,
+          showLogs: showSDKLogs,
           httpEndpoint: amityEndpoint!,
           mqttEndpoint: amityMqttEndpoint!,
           uploadEndpoint: amityUploadEndpoint!,
         ),
         sycInitialization: true);
+
+    AmityLog.logLevel = showUIKitLogs ? AmityLogLevel.debug : AmityLogLevel.error;
+
     stopwatch.stop();
-    log('setupAmityClient execution time: ${stopwatch.elapsedMilliseconds} ms');
+    AmityLog.debug('setupAmityClient execution time: ${stopwatch.elapsedMilliseconds} ms');
   }
 
   Future<void> registerDevice(
@@ -134,12 +143,12 @@ class AmityUIKit {
     await Provider.of<AmityVM>(context, listen: false)
         .login(userID: userId, displayName: displayName, authToken: authToken)
         .then((value) async {
-      log("login success");
+      AmityLog.debug("login success");
 
       // await Provider.of<UserVM>(context, listen: false)
       //     .initAccessToken()
       //     .then((value) {
-      //   log("initAccessToken success");
+      //  AmityLog.debug("initAccessToken success");
       //   if (Provider.of<UserVM>(context, listen: false).accessToken != null ||
       //       Provider.of<UserVM>(context, listen: false).accessToken != "") {
       if (callback != null) {
@@ -151,20 +160,20 @@ class AmityUIKit {
       //     }
       //   }
       // }).onError((error, stackTrace) {
-      //   log("initAccessToken fail...");
-      //   log(error.toString());
+      //  AmityLog.debug("initAccessToken fail...");
+      //  AmityLog.debug(error.toString());
       //   if (callback != null) {
       //     callback(true, error.toString());
       //   }
       // });
     }).onError((error, stackTrace) {
-      log("registerDevice...Error:$error");
+      AmityLog.debug("registerDevice...Error:$error");
       if (callback != null) {
         callback(false, error.toString());
       }
     });
     stopwatch.stop();
-    log('registerDevice execution time: ${stopwatch.elapsedMilliseconds} ms');
+    AmityLog.debug('registerDevice execution time: ${stopwatch.elapsedMilliseconds} ms');
   }
 
   Future<void> registerNotification(String fcmToken, Function(bool isSuccess, String? error) callback) async {
@@ -172,9 +181,9 @@ class AmityUIKit {
     // FirebaseMessaging messaging = FirebaseMessaging.instance;
     // final fcmToken = await messaging.getToken();
     // await AmityCoreClient.unregisterDeviceNotification();
-    // log("unregisterDeviceNotification");
+    //AmityLog.debug("unregisterDeviceNotification");
     await AmityCoreClient.registerDeviceNotification(fcmToken).then((value) {
-      log("registerNotification succesfully ✅");
+      AmityLog.debug("registerNotification succesfully ✅");
       callback(true, null);
     }).onError((error, stackTrace) {
       callback(false, "Initialize push notification fail...❌");
@@ -203,9 +212,9 @@ class AmityUIKit {
   Future<void> joinInitialCommunity(List<String> communityIds) async {
     for (var i = 0; i < communityIds.length; i++) {
       AmitySocialClient.newCommunityRepository().joinCommunity(communityIds[i]).then((value) {
-        log("join community:${communityIds[i]} success");
+        AmityLog.debug("join community:${communityIds[i]} success");
       }).onError((error, stackTrace) {
-        log(error.toString());
+        AmityLog.debug(error.toString());
       });
     }
   }
@@ -255,8 +264,7 @@ class AmityUIKitProvider extends StatelessWidget {
             ChangeNotifierProvider<MemberManagementVM>(create: ((context) => MemberManagementVM())),
             ChangeNotifierProvider<MediaPickerVM>(create: ((context) => MediaPickerVM())),
             ChangeNotifierProvider<ChatRoomVM>(create: ((context) => ChatRoomVM())),
-            ChangeNotifierProvider<NavigationProvider>(
-                create: ((context) => navigationProvider ?? NavigationProvider())),
+            ChangeNotifierProvider<NavigationProvider>(create: (context) => navigationProvider ?? NavigationProvider()),
             ChangeNotifierProvider<ConfigProvider>(
                 key: const ValueKey("global_config"), create: (context) => ConfigProvider()),
           ],
@@ -265,18 +273,19 @@ class AmityUIKitProvider extends StatelessWidget {
       child: Builder(builder: (context) {
         return Consumer<ConfigProvider>(builder: (context, configProvider, _) {
           configProvider.loadConfig();
+          final contentBuilder = Builder(builder: (context2) {
+            return child;
+          });
 
           if (!withMaterialApp) {
-            return child;
+            return contentBuilder;
           }
 
           return MaterialApp(
             theme: ThemeData(),
             debugShowCheckedModeBanner: false,
             navigatorKey: NavigationService.navigatorKey,
-            home: Builder(builder: (context2) {
-              return child;
-            }),
+            home: contentBuilder,
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -297,8 +306,8 @@ class AmityUIKitProvider extends StatelessWidget {
             localeResolutionCallback: (deviceLocale, supportedLocales) {
               if (deviceLocale != null) {
                 for (var locale in supportedLocales) {
-                  print("deviceLocale: ${deviceLocale.languageCode}");
-                  print("supportedLocales: $supportedLocales}");
+                  AmityLog.debug("deviceLocale: ${deviceLocale.languageCode}");
+                  AmityLog.debug("supportedLocales: $supportedLocales");
                   // Check for exact matches first
                   if (locale.languageCode == deviceLocale.languageCode &&
                       locale.countryCode == deviceLocale.countryCode) {

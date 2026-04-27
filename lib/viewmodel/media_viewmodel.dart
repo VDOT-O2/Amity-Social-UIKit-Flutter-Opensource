@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/create_post_viewmodel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -30,10 +31,10 @@ class MediaPickerVM with ChangeNotifier {
     // Iterate through the uploadedList to find if any file's path matches the given filePath
     for (var fileInfo in uploadedList) {
       // Assuming that fileInfo.file represents the File and has a path property
-      // print(fileInfo.file?.path);
+      //AmityLog.debug(fileInfo.file?.path);
       if (fileInfo.file?.path == filePath) {
         // The file's path matches the given filePath, meaning the upload did not fail
-        print("MATCH");
+       AmityLog.debug("MATCH");
         return false;
       }
     }
@@ -53,7 +54,7 @@ class MediaPickerVM with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Error picking images: $e");
+     AmityLog.debug("Error picking images: $e");
       // Handle the error as appropriate for your app
     }
   }
@@ -69,7 +70,7 @@ class MediaPickerVM with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Error picking images: $e");
+     AmityLog.debug("Error picking images: $e");
       // Handle the error as appropriate for your app
     }
   }
@@ -82,7 +83,7 @@ class MediaPickerVM with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Error picking video: $e");
+     AmityLog.debug("Error picking video: $e");
       // Handle the error as appropriate for your app
     }
   }
@@ -105,7 +106,7 @@ class MediaPickerVM with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Error picking files: $e");
+     AmityLog.debug("Error picking files: $e");
       // Handle the error as appropriate for your app
     }
   }

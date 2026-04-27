@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/utils/processed_text_cache.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +113,7 @@ class _ExpandableTextState extends State<ExpandableText> {
   void _processTruncatedText(String truncatedText) {
     // Check cache first - synchronous
     if (_textCache.contains(truncatedText)) {
+      AmityLog.debug("Cache hit for truncated text: $truncatedText");
       _truncatedSpans = _entitiesToTextSpans(truncatedText, _textCache.get(truncatedText)!);
       return; // Return early, we have the spans
     }
@@ -130,6 +132,7 @@ class _ExpandableTextState extends State<ExpandableText> {
   Future<List<TextSpan>> _processTextAsync(String text) async {
     // Check cache first
     if (_textCache.contains(text)) {
+      AmityLog.debug("Cache hit for text: $text");
       return _entitiesToTextSpans(text, _textCache.get(text)!);
     }
 
@@ -143,6 +146,7 @@ class _ExpandableTextState extends State<ExpandableText> {
 
     try {
       // Process in background
+      AmityLog.debug("Processing text in background for: $text");
       final entities = await compute(processTextInBackground, data);
 
       // Cache the result
@@ -151,8 +155,10 @@ class _ExpandableTextState extends State<ExpandableText> {
       // Convert entities to spans on main thread
       List<TextSpan> spans = _entitiesToTextSpans(text, entities);
 
+      AmityLog.debug("Finished processing text in background for: $text");
       return spans;
     } catch (e) {
+      AmityLog.error("Error processing text in background", e);
       return [];
     }
   }

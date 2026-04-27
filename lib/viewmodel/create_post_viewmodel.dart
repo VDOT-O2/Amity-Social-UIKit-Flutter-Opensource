@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/viewmodel/media_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,17 +74,17 @@ class CreatePostVM extends ChangeNotifier {
   Map<String, Uint8List> thumbnailCache = {};
 
   Future<ImageProvider> getImageProvider(String path) async {
-    log("video path$path");
+   AmityLog.debug("video path$path");
     if (path.endsWith('.mp4') || path.endsWith('.MOV')) {
-      log("Checking for thumbnail...");
+     AmityLog.debug("Checking for thumbnail...");
 
       // Check if the thumbnail data for this path is already available in the map
       if (thumbnailCache.containsKey(path)) {
-        log("found in cache");
+       AmityLog.debug("found in cache");
         return MemoryImage(thumbnailCache[path]!);
       }
 
-      log("Generating thumbnail...");
+     AmityLog.debug("Generating thumbnail...");
       final uint8list = await FlutterVideoThumbnail.getThumbnail(
         path,
         quality: 75,
@@ -168,7 +169,7 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> uploadFile(File file,
       {required Function onSuccess, required Function(String) onError}) async {
-    log("FILE::::${file.path}");
+   AmityLog.debug("FILE::::${file.path}");
 
     // Determine the MIME type of the file
     final mimeType = lookupMimeType(file.path);
@@ -182,10 +183,10 @@ class CreatePostVM extends ChangeNotifier {
           var client = AmityCoreClient.newFileRepository().uploadVideo(file);
           await _performUpload(client, file, onSuccess, onError);
         } else if (mimeType.startsWith('audio')) {
-          log("Audio upload not implemented yet");
+         AmityLog.debug("Audio upload not implemented yet");
           onError("Audio upload not implemented yet");
         } else {
-          log("upload File");
+         AmityLog.debug("upload File");
           var client = AmityCoreClient.newFileRepository().uploadFile(file);
           await _performUpload(client, file, onSuccess, onError);
         }
@@ -215,10 +216,10 @@ class CreatePostVM extends ChangeNotifier {
             setCompletionStatus(file.path, false);
             checkAreAllPathsComplete();
             notifyListeners();
-            log(progress.toString());
+           AmityLog.debug(progress.toString());
           },
           complete: (amityFile) {
-            log("complete");
+           AmityLog.debug("complete");
             var uploadedImage = amityFile;
             amityUploadFile.add(
                 AmityFileInfoWithUploadStatus()..addFile(uploadedImage, file));
@@ -229,7 +230,7 @@ class CreatePostVM extends ChangeNotifier {
             completer.complete(); // Mark the completer as complete
           },
           error: (error) async {
-            log("error");
+           AmityLog.debug("error");
             // setProgress(file.path, -100);
             setfailUpload(file.path);
             await AmityDialog().showAlertErrorDialog(
@@ -261,8 +262,8 @@ class CreatePostVM extends ChangeNotifier {
     if (isNotSelectVideoYet()) {
       final List<XFile> images =
           await _picker.pickMultiImage(imageQuality: 100);
-      log("_progressMap");
-      log(_progressMap.toString());
+     AmityLog.debug("_progressMap");
+     AmityLog.debug(_progressMap.toString());
       for (var image in images) {
         // Check if the image is already in the list of selected images
         if (_progressMap[image.path] == null) {
@@ -290,7 +291,7 @@ class CreatePostVM extends ChangeNotifier {
           amityUploadFile.last.addFile(fileInfo.getFile, File(image.path));
           notifyListeners();
         }).onError((error, stackTrace) async {
-          log("error: $error");
+         AmityLog.debug("error: $error");
           await AmityDialog()
               .showAlertErrorDialog(title: "Error!", message: error.toString());
         });
@@ -305,7 +306,7 @@ class CreatePostVM extends ChangeNotifier {
             await _picker.pickVideo(source: ImageSource.gallery);
 
         if (video != null) {
-          log("got Video");
+         AmityLog.debug("got Video");
           // var fileWithStatus = AmityFileInfoWithUploadStatus();
           // amityVideo = fileWithStatus;
           // amityVideo!.file = File(video.path);
@@ -318,21 +319,21 @@ class CreatePostVM extends ChangeNotifier {
           //   var fileInfo = value as AmityUploadComplete;
 
           //   amityVideo!.addFile(fileInfo.getFile);
-          //   log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${fileInfo.getFile.fileId}");
+          //  AmityLog.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${fileInfo.getFile.fileId}");
 
           //   notifyListeners();
           // }).onError((error, stackTrace) async {
-          //   log("error: $error");
+          //  AmityLog.debug("error: $error");
           //   await AmityDialog()
           //       .showAlertErrorDialog(title: "Error!", message: error.toString());
           // });
         } else {
-          log("error: video is null");
+         AmityLog.debug("error: video is null");
           // await AmityDialog().showAlertErrorDialog(
           //     title: "Error!", message: "error: video is null");
         }
       } catch (error) {
-        log("error: $error");
+       AmityLog.debug("error: $error");
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       }
@@ -346,40 +347,40 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> createPost(BuildContext context,
       {String? communityId, required Function(bool, String?) callback}) async {
-    log("createPost");
-    log(amityUploadFile.length.toString());
+   AmityLog.debug("createPost");
+   AmityLog.debug(amityUploadFile.length.toString());
 
     for (var file in amityUploadFile) {
-      log(file.fileInfo!.getFileProperties?.type ?? "error");
+     AmityLog.debug(file.fileInfo!.getFileProperties?.type ?? "error");
     }
 
-    log("create post with communityId: $communityId");
+   AmityLog.debug("create post with communityId: $communityId");
     isloading = true;
     notifyListeners();
     HapticFeedback.heavyImpact();
     bool isCommunity = (communityId != null) ? true : false;
 
     if (isCommunity) {
-      log("is community");
+     AmityLog.debug("is community");
       if (isNotSelectVideoYet() &&
           isNotSelectedImageYet() &&
           isNotSelectedFileYet()) {
-        log("No media selected - creating text post");
+       AmityLog.debug("No media selected - creating text post");
         // Create text post
         await createTextpost(context, communityId: communityId);
         callback(true, null);
       } else if (isNotSelectedImageYet() && isNotSelectedFileYet()) {
-        log("Video selected - creating video post");
+       AmityLog.debug("Video selected - creating video post");
         // Create video post
         await creatVideoPost(context, communityId: communityId);
         callback(true, null);
       } else if (isNotSelectVideoYet() && isNotSelectedFileYet()) {
-        log("Image selected - creating image post");
+       AmityLog.debug("Image selected - creating image post");
         // Create image post
         await creatImagePost(context, communityId: communityId);
         callback(true, null);
       } else if (isNotSelectVideoYet() && isNotSelectedImageYet()) {
-        log("File selected - creating file post");
+       AmityLog.debug("File selected - creating file post");
         // Assuming createFilePost handles file selection internally
         await createFilePost(context, communityId: communityId);
         callback(true, null);
@@ -388,22 +389,22 @@ class CreatePostVM extends ChangeNotifier {
       if (isNotSelectVideoYet() &&
           isNotSelectedImageYet() &&
           isNotSelectedFileYet()) {
-        log("No media selected - creating text post");
+       AmityLog.debug("No media selected - creating text post");
         // Create text post
         await createTextpost(context);
         callback(true, null);
       } else if (isNotSelectedImageYet() && isNotSelectedFileYet()) {
-        log("Video selected - creating video post");
+       AmityLog.debug("Video selected - creating video post");
         // Create video post
         await creatVideoPost(context);
         callback(true, null);
       } else if (isNotSelectVideoYet() && isNotSelectedFileYet()) {
-        log("Image selected - creating image post");
+       AmityLog.debug("Image selected - creating image post");
         // Create image post
         await creatImagePost(context);
         callback(true, null);
       } else if (isNotSelectVideoYet() && isNotSelectedImageYet()) {
-        log("File selected - creating file post");
+       AmityLog.debug("File selected - creating file post");
         // Assuming createFilePost handles file selection internally
         await createFilePost(context);
         callback(true, null);
@@ -413,10 +414,10 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> createTextpost(BuildContext context,
       {String? communityId}) async {
-    log("createTextpost...");
+   AmityLog.debug("createTextpost...");
     bool isCommunity = (communityId != null) ? true : false;
     if (isCommunity) {
-      log("in community...");
+     AmityLog.debug("in community...");
       await AmitySocialClient.newPostRepository()
           .createPost()
           .targetCommunity(communityId)
@@ -430,7 +431,7 @@ class CreatePostVM extends ChangeNotifier {
         //   viewModel.scrollcontroller.jumpTo(0);
         // }
       }).onError((error, stackTrace) async {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -457,7 +458,7 @@ class CreatePostVM extends ChangeNotifier {
         }
         notifyListeners();
       }).onError((error, stackTrace) async {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -466,15 +467,15 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> createFilePost(BuildContext context,
       {String? communityId}) async {
-    log("createFilePost...");
+   AmityLog.debug("createFilePost...");
     bool isCommunity = (communityId != null) ? true : false;
     List<AmityFile> files = [];
-    log(amityUploadFile.toString());
+   AmityLog.debug(amityUploadFile.toString());
     for (var amityFile in amityUploadFile) {
       if (amityFile.fileInfo is AmityFile) {
         var file = amityFile.fileInfo as AmityFile;
         files.add(file);
-        log("add file to files");
+       AmityLog.debug("add file to files");
       }
     }
     if (isCommunity) {
@@ -490,7 +491,7 @@ class CreatePostVM extends ChangeNotifier {
 
       builder.post().then((post) async {
         // ///add post to feedx
-        // log("success");
+        //AmityLog.debug("success");
         // var viewModel = Provider.of<CommuFeedVM>(context, listen: false);
         // viewModel.addPostToFeed(post);
         // if (viewModel.scrollcontroller.hasClients) {
@@ -510,7 +511,7 @@ class CreatePostVM extends ChangeNotifier {
 
       builder.post().then((post) async {
         ///add post to feedx
-        log("success");
+       AmityLog.debug("success");
         if (communityId != null) {
           var viewModel = Provider.of<CommuFeedVM>(context, listen: false);
           viewModel.addPostToFeed(post);
@@ -534,17 +535,17 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> creatImagePost(BuildContext context,
       {String? communityId}) async {
-    log("creatImagePost...");
+   AmityLog.debug("creatImagePost...");
     List<AmityImage> images = [];
-    log(amityUploadFile.toString());
+   AmityLog.debug(amityUploadFile.toString());
     for (var amityImage in amityUploadFile) {
       if (amityImage.fileInfo is AmityImage) {
         var image = amityImage.fileInfo as AmityImage;
         images.add(image);
-        log("add file to _images");
+       AmityLog.debug("add file to _images");
       }
     }
-    log(images.toString());
+   AmityLog.debug(images.toString());
     bool isCommunity = (communityId != null) ? true : false;
     if (isCommunity) {
       var builder = AmitySocialClient.newPostRepository()
@@ -558,14 +559,14 @@ class CreatePostVM extends ChangeNotifier {
 
       builder.post().then((post) async {
         ///add post to feedx
-        log("success");
+       AmityLog.debug("success");
         var viewModel = Provider.of<CommuFeedVM>(context, listen: false);
         viewModel.addPostToFeed(post);
         if (viewModel.scrollcontroller.hasClients) {
           viewModel.scrollcontroller.jumpTo(0);
         }
       }).onError((error, stackTrace) async {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -595,7 +596,7 @@ class CreatePostVM extends ChangeNotifier {
           }
         }
       }).onError((error, stackTrace) async {
-        log(error.toString());
+       AmityLog.debug(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -605,15 +606,15 @@ class CreatePostVM extends ChangeNotifier {
   Future<void> creatVideoPost(BuildContext context,
       {String? communityId}) async {
     List<AmityVideo> videos = [];
-    log("creatVideoPost....${amityUploadFile.length}");
+   AmityLog.debug("creatVideoPost....${amityUploadFile.length}");
     for (var amityVideo in amityUploadFile) {
       AmityVideo video = amityVideo.fileInfo as AmityVideo;
       videos.add(video);
-      log("add file to videos ${video.fileId}");
+     AmityLog.debug("add file to videos ${video.fileId}");
     }
 
     if (videos.isNotEmpty) {
-      log("creatVideoPost...${videos.length}");
+     AmityLog.debug("creatVideoPost...${videos.length}");
       bool isCommunity = (communityId != null) ? true : false;
       if (isCommunity) {
         var builder = AmitySocialClient.newPostRepository()
@@ -626,7 +627,7 @@ class CreatePostVM extends ChangeNotifier {
         }
 
         builder.post().then((post) async {
-          log("create video success!");
+         AmityLog.debug("create video success!");
 
           ///add post to feedx
           Provider.of<CommuFeedVM>(context, listen: false).addPostToFeed(post);
@@ -648,7 +649,7 @@ class CreatePostVM extends ChangeNotifier {
         }
 
         builder.post().then((post) async {
-          log("create video success!");
+         AmityLog.debug("create video success!");
           if (communityId != null) {
             var viewModel = Provider.of<CommuFeedVM>(context, listen: false);
             viewModel.addPostToFeed(post);

@@ -1,5 +1,6 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator_action.dart';
@@ -172,7 +173,7 @@ class _CommentTrayComponentState extends State<CommentTrayComponent> {
                                     "Comments are disabled for this story",
                                     style: TextStyle(
                                       fontSize: 15,
-                                      fontFamily: "SF Pro Text",
+                                      fontFamily: AmityTextStyle.fontFamily,
                                       color: Color(
                                         0xff898E9E,
                                       ),

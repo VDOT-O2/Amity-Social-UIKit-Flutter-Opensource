@@ -1,10 +1,10 @@
-import 'package:amity_uikit_beta_service/v4/chat/create/channel_create_conversation_page.dart';
-import 'package:amity_uikit_beta_service/v4/chat/createGroup/ui/amity_select_group_member_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class ChatListEmptyState extends StatelessWidget {
   final AmityThemeColor theme;
@@ -31,10 +31,12 @@ class ChatListEmptyState extends StatelessWidget {
             height: 140,
           ),
           const SizedBox(height: 16),
-          Text(context.l10n.chat_empty_title,
-            style: AmityTextStyle.titleBold(theme.baseColorShade3),
+          Text(
+            context.l10n.chat_empty_title,
+            style: AmityTextStyle.titleSemiBold(theme.baseColorShade3),
           ),
-          Text(context.l10n.chat_empty_description,
+          Text(
+            context.l10n.chat_empty_description,
             style: AmityTextStyle.caption(theme.baseColorShade3),
           ),
           const SizedBox(height: 16),
@@ -47,26 +49,20 @@ class ChatListEmptyState extends StatelessWidget {
   Widget newChatButton(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        if (isGroupChatList) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AmitySelectGroupMemberPage()),
-          );
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AmityChannelCreateConversationPage()),
-          );
-        }
+        context.read<NavigationProvider>().handleNavigation(context,
+            event: AmityNavigationEvent.showCreateChat, params: {'isGroupChat': isGroupChatList});
       },
-      icon: const Icon(Icons.add, color: Colors.white),
-      label: Text(context.l10n.chat_create_new,
-        style: AmityTextStyle.bodyBold(Colors.white),
+      icon: Icon(Icons.add, color: theme.buttonTextColor),
+      label: Text(
+        context.l10n.chat_create_new,
+        style: AmityTextStyle.bodyBold(theme.buttonTextColor),
       ),
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        backgroundColor: theme.primaryColor,
+        backgroundColor: theme.buttonColor,
         padding: const EdgeInsets.fromLTRB(12, 10, 16, 10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(60),
         ),
       ),
     );

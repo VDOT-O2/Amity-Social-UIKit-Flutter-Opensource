@@ -1,4 +1,4 @@
-// import 'package:amity_sdk/amity_sdk.dart';
+﻿// import 'package:amity_sdk/amity_sdk.dart';
 // import 'package:amity_uikit_beta_service/utils/dynamicSilverAppBar.dart';
 // import 'package:amity_uikit_beta_service/view/UIKit/social/create_post_screenV2.dart';
 // import 'package:amity_uikit_beta_service/view/social/user_follow_screen.dart';
@@ -589,7 +589,7 @@
 //                                 labelStyle: const TextStyle(
 //                                   fontSize: 17,
 //                                   fontWeight: FontWeight.w600,
-//                                   fontFamily: 'SF Pro Text',
+//                                   fontFamily: AmityTextStyle.fontFamily,
 //                                 ),
 //                                 tabs: const [
 //                                   Tab(text: "Timeline"),

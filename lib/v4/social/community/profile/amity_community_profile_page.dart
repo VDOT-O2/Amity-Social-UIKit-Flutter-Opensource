@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/bottom_sheet_menu.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_feed/community_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_image_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_video_feed_component.dart';
@@ -22,6 +23,7 @@ import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_compo
 import 'package:amity_uikit_beta_service/v4/social/story/target/amity_story_tab_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/target/amity_story_tab_component_type.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
+import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,267 +31,38 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../post_poll_composer_page/post_poll_composer_page.dart';
 
+const _kToolbarHeight = 56.0;
+
 class AmityCommunityProfilePage extends NewBasePage {
   final String communityId;
-  AmityCommunityProfilePage({super.key, required this.communityId})
-      : super(pageId: 'community_profile');
+  AmityCommunityProfilePage({super.key, required this.communityId}) : super(pageId: 'community_profile');
 
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget buildPage(BuildContext context) {
-    final statusBarHeight = Platform.isIOS
-        ? 44.0
-        : 24.0; // iOS status bar height is 44 and android status bar height is 34
-    final appBarHeight = statusBarHeight + 56;
     return BlocProvider(
-      create: (context) => CommunityProfileBloc(communityId, _scrollController),
-      child: Builder(builder: (context) {
-        return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(
-          builder: (context, state) {
-            state.scrollController.addListener(() {
-              if (state.scrollController.hasClients &&
-                  state.scrollController.offset > 330) {
-                context
-                    .read<CommunityProfileBloc>()
-                    .add(CommunityProfileEventCollapsed());
-              } else {
-                context
-                    .read<CommunityProfileBloc>()
-                    .add(CommunityProfileEventExpanded());
-              }
-            });
-
+        create: (context) => CommunityProfileBloc(communityId, _scrollController),
+        child: Builder(builder: (context) {
+          return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
 
             return Scaffold(
               backgroundColor: theme.baseColorShade4,
-              body: CustomScrollView(
-                controller: state.scrollController,
-                slivers: <Widget>[
-                  !(state.isExpanded)
-                      ? SliverAppBar(
-                          floating: false,
-                          pinned: true,
-                          stretch: true,
-                          elevation: 0,
-                          leadingWidth: 48,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(left: 16),
-                            child: GestureDetector(
-                              onTap: () => {Navigator.pop(context)},
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    "assets/Icons/amity_ic_back_button.svg",
-                                    package: 'amity_uikit_beta_service',
-                                    height: 18,
-                                    width: 18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          title: SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                if (state.community?.isPublic == false)
-                                  Container(
-                                    width: 28,
-                                    height: 28,
-                                    margin: const EdgeInsets.only(top: 1),
-                                    child: AmityPrivateBadgeElement(
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.white, BlendMode.srcIn),
-                                    ),
-                                  ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.loose,
-                                  child: Text(
-                                    state.community?.displayName ?? "",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                if (state.community?.isOfficial == true)
-                                  Container(
-                                      width: 28,
-                                      height: 28,
-                                      margin: const EdgeInsets.only(top: 2),
-                                      child: AmityOfficialBadgeElement()),
-                              ],
-                            ),
-                          ),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: GestureDetector(
-                                onTap: () => {
-                                  if (state.community != null)
-                                    {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context2) =>
-                                                  AmityCommunitySettingPage(
-                                                      community:
-                                                          state.community!)))
-                                    }
-                                },
-                                child: Container(
-                                  height: 32,
-                                  width: 32,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.5),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/Icons/amity_ic_post_item_option.svg",
-                                      package: 'amity_uikit_beta_service',
-                                      height: 18,
-                                      width: 18,
-                                      colorFilter: const ColorFilter.mode(
-                                          Colors.white, BlendMode.srcIn),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                          flexibleSpace: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: appBarHeight,
-                                child: (state.community != null)
-                                    ? Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          AmityCommunityCoverView(
-                                            community: state.community!,
-                                            style: AmityCommunityHeaderStyle
-                                                .COLLAPSE,
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                              ),
-                            ],
-                          ),
-                        )
-                      : SliverToBoxAdapter(child: Container()),
-                  SliverToBoxAdapter(
-                    child: Container(
-                        child: AmityCommunityHeaderComponent(
-                      community: state.community,
-                    )),
-                  ),
-                  SliverToBoxAdapter(
-                    child: (state.community != null && state.isJoined == false)
-                        ? Container(
-                            width: double.infinity,
-                            color: theme.backgroundColor,
-                            padding: const EdgeInsets.all(16),
-                            child: AmityCommunityJoinButton(
-                              community: state.community!,
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Visibility(
-                      visible: featureConfig.story.viewStoryTabEnabled,
-                      child: Container(
-                        color: theme.backgroundColor,
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AmityStoryTabComponent(
-                              type: CommunityFeedStoryTab(
-                                  communityId: communityId),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: (state.community != null &&
-                            state.isJoined &&
-                            state.pendingPostCount > 0 &&
-                            (state.community!.isPostReviewEnabled ?? false))
-                        ? Container(
-                            color: theme.backgroundColor,
-                            padding: const EdgeInsets.all(16),
-                            child: AmityCommunityPendingPost(
-                              community: state.community!,
-                              pendingPostCount: state.pendingPostCount,
-                              isModerator: state.isModerator,
-                              onReturnCallback: () {
-                                context.read<CommunityProfileBloc>().add(
-                                    CommunityProfileEventRefreshFromPendingPage());
-                              },
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  SliverToBoxAdapter(
-                    child: CommunityProfileTab(
-                      selectedIndex: state.selectedIndex,
-                      onTabSelected: (index) {
-                        context
-                            .read<CommunityProfileBloc>()
-                            .add(CommunityProfileEventTabSelected(tab: index));
-                      },
-                    ),
-                  ),
-                  if (state.selectedIndex == CommunityProfileTabIndex.feed)
-                    CommunityFeedComponent(
-                      communityId: state.communityId,
-                      scrollController: _scrollController,
-                    ),
-                  if (state.selectedIndex == CommunityProfileTabIndex.pin)
-                    CommunityPinComponent(
-                      communityId: state.communityId,
-                      scrollController: _scrollController,
-                    ),
-                  if (state.selectedIndex == CommunityProfileTabIndex.image)
-                    AmityCommunityImageFeedComponent(
-                      communityId: state.communityId,
-                      scrollController: _scrollController,
-                    ),
-                  if (state.selectedIndex == CommunityProfileTabIndex.video)
-                    AmityCommunityVideoFeedComponent(
-                      communityId: state.communityId,
-                      scrollController: _scrollController,
-                    ),
-                ],
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endFloat,
+              body: CustomScrollView(controller: state.scrollController, slivers: <Widget>[
+                _buildAppBar(context, state),
+                _buildHeader(context, state),
+                _buildJoinButton(context, state, theme),
+                _buildStoryTab(context, state, featureConfig),
+                _buildPendingPost(context, state),
+                _buildFeedTabSelector(context, state),
+                _buildFeed(context, state),
+              ]),
+              floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
               floatingActionButton: (state.isJoined)
                   ? GestureDetector(
                       onTap: () {
-                        showActions(context, state.canManageStory,
-                            state.community, state.isModerator);
+                        showActions(context, state.canManageStory, state.community, state.isModerator);
                       },
                       child: Container(
                         width: 64,
@@ -303,7 +76,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                                 width: 64,
                                 height: 64,
                                 decoration: ShapeDecoration(
-                                  color: theme.primaryColor,
+                                  color: theme.buttonColor,
                                   shape: OvalBorder(),
                                 ),
                               ),
@@ -327,6 +100,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                                         package: 'amity_uikit_beta_service',
                                         width: 32,
                                         height: 32,
+                                        colorFilter: ColorFilter.mode(theme.buttonTextColor, BlendMode.srcIn),
                                       ),
                                     ),
                                   ],
@@ -339,14 +113,56 @@ class AmityCommunityProfilePage extends NewBasePage {
                     )
                   : Container(),
             );
-          },
-        );
-      }),
-    );
+          });
+        }));
+
+    // final statusBarHeight = Platform.isIOS
+    //     ? 44.0
+    //     : 24.0; // iOS status bar height is 44 and android status bar height is 34
+    // final appBarHeight = statusBarHeight + 56;
+    // return BlocProvider(
+    //   create: (context) => CommunityProfileBloc(communityId, _scrollController),
+    //   child: Builder(builder: (context) {
+    //     return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(
+    //       builder: (context, state) {
+    //         state.scrollController.addListener(() {
+    //           if (state.scrollController.hasClients &&
+    //               state.scrollController.offset > 330) {
+    //             context
+    //                 .read<CommunityProfileBloc>()
+    //                 .add(CommunityProfileEventCollapsed());
+    //           } else {
+    //             context
+    //                 .read<CommunityProfileBloc>()
+    //                 .add(CommunityProfileEventExpanded());
+    //           }
+    //         });
+
+    //         final featureConfig = configProvider.getFeatureConfig();
+
+    //         return Scaffold(
+    //           backgroundColor: theme.baseColorShade4,
+    //           body: CustomScrollView(
+    //             controller: state.scrollController,
+    //             slivers: <Widget>[
+    //               _buildAppBar(context, state),
+    //               _buildHeader(context, state),
+    //               _buildJoinButton(context, state, theme),
+    //               _buildStoryTab(context, state, featureConfig),
+    //               _buildPendingPost(context, state),
+    //               _buildFeedTabSelector(context, state),
+    //               _buildFeed(context, state),
+    //             ],
+    //           ),
+    //
+    //         );
+    //       },
+    //     );
+    //   }),
+    // );
   }
 
-  void showActions(BuildContext context, bool canManageStory,
-      AmityCommunity? community, bool isModerator) {
+  void showActions(BuildContext context, bool canManageStory, AmityCommunity? community, bool isModerator) {
     final postOption = BottomSheetMenuOption(
         title: context.l10n.general_post,
         icon: "assets/Icons/amity_ic_create_post_button.svg",
@@ -355,9 +171,7 @@ class AmityCommunityProfilePage extends NewBasePage {
           Navigator.of(context).pop();
 
           final createOptions = AmityPostComposerOptions.createOptions(
-              targetId: communityId,
-              community: community,
-              targetType: AmityPostTargetType.COMMUNITY);
+              targetId: communityId, community: community, targetType: AmityPostTargetType.COMMUNITY);
 
           Navigator.of(context).push(MaterialPageRoute(
             fullscreenDialog: true,
@@ -489,15 +303,11 @@ class AmityCommunityProfilePage extends NewBasePage {
                 ),
                 GestureDetector(
                   onTap: () {
-                    final createOptions =
-                        AmityPostComposerOptions.createOptions(
-                            targetId: communityId,
-                            community: community,
-                            targetType: AmityPostTargetType.COMMUNITY);
+                    final createOptions = AmityPostComposerOptions.createOptions(
+                        targetId: communityId, community: community, targetType: AmityPostTargetType.COMMUNITY);
                     Navigator.of(context).push(
                       PageRouteBuilder(
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.ease;
@@ -514,8 +324,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                           );
                         },
                         reverseTransitionDuration: Duration.zero,
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            PopScope(
+                        pageBuilder: (context, animation, secondaryAnimation) => PopScope(
                           canPop: true,
                           child: AmityPostComposerPage(
                             options: createOptions,
@@ -523,8 +332,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                               if (shouldPopCaller) {
                                 Navigator.of(context).pop();
                                 // Show dialog if post review is enabled and user is not a moderator
-                                if (community?.isPostReviewEnabled == true &&
-                                    !isModerator) {
+                                if (community?.isPostReviewEnabled == true && !isModerator) {
                                   _showPostReviewDialog(context);
                                 }
                               }
@@ -536,8 +344,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -583,8 +390,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     },
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -616,8 +422,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                   onTap: () {
                     Navigator.of(context).push(
                       PageRouteBuilder(
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.ease;
@@ -634,8 +439,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                           );
                         },
                         reverseTransitionDuration: Duration.zero,
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            PopScope(
+                        pageBuilder: (context, animation, secondaryAnimation) => PopScope(
                           canPop: true,
                           child: AmityPollPostComposerPage(
                             targetId: communityId,
@@ -645,8 +449,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                               if (shouldPopCaller) {
                                 Navigator.of(context).pop();
                                 // Show dialog if post review is enabled and user is not a moderator
-                                if (community?.isPostReviewEnabled == true &&
-                                    !isModerator) {
+                                if (community?.isPostReviewEnabled == true && !isModerator) {
                                   _showPostReviewDialog(context);
                                 }
                               }
@@ -658,8 +461,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -700,5 +502,236 @@ class AmityCommunityProfilePage extends NewBasePage {
           "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
       closeText: "OK",
     );
+  }
+
+  Widget _buildAppBar(BuildContext context, CommunityProfileState state) {
+    final topInset = MediaQuery.paddingOf(context).top;
+    final appBarHeight = topInset + _kToolbarHeight;
+
+    return !state.isExpanded
+        ? SliverAppBar(
+            floating: false,
+            pinned: true,
+            stretch: true,
+            elevation: 0,
+            leadingWidth: 48,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: GestureDetector(
+                onTap: () => {Navigator.pop(context)},
+                child: Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      "assets/Icons/amity_ic_back_button.svg",
+                      package: 'amity_uikit_beta_service',
+                      height: 18,
+                      width: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            title: SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (state.community?.isPublic == false)
+                    Container(
+                      width: 28,
+                      height: 28,
+                      margin: const EdgeInsets.only(top: 1),
+                      child: AmityPrivateBadgeElement(
+                        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      ),
+                    ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.loose,
+                    child: Text(
+                      state.community?.displayName ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  if (state.community?.isOfficial == true)
+                    Container(
+                        width: 28,
+                        height: 28,
+                        margin: const EdgeInsets.only(top: 2),
+                        child: AmityOfficialBadgeElement()),
+                ],
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () => {
+                    if (state.community != null)
+                      {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
+                      }
+                  },
+                  child: Container(
+                    height: 32,
+                    width: 32,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        "assets/Icons/amity_ic_post_item_option.svg",
+                        package: 'amity_uikit_beta_service',
+                        height: 18,
+                        width: 18,
+                        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            flexibleSpace: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: appBarHeight,
+                  child: (state.community != null)
+                      ? Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            AmityCommunityCoverView(
+                              community: state.community!,
+                              style: AmityCommunityHeaderStyle.COLLAPSE,
+                            ),
+                          ],
+                        )
+                      : const SizedBox(),
+                ),
+              ],
+            ),
+          )
+        : SliverToBoxAdapter(child: Container());
+  }
+
+  Widget _buildHeader(BuildContext context, CommunityProfileState state) {
+    return SliverToBoxAdapter(
+      child: AmityCommunityHeaderComponent(
+        community: state.community,
+      ),
+    );
+  }
+
+  Widget _buildJoinButton(BuildContext context, CommunityProfileState state, AmityThemeColor theme) {
+    return SliverToBoxAdapter(
+      child: (state.community != null && state.isJoined == false)
+          ? Container(
+              width: double.infinity,
+              color: theme.backgroundColor,
+              padding: const EdgeInsets.all(16),
+              child: AmityCommunityJoinButton(
+                community: state.community!,
+              ),
+            )
+          : Container(),
+    );
+  }
+
+  Widget _buildStoryTab(BuildContext context, CommunityProfileState state, AmityFeatureFlag featureConfig) {
+    return SliverToBoxAdapter(
+      child: Visibility(
+        visible: featureConfig.story.viewStoryTabEnabled,
+        child: Container(
+          color: theme.backgroundColor,
+          padding: const EdgeInsets.only(left: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AmityStoryTabComponent(
+                type: CommunityFeedStoryTab(communityId: communityId),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPendingPost(BuildContext context, CommunityProfileState state) {
+    return SliverToBoxAdapter(
+      child: (state.community != null &&
+              state.isJoined &&
+              state.pendingPostCount > 0 &&
+              (state.community!.isPostReviewEnabled ?? false))
+          ? Container(
+              color: theme.backgroundColor,
+              padding: const EdgeInsets.all(16),
+              child: AmityCommunityPendingPost(
+                community: state.community!,
+                pendingPostCount: state.pendingPostCount,
+                isModerator: state.isModerator,
+                onReturnCallback: () {
+                  context.read<CommunityProfileBloc>().add(CommunityProfileEventRefreshFromPendingPage());
+                },
+              ),
+            )
+          : Container(),
+    );
+  }
+
+  Widget _buildFeedTabSelector(BuildContext context, CommunityProfileState state) {
+    return SliverToBoxAdapter(
+      child: CommunityProfileTab(
+        selectedIndex: state.selectedIndex,
+        onTabSelected: (index) {
+          context.read<CommunityProfileBloc>().add(CommunityProfileEventTabSelected(tab: index));
+        },
+      ),
+    );
+  }
+
+  Widget _buildFeed(BuildContext context, CommunityProfileState state) {
+    if (state.selectedIndex == CommunityProfileTabIndex.feed) {
+      return CommunityFeedComponent(
+        communityId: state.communityId,
+        scrollController: _scrollController,
+      );
+    }
+    if (state.selectedIndex == CommunityProfileTabIndex.pin) {
+      return CommunityPinComponent(
+        communityId: state.communityId,
+        scrollController: _scrollController,
+      );
+    }
+    if (state.selectedIndex == CommunityProfileTabIndex.image) {
+      return AmityCommunityImageFeedComponent(
+        communityId: state.communityId,
+        scrollController: _scrollController,
+      );
+    }
+    if (state.selectedIndex == CommunityProfileTabIndex.video) {
+      return AmityCommunityVideoFeedComponent(
+        communityId: state.communityId,
+        scrollController: _scrollController,
+      );
+    }
+    return Container();
   }
 }

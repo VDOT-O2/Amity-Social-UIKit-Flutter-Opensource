@@ -29,13 +29,12 @@ class AmityPendingPostListComponent extends NewBaseComponent {
         community: community,
       ),
       child: BlocConsumer<PendingPostsCubit, PendingPostsState>(
-        listenWhen: (previous, current) =>
-            previous.posts.length != current.posts.length,
+        listenWhen: (previous, current) => previous.posts.length != current.posts.length,
         listener: (context, state) {},
         builder: (context, state) {
           // Check if content is not scrollable and load more if possible
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_scrollController.hasClients && 
+            if (_scrollController.hasClients &&
                 !state.isLoading &&
                 !state.loadingMore &&
                 _scrollController.position.maxScrollExtent <= 0) {
@@ -43,9 +42,7 @@ class AmityPendingPostListComponent extends NewBaseComponent {
             }
           });
 
-          if (!state.isLoading &&
-              !state.hasError &&
-              onPendingPostsLoaded != null) {
+          if (!state.isLoading && !state.hasError && onPendingPostsLoaded != null) {
             onPendingPostsLoaded!(state.posts);
           }
           return _buildContent(context, state);
@@ -92,10 +89,13 @@ class AmityPendingPostListComponent extends NewBaseComponent {
             package: 'amity_uikit_beta_service',
             width: 60,
             height: 60,
+            colorFilter: ColorFilter.mode(
+              theme.primaryColor,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(height: 8),
-          Text(context.l10n.community_pending_posts_empty,
-              style: AmityTextStyle.titleBold(theme.baseColorShade3)),
+          Text(context.l10n.community_pending_posts_empty, style: AmityTextStyle.titleBold(theme.baseColorShade3)),
         ],
       ),
     );
@@ -115,8 +115,7 @@ class AmityPendingPostListComponent extends NewBaseComponent {
         controller: _scrollController,
         key: ValueKey('pending_posts_list_${community.communityId}'),
         itemCount: state.posts.length,
-        separatorBuilder: (context, index) =>
-            Divider(height: 8, thickness: 8, color: theme.baseColorShade4),
+        separatorBuilder: (context, index) => Divider(height: 8, thickness: 8, color: theme.baseColorShade4),
         itemBuilder: (context, index) {
           final post = state.posts[index];
 
@@ -131,9 +130,7 @@ class AmityPendingPostListComponent extends NewBaseComponent {
             pageId: pageId ?? 'communityPendingPostPage',
             isModerator: state.isModerator,
             onDelete: () {
-              context
-                  .read<PendingPostsCubit>()
-                  .handlePostAction(post.postId!, true);
+              context.read<PendingPostsCubit>().handlePostAction(post.postId!, true);
             },
           );
         },

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/user/medie_component.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class UserFeedVM extends ChangeNotifier {
   MediaType _selectedMediaType = MediaType.photos;
   void doSelectMedieType(MediaType mediaType) {
     _selectedMediaType = mediaType;
-    log(_selectedMediaType.toString());
+   AmityLog.debug(_selectedMediaType.toString());
     notifyListeners();
   }
 
@@ -40,30 +41,30 @@ class UserFeedVM extends ChangeNotifier {
   }
 
   Future<void> _getUser({required String userId, AmityUser? otherUser}) async {
-    log("getUser=> $userId");
+   AmityLog.debug("getUser=> $userId");
     if (userId == AmityCoreClient.getUserId()) {
-      log("isCurrentUser:$userId");
+     AmityLog.debug("isCurrentUser:$userId");
       amityUser = AmityCoreClient.getCurrentUser();
-      print("get user from currentamityUser :$amityUser");
+     AmityLog.debug("get user from currentamityUser :$amityUser");
     } else {
-      log("isNotCurrentUser:$userId");
+     AmityLog.debug("isNotCurrentUser:$userId");
       if (otherUser != null) {
-        print("set instant user object");
+       AmityLog.debug("set instant user object");
         amityUser = otherUser;
       } else {
-        print("get new user object");
+       AmityLog.debug("get new user object");
         await AmityCoreClient.newUserRepository()
             .getUser(userId)
             .then((AmityUser user) {
-          print("get user success");
+         AmityLog.debug("get user success");
           amityUser = user;
         }).onError<AmityException>((error, stackTrace) {
-          print("fail getting user Data");
+         AmityLog.debug("fail getting user Data");
         });
       }
     }
     amityMyFollowInfo.id = null;
-    print("get following info");
+   AmityLog.debug("get following info");
     amityUser!.relationship().getFollowInfo(amityUser!.userId!).then((value) {
       amityMyFollowInfo = value;
 
@@ -91,8 +92,8 @@ class UserFeedVM extends ChangeNotifier {
             notifyListeners();
           } else {
             //Error on pagination controller
-            log("Error: listenForUserFeed... with userId = $userId");
-            log("ERROR::${_controller.error.toString()}");
+           AmityLog.debug("Error: listenForUserFeed... with userId = $userId");
+           AmityLog.debug("ERROR::${_controller.error.toString()}");
           }
         },
       );
@@ -124,8 +125,8 @@ class UserFeedVM extends ChangeNotifier {
             notifyListeners();
           } else {
             //Error on pagination controller
-            log("Error: listenForUserFeed... with userId = $userId");
-            log("ERROR::${_imagePostController.error.toString()}");
+           AmityLog.debug("Error: listenForUserFeed... with userId = $userId");
+           AmityLog.debug("ERROR::${_imagePostController.error.toString()}");
           }
         },
       );
@@ -157,8 +158,8 @@ class UserFeedVM extends ChangeNotifier {
             notifyListeners();
           } else {
             //Error on pagination controller
-            log("Error: listenForUserFeed... with userId = $userId");
-            log("ERROR::${_videoPostController.error.toString()}");
+           AmityLog.debug("Error: listenForUserFeed... with userId = $userId");
+           AmityLog.debug("ERROR::${_videoPostController.error.toString()}");
           }
         },
       );
@@ -195,7 +196,7 @@ class UserFeedVM extends ChangeNotifier {
           .then((value) =>
               {log("update displayname & description & avatarFileUrl success")})
           .onError((error, stackTrace) async => {
-                log("update displayname & description & avatarFileUrl fail"),
+               AmityLog.debug("update displayname & description & avatarFileUrl fail"),
                 // await AmityDialog().showAlertErrorDialog(
                 //     title: "Error!", message: error.toString())
               });
@@ -207,7 +208,7 @@ class UserFeedVM extends ChangeNotifier {
           .update()
           .then((value) => {log("update displayname & description success")})
           .onError((error, stackTrace) async => {
-                log("update displayname & description fail"),
+               AmityLog.debug("update displayname & description fail"),
                 // await AmityDialog().showAlertErrorDialog(
                 //     title: "Error!", message: error.toString())
               });
@@ -216,20 +217,20 @@ class UserFeedVM extends ChangeNotifier {
 
   Future<void> followButtonAction(
       AmityUser user, AmityFollowStatus amityFollowStatus) async {
-    log(amityFollowStatus.toString());
+   AmityLog.debug(amityFollowStatus.toString());
     if (amityFollowStatus == AmityFollowStatus.NONE) {
       await sendFollowRequest(user: user);
       initUserFeed(userId: amityUser!.userId!);
       notifyListeners();
     } else if (amityFollowStatus == AmityFollowStatus.PENDING) {
-      print("withDraw");
+     AmityLog.debug("withDraw");
       await withdrawFollowRequest(user);
       initUserFeed(userId: amityUser!.userId!);
       notifyListeners();
     } else if (amityFollowStatus == AmityFollowStatus.ACCEPTED) {
       await _getUser(userId: amityUser!.userId!);
 
-      print("clear post");
+     AmityLog.debug("clear post");
       initUserFeed(userId: amityUser!.userId!);
     } else if (amityFollowStatus == AmityFollowStatus.BLOCKED) {
       //do nothing
@@ -246,13 +247,12 @@ class UserFeedVM extends ChangeNotifier {
         .deletePost(postId: post.postId!)
         .then((value) {
       int postIndex = amityPosts.indexWhere((p) => p.postId == post.postId);
-      print("index:$postIndex");
-      print(amityPosts.length);
+     AmityLog.debug("index:$postIndex");
+     AmityLog.debug("amityPosts length before removal: ${amityPosts.length}");
       amityPosts.removeAt(postIndex);
-      print("rmove");
-      print(amityPosts.length);
+     AmityLog.debug("amityPosts length after removal: ${amityPosts.length}");
       notifyListeners();
-      print("notifyListeners");
+     AmityLog.debug("notifyListeners");
       listenForUserFeed(amityUser!.userId!);
       callback(true, "Post deleted successfully.");
 
@@ -272,7 +272,7 @@ class UserFeedVM extends ChangeNotifier {
         .follow()
         .then((AmityFollowStatus followStatus) {
       //success
-      log("sendFollowRequest: Success");
+     AmityLog.debug("sendFollowRequest: Success");
 
       notifyListeners();
     }).onError((error, stackTrace) {
@@ -288,7 +288,7 @@ class UserFeedVM extends ChangeNotifier {
         .me()
         .unfollow(user.userId!)
         .then((value) {
-      log("withdrawFollowRequest: Success");
+     AmityLog.debug("withdrawFollowRequest: Success");
       notifyListeners();
     }).onError((error, stackTrace) {
       AmityDialog()
@@ -297,16 +297,16 @@ class UserFeedVM extends ChangeNotifier {
   }
 
   Future<void> unfollowUser(AmityUser user) async {
-    print(user.userId);
+   AmityLog.debug("unfollowUser: userId=${user.userId}");
     await AmityCoreClient.newUserRepository()
         .relationship()
         .unfollow(user.userId!)
         .then((value) {
-      log("unfollowUser: Success");
+     AmityLog.debug("unfollowUser: Success");
       amityImagePosts.clear();
       amityPosts.clear();
       amityVideoPosts.clear();
-      log("clear post: $amityImagePosts, $amityPosts, $amityVideoPosts");
+     AmityLog.debug("clear post: $amityImagePosts, $amityPosts, $amityVideoPosts");
       notifyListeners();
       initUserFeed(userId: amityUser!.userId!);
     }).onError((error, stackTrace) {
@@ -320,7 +320,7 @@ class UserFeedVM extends ChangeNotifier {
         .relationship()
         .blockUser(userId)
         .then((value) {
-      print(value);
+     AmityLog.debug(value);
       AmitySuccessDialog.showTimedDialog("Blocked user");
       _getUser(userId: userId);
       notifyListeners();
@@ -336,7 +336,7 @@ class UserFeedVM extends ChangeNotifier {
         .relationship()
         .unblockUser(userId)
         .then((value) {
-      print(value);
+     AmityLog.debug(value);
       AmitySuccessDialog.showTimedDialog("Unblock user");
       _getUser(userId: userId);
       notifyListeners();

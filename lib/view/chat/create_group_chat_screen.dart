@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:animation_wrappers/animations/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class CreateChatGroupState extends State<CreateChatGroup> {
     Provider.of<UserVM>(context, listen: false)
         .selectedUserList
         .add(AmityCoreClient.getUserId());
-    log("check user id list ${Provider.of<UserVM>(context, listen: false).selectedUserList}");
+   AmityLog.debug("check user id list ${Provider.of<UserVM>(context, listen: false).selectedUserList}");
     Provider.of<ChannelVM>(context, listen: false).createGroupChannel(
         displayName,
         Provider.of<UserVM>(context, listen: false).selectedUserList,

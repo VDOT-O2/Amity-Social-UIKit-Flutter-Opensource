@@ -1,3 +1,4 @@
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -41,7 +42,7 @@ class AmityStoryCommentCountElement extends StatelessWidget {
             Text(
               count,
               style: const TextStyle(
-                fontFamily: "SF Pro Text",
+                fontFamily: AmityTextStyle.fontFamily,
                 color: Colors.white,
                 fontSize: 14,
               ),

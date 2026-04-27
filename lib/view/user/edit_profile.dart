@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/components/custom_textfield.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,11 +30,11 @@ class ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   Widget imageWidgetBuilder(ImageState imageState) {
-    log("image state$imageState");
-    log("ImagePickerVM:${Provider.of<ImagePickerVM>(
+   AmityLog.debug("image state$imageState");
+   AmityLog.debug("ImagePickerVM:${Provider.of<ImagePickerVM>(
       context,
     ).amityImage?.fileUrl}");
-    log("AmityVM:${Provider.of<AmityVM>(
+   AmityLog.debug("AmityVM:${Provider.of<AmityVM>(
       context,
     ).currentamityUser?.avatarUrl}");
     var avatarWidget = const CircleAvatar();
@@ -130,7 +131,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               if (Provider.of<ImagePickerVM>(context, listen: false)
                       .amityImage !=
                   null) {
-                log("Image was selected and will be adding to user profile...");
+               AmityLog.debug("Image was selected and will be adding to user profile...");
 
                 await Provider.of<UserFeedVM>(context, listen: false)
                     .editCurrentUserInfo(
@@ -141,7 +142,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 .amityImage
                                 ?.fileId);
               } else {
-                log("No Image was selected and current avatarImage will be adding to user profile...");
+               AmityLog.debug("No Image was selected and current avatarImage will be adding to user profile...");
                 await Provider.of<UserFeedVM>(context, listen: false)
                     .editCurrentUserInfo(
                         displayName: _displayNameController.text,

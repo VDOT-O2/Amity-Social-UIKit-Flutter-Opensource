@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,7 +26,7 @@ class PostVM extends ChangeNotifier {
         .listen((event) {
       amityPost = event;
     }).onError((error, stackTrace) async {
-      log(error.toString());
+     AmityLog.debug(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -60,13 +61,13 @@ class PostVM extends ChangeNotifier {
                 .toList();
             if (newItems.isNotEmpty) {
               amityComments.addAll(newItems);
-              print("parent comments added: ${newItems.length}");
+             AmityLog.debug("parent comments added: ${newItems.length}");
               successCallback?.call();
               notifyListeners(); // Uncomment if you are using a listener-based state management
             }
           } else {
             // Error on pagination controller
-            log("error from Comment: ${controller.error.toString()}");
+           AmityLog.debug("error from Comment: ${controller.error.toString()}");
             // await AmityDialog().showAlertErrorDialog(
             //     title: "Error!", message: _controller.error.toString());
           }
@@ -103,7 +104,7 @@ class PostVM extends ChangeNotifier {
         scrollcontroller.jumpTo(0);
       });
     }).onError((error, stackTrace) async {
-      log(error.toString());
+     AmityLog.debug(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -128,9 +129,9 @@ class PostVM extends ChangeNotifier {
   }
 
   Future<void> deleteComment(AmityComment comment) async {
-    print("delete commet...");
+   AmityLog.debug("delete commet...");
     comment.delete().then((value) {
-      print("delete commet success: $value");
+     AmityLog.debug("delete commet success: $value");
       // amityComments
       //     .removeWhere((element) => element.commentId == comment.commentId);
       getPost(amityPost.postId!, amityPost);
@@ -155,11 +156,11 @@ class PostVM extends ChangeNotifier {
 
   void flagPost(AmityPost post) {
     post.report().flag().then((value) {
-      log("flag success $value");
+     AmityLog.debug("flag success $value");
       AmitySuccessDialog.showTimedDialog("Report success");
       notifyListeners();
     }).onError((error, stackTrace) async {
-      log("flag error ${error.toString()}");
+     AmityLog.debug("flag error ${error.toString()}");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -168,11 +169,11 @@ class PostVM extends ChangeNotifier {
   void unflagPost(AmityPost post) {
     post.report().unflag().then((value) {
       //success
-      log("unflag success $value");
+     AmityLog.debug("unflag success $value");
       AmitySuccessDialog.showTimedDialog("Undo report success");
       notifyListeners();
     }).onError((error, stackTrace) async {
-      log("unflag error ${error.toString()}");
+     AmityLog.debug("unflag error ${error.toString()}");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -180,12 +181,12 @@ class PostVM extends ChangeNotifier {
 
   void removePostReaction(AmityPost post) {
     HapticFeedback.heavyImpact();
-    print("removePostReaction");
+   AmityLog.debug("removePostReaction");
 
     post.react().removeReaction('like').then((value) {
       // Handle success
     }).catchError((error) {
-      print(error);
+     AmityLog.debug(error);
       // Handle error
     });
   }
@@ -205,7 +206,7 @@ class PostVM extends ChangeNotifier {
     comment.edit().text(text).build().update().then((value) {
       //handle result
     }).onError((error, stackTrace) async {
-      log("unflag error ${error.toString()}");
+     AmityLog.debug("unflag error ${error.toString()}");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });

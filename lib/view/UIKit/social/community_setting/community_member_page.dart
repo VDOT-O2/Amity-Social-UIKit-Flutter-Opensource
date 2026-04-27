@@ -1,8 +1,10 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/view/social/select_user_page.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile_v2.dart';
 import 'package:amity_uikit_beta_service/viewmodel/community_member_viewmodel.dart';
@@ -121,7 +123,7 @@ class _MemberManagementPageState extends State<MemberManagementPage> {
                                         );
                                         Navigator.of(context).pop();
                                       } else {
-                                        log('Failed to add members');
+                                       AmityLog.error('Failed to add members', null, stackTrace: null);
                                       }
                                     },
                                   )));
@@ -169,7 +171,7 @@ class _MemberManagementPageState extends State<MemberManagementPage> {
                   labelStyle: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'SF Pro Text',
+                    fontFamily: AmityTextStyle.fontFamily,
                   ),
 
                   tabs: const [

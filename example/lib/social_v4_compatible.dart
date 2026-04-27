@@ -1,4 +1,5 @@
-import 'package:amity_sdk/amity_sdk.dart';
+﻿import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider_widget.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/create_action_bottom_sheet.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/post_target_page.dart';
@@ -98,7 +99,7 @@ class _CommunityPageState extends State<AmitySocialV4Compatible> {
                       labelStyle: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'SF Pro Text',
+                        fontFamily: AmityTextStyle.fontFamily,
                       ),
                       tabs: const [
                         Tab(

@@ -151,7 +151,12 @@ class AmityCommunityImageFeedComponent extends NewBaseComponent {
                   child: SvgPicture.asset(
                     'assets/Icons/amity_ic_image_feed_empty.svg',
                     package: 'amity_uikit_beta_service',
+                    colorFilter: ColorFilter.mode(
+                      theme.primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
+                  
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/alert_dialog.dart';
@@ -51,8 +52,8 @@ class FeedVM extends ChangeNotifier {
 
   Future<void> initAmityGlobalfeed({bool isCustomPostRanking = false}) async {
     isLoading = true;
-    print("isloading1: $isLoading");
-    print("isCustomPostRanking:$isCustomPostRanking");
+    AmityLog.debug("isloading1: $isLoading");
+    AmityLog.debug("isCustomPostRanking:$isCustomPostRanking");
 
     if (isCustomPostRanking) {
       _controllerGlobal = PagingController(
@@ -62,7 +63,7 @@ class FeedVM extends ChangeNotifier {
         pageSize: 5,
       )..addListener(
           () async {
-            log("getCustomRankingGlobalFeed listener...");
+           AmityLog.debug("getCustomRankingGlobalFeed listener...");
             if (_controllerGlobal?.error == null) {
               _amityGlobalFeedPosts.clear();
               _amityGlobalFeedPosts.addAll(_controllerGlobal!.loadedItems);
@@ -74,7 +75,7 @@ class FeedVM extends ChangeNotifier {
               isLoading = false;
 
               notifyListeners();
-              log("error: ${_controllerGlobal!.error.toString()}");
+             AmityLog.debug("error: ${_controllerGlobal!.error.toString()}");
               // await AmityDialog().showAlertErrorDialog(
               //     title: "Error!",
               //     message: _controllerGlobal!.error.toString());
@@ -89,7 +90,7 @@ class FeedVM extends ChangeNotifier {
         pageSize: 5,
       )..addListener(
           () async {
-            log("initAmityGlobalfeed listener...");
+           AmityLog.debug("initAmityGlobalfeed listener...");
             if (_controllerGlobal?.error == null) {
               _amityGlobalFeedPosts.clear();
               _amityGlobalFeedPosts.addAll(_controllerGlobal!.loadedItems);
@@ -98,7 +99,7 @@ class FeedVM extends ChangeNotifier {
               notifyListeners();
             } else {
               // Handle pagination controller error
-              log("error: ${_controllerGlobal!.error.toString()}");
+             AmityLog.debug("error: ${_controllerGlobal!.error.toString()}");
               notifyListeners();
               // Optionally show an error dialog
               // await AmityDialog().showAlertErrorDialog(
@@ -122,14 +123,14 @@ class FeedVM extends ChangeNotifier {
   void loadnextpage() async {
     isLoading = true;
 
-    // log(scrollcontroller.offset);
+    //AmityLog.debug(scrollcontroller.offset);
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
         _controllerGlobal!.hasMoreItems &&
         !loadingNexPage) {
       loadingNexPage = true;
       notifyListeners();
-      log("loading Next Page...");
+     AmityLog.debug("loading Next Page...");
       await _controllerGlobal!.fetchNextPage().then((value) {
         loadingNexPage = false;
         notifyListeners();

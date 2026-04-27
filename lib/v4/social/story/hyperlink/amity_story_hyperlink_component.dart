@@ -2,6 +2,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
+import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/hyperlink/elements/amity_hyper_link_text_field.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/hyperlink/bloc/hyperlink_bloc.dart';
@@ -132,7 +133,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                       foregroundColor: Colors.black,
                       textStyle: const TextStyle(
                         fontSize: 15,
-                        fontFamily: "SF Pro Text",
+                        fontFamily: AmityTextStyle.fontFamily,
                       ),
                     ),
                     onPressed: () {
@@ -158,7 +159,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                       'Cancel',
                       style: TextStyle(
                         fontSize: 15,
-                        fontFamily: "SF Pro Text",
+                        fontFamily: AmityTextStyle.fontFamily,
                         color: widget.theme.baseColor,
                       ),
                     ),
@@ -171,7 +172,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: widget.theme.baseColor,
-                            fontFamily: "SF Pro Text",
+                            fontFamily: AmityTextStyle.fontFamily,
                           ),
                         ),
                   DoneButton(
@@ -201,13 +202,13 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                 children: [
                   Text(
                     "URL",
-                    style: TextStyle(fontFamily: "SF Pro Text", fontSize: 17, color: widget.theme.baseColor, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontFamily: AmityTextStyle.fontFamily, fontSize: 17, color: widget.theme.baseColor, fontWeight: FontWeight.w600),
                   ),
                   const Text(
                     "*",
                     style: TextStyle(
                       color: Colors.red,
-                      fontFamily: "SF Pro Text",
+                      fontFamily: AmityTextStyle.fontFamily,
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
@@ -249,12 +250,12 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                   children: [
                     Text(
                       "Customize link text",
-                      style: TextStyle(fontFamily: "SF Pro Text", color: widget.theme.baseColor, fontSize: 17, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontFamily: AmityTextStyle.fontFamily, color: widget.theme.baseColor, fontSize: 17, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       "${customizedTextController.text.length}/30",
                       style: const TextStyle(
-                        fontFamily: "SF Pro Text",
+                        fontFamily: AmityTextStyle.fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
@@ -290,7 +291,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                     child: const Text(
                       "This text will show on the link instead of URL.",
                       style: TextStyle(
-                        fontFamily: "SF Pro Text",
+                        fontFamily: AmityTextStyle.fontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
@@ -330,7 +331,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                               Text(
                                 "Remove link",
                                 style: TextStyle(
-                                  fontFamily: "SF Pro Text",
+                                  fontFamily: AmityTextStyle.fontFamily,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w400,
                                   color: widget.theme.alertColor,
@@ -366,7 +367,7 @@ class DoneButton extends BaseElement {
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: theme.primaryColor,
-        textStyle: const TextStyle(fontSize: 15, fontFamily: "SF Pro Text"),
+        textStyle: const TextStyle(fontSize: 15, fontFamily: AmityTextStyle.fontFamily),
         disabledForegroundColor: theme.primaryColor.blend(ColorBlendingOption.shade2),
       ),
       onPressed: onPressed,
