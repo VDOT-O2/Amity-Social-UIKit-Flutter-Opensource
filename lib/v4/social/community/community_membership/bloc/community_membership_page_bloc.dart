@@ -8,6 +8,7 @@ import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'community_membership_page_event.dart';
 part 'community_membership_page_state.dart';
@@ -38,7 +39,10 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
         .includeDeleted(false)
         .getLiveCollection();
 
-    memberStreamSubscription = memberLiveCollection.getStreamController().stream.listen((event) {
+    memberStreamSubscription =
+        memberLiveCollection.getStreamController().stream.debounceTime(Durations.short4).listen((event) {
+      AmityLog.debug('Loaded ${event.length} members');
+
       add(CommunityMembershipPageMemberLoadedEvent(event));
     });
 
@@ -79,7 +83,7 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
         .includeDeleted(false)
         .getLiveCollection();
 
-    moderatorStreamSubscription = moderatorLiveCollection.getStreamController().stream.listen((event) {
+    moderatorStreamSubscription = moderatorLiveCollection.getStreamController().stream.debounceTime(Durations.short4).listen((event) {
       add(CommunityMembershipPageModeratorLoadedEvent(event));
     });
 
@@ -117,8 +121,8 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
       memberStreamSubscription?.cancel();
       memberStreamSubscription = memberLiveCollection.getStreamController().stream.listen((event) {
         var count = event.length;
-       AmityLog.debug("pageCount: $count");
-       AmityLog.debug("1st member: ${event[0].user?.displayName}");
+        AmityLog.debug("pageCount: $count");
+        AmityLog.debug("1st member: ${event[0].user?.displayName}");
         add(CommunityMembershipPageMemberLoadedEvent(event));
       });
 
