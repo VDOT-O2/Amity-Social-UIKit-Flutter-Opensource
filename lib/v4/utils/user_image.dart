@@ -65,7 +65,7 @@ class AmityUserImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl != null && imageUrl!.isNotEmpty && !kDebugMode) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
       return Image.network(
         imageUrl!,
         fit: BoxFit.cover,
