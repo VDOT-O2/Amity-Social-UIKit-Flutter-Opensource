@@ -16,6 +16,8 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
   var isInitialLoad = true;
 
   MyCommunityBloc() : super(const MyCommunityState()) {
+    AmityLog.debug("MyCommunityBloc: Initializing bloc and live collection");
+
     communityLiveCollection = AmitySocialClient.newCommunityRepository()
         .getCommunities()
         .filter(AmityCommunityFilter.MEMBER)
@@ -50,6 +52,8 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
     });
 
     on<MyCommunityEventInitial>((event, emit) async {
+      AmityLog.debug("MyCommunityBloc: Initial event triggered, resetting live collection");
+      
       communityLiveCollection.reset();
       communityLiveCollection.loadNext();
     });

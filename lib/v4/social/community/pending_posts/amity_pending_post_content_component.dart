@@ -175,6 +175,7 @@ class AmityPendingPostContentComponent extends NewBaseComponent {
             children: [
               // User avatar - make it clickable
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => _goToUserProfilePage(
                     context, displayPost.postedUser?.userId ?? ""),
                 child: AmityUserAvatar(
@@ -192,6 +193,7 @@ class AmityPendingPostContentComponent extends NewBaseComponent {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () => _goToUserProfilePage(
                           context, displayPost.postedUser?.userId ?? ""),
                       child: Text(
@@ -210,6 +212,7 @@ class AmityPendingPostContentComponent extends NewBaseComponent {
               // Add 3-dot menu for non-moderators when data is fully loaded
               if (!state.isLoadingPost && !state.isModerator)
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => _showPostAction(context),
                   child: Container(
                     width: 44,

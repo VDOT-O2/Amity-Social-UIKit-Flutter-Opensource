@@ -261,6 +261,7 @@ class _AmityPostCameraScreenState extends State<AmityPostCameraScreen> {
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () async {
                   if (isVideoMode) {
                     if (isRecording) {
@@ -358,6 +359,7 @@ class _AmityPostCameraScreenState extends State<AmityPostCameraScreen> {
           Padding(
             padding: EdgeInsets.only(right: selectedFileType == null ? 20 : 0),
             child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 setState(() {
                   isVideoMode = true;
@@ -375,6 +377,7 @@ class _AmityPostCameraScreenState extends State<AmityPostCameraScreen> {
           ),
         if (selectedFileType == FileType.image || selectedFileType == null)
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               setState(() {
                 isVideoMode = false;

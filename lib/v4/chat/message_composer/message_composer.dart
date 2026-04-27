@@ -195,6 +195,7 @@ class AmityMessageComposer extends NewBaseComponent {
                       Container(
                         padding: const EdgeInsets.only(bottom: 6, right: 12),
                         child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             if (state.showMediaSection) {
                               focusNode.requestFocus();
@@ -330,6 +331,7 @@ class AmityMessageComposer extends NewBaseComponent {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () {
                               if (!isSendable) {
                                 if (editingMessage != null) {
@@ -434,6 +436,7 @@ class AmityMessageComposer extends NewBaseComponent {
             width: 12,
           ),
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               controller.clear();
               action.onDissmiss();
@@ -488,6 +491,7 @@ class AmityMessageComposer extends NewBaseComponent {
       );
     }
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         // TODO Remove this condition when jump to replied message is implemented
         if (message.data is MessageTextData) {
@@ -620,6 +624,7 @@ class AmityMessageComposer extends NewBaseComponent {
               width: 12,
             ),
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 action.onDissmiss();
               },
@@ -671,6 +676,7 @@ class AmityMessageComposer extends NewBaseComponent {
 
   Widget renderMediaButton(String assetPath, String label, Function() onClick) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         onClick();
       },

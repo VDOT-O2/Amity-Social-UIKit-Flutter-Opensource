@@ -1,5 +1,6 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/core/video_post_player/pager/video_post_player.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,8 @@ class PostContentVideo extends StatelessWidget {
 
     Widget backgroundThumbnail(String fileUrl, int index,
         {BorderRadius? borderRadius}) {
+      AmityLog.debug("PostContentVideo: Displaying thumbnail for post at index $index with URL: $fileUrl");
+
       return Padding(
         padding: const EdgeInsets.all(2.0),
         child: Stack(
@@ -66,6 +69,7 @@ class PostContentVideo extends StatelessWidget {
     switch (posts.length) {
       case 1:
         return GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             Navigator.push(
               context,
@@ -94,6 +98,7 @@ class PostContentVideo extends StatelessWidget {
           child: Row(children: [
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -112,6 +117,7 @@ class PostContentVideo extends StatelessWidget {
             )),
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -139,6 +145,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -162,6 +169,7 @@ class PostContentVideo extends StatelessWidget {
                   children: [
                     Expanded(
                         child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -180,6 +188,7 @@ class PostContentVideo extends StatelessWidget {
                     )),
                     Expanded(
                         child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -209,6 +218,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                   child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -229,6 +239,7 @@ class PostContentVideo extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -251,6 +262,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -270,6 +282,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -302,6 +315,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                   child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -323,6 +337,7 @@ class PostContentVideo extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -345,6 +360,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -364,6 +380,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,

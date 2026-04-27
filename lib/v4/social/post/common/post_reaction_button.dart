@@ -54,6 +54,7 @@ class PostReactionButton extends StatelessWidget {
           : 'assets/Icons/amity_ic_post_reaction_heart.svg';
     }
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         if (!isReacting) {
           if (post.myReactions?.isNotEmpty ?? false) {

@@ -99,6 +99,7 @@ class _PreviewLinkWidgetState extends State<PreviewLinkWidget> {
     }
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: widget.onTap ?? _launchUrl,
       child: Container(
         decoration: BoxDecoration(

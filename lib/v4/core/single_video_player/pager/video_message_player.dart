@@ -84,6 +84,7 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                           children: [
                             ...[
                               GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () {
                                   onDelete();
                                 },
@@ -99,6 +100,7 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                               ),
                             ],
                             GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () async {
                                 try {
                                   final permissionHandler =

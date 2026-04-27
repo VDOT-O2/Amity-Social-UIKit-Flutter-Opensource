@@ -131,6 +131,7 @@ class _StoryDraftPageBuilderState extends State<StoryDraftPageBuilder> {
                             top: 16,
                             right: 16,
                             child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 if (state is HyperlinkAddedState &&
                                     state.hyperlink != null) {
@@ -186,6 +187,7 @@ class _StoryDraftPageBuilderState extends State<StoryDraftPageBuilder> {
                                   top: 16,
                                   right: 52,
                                   child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
                                     onTap: () {
                                       context.read<StoryDraftBloc>().add(
                                           FillFitToggleEvent(
@@ -254,6 +256,7 @@ class _StoryDraftPageBuilderState extends State<StoryDraftPageBuilder> {
                             top: 16,
                             left: 16,
                             child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 ConfirmationDialog().show(
                                   context: context,
@@ -910,6 +913,7 @@ class ShareButton extends BaseElement {
   @override
   Widget buildElement(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onClick,
       child: Container(
         padding: const EdgeInsets.only(right: 8, left: 4),

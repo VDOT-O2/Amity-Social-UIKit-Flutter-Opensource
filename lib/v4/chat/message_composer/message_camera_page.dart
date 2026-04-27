@@ -197,6 +197,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.of(context).pop(),
                   child: SizedBox(
                     width: 32,
@@ -263,6 +264,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     setState(() {
                       result = null;
@@ -380,6 +382,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () async {
                   if (isVideoMode) {
                     if (isRecording) {
@@ -477,6 +480,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
           Padding(
             padding: EdgeInsets.only(right: selectedFileType == null ? 20 : 0),
             child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 setState(() {
                   isVideoMode = true;
@@ -494,6 +498,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
           ),
         if (selectedFileType == FileType.image || selectedFileType == null)
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               setState(() {
                 isVideoMode = false;
@@ -572,6 +577,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () async {
                     Navigator.of(context).pop(result);
                   },

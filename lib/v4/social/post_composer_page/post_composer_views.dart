@@ -150,6 +150,7 @@ extension PostComposerView on AmityPostComposerPage {
         if (file.value.videoThumbnail != null) {
           // New video
           return GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Navigator.push(
                 context,
@@ -173,6 +174,7 @@ extension PostComposerView on AmityPostComposerPage {
         } else if (file.value.uploadedUrl != null) {
           // Existing video
           return GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Navigator.push(
                 context,
@@ -269,6 +271,7 @@ extension PostComposerView on AmityPostComposerPage {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   context.read<PostComposerBloc>().add(
                         PostComposerDeleteFileEvent(filePath: file.key),

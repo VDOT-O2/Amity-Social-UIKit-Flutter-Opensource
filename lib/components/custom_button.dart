@@ -41,6 +41,7 @@ class CustomButton extends StatelessWidget {
     var theme = Theme.of(context);
     return FadedScaleAnimation(
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: onTap as void Function()?,
         child: Container(
           width: width,

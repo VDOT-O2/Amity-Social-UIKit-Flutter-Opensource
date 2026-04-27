@@ -49,6 +49,7 @@ class AmityCommunitiesByCategoryPage extends NewBasePage {
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () => {
                           _goToCommunityProfilePage(
                               context, state.communities[index])

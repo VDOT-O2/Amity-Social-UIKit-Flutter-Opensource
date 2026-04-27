@@ -91,6 +91,7 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                       right: 0,
                                       bottom: 0,
                                       child: GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           navigateToCreatePage();
                                         },
@@ -282,6 +283,7 @@ class AmityStoryHeaderRow extends StatelessWidget {
                         width: 5,
                       ),
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           Navigator.pop(context);
                         },

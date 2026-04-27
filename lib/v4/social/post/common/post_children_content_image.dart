@@ -46,6 +46,7 @@ class PostContentImage extends StatelessWidget {
       return AspectRatio(
         aspectRatio: 1,
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             Navigator.push(
               context,
@@ -69,6 +70,7 @@ class PostContentImage extends StatelessWidget {
         child: Row(children: [
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Navigator.push(
                 context,
@@ -87,6 +89,7 @@ class PostContentImage extends StatelessWidget {
           )),
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Navigator.push(
                 context,
@@ -114,6 +117,7 @@ class PostContentImage extends StatelessWidget {
           children: [
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -135,6 +139,7 @@ class PostContentImage extends StatelessWidget {
                 children: [
                   Expanded(
                       child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -152,6 +157,7 @@ class PostContentImage extends StatelessWidget {
                   )),
                   Expanded(
                       child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -182,6 +188,7 @@ class PostContentImage extends StatelessWidget {
           children: [
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -202,6 +209,7 @@ class PostContentImage extends StatelessWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -223,6 +231,7 @@ class PostContentImage extends StatelessWidget {
                 ),
                 Expanded(
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -242,6 +251,7 @@ class PostContentImage extends StatelessWidget {
                 ),
                 Expanded(
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -282,6 +292,7 @@ class PostContentImage extends StatelessWidget {
             children: [
               Expanded(
                   child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -302,6 +313,7 @@ class PostContentImage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -324,6 +336,7 @@ class PostContentImage extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -343,6 +356,7 @@ class PostContentImage extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,

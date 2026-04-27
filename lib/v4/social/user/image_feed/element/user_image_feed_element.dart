@@ -18,6 +18,7 @@ class UserImageFeedElement extends BaseElement {
     return ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             Navigator.push(
               context,

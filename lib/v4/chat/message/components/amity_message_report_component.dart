@@ -80,6 +80,7 @@ class MessageReportView extends StatelessWidget {
     final isOthersOption = reason.type == AmityContentFlagReasonType.OTHERS;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         if (isOthersOption) {
           cubit.selectReason(reason);
@@ -204,6 +205,7 @@ class MessageReportView extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           if (onCancel != null) {
                             onCancel!();

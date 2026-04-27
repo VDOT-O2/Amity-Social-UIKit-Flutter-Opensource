@@ -324,6 +324,7 @@ class _ExpandableTextState extends State<ExpandableText> {
       // If truncated spans are available, use them
       if (_truncatedSpans != null) {
         return GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             setState(() {
               _expanded = true;
@@ -446,6 +447,7 @@ class _ExpandableTextState extends State<ExpandableText> {
     // If we have processed spans, use them directly
     if (_processedSpans != null) {
       return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           if (widget.maxLines != null) {
             setState(() {

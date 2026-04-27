@@ -109,6 +109,7 @@ extension ParentMessageWidget on MessageBubbleView {
               height: 4,
             ),
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 // TODO Remove this condition when jump to replied message is implemented
                 if (parentMessage.data is MessageTextData) {

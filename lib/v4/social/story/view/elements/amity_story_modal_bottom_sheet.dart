@@ -93,6 +93,7 @@ class AmityBottomSheetActionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         Navigator.of(context).pop();
         onTap();

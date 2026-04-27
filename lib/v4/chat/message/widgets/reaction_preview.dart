@@ -30,6 +30,7 @@ class ReactionBubble extends StatelessWidget {
     return Transform.translate(
       offset: const Offset(0, -6),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),

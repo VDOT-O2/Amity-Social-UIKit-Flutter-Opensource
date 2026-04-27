@@ -64,6 +64,7 @@ class PostDetailInfo extends NewBaseComponent {
     }
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         showReactionsBottomSheet();
       },

@@ -115,6 +115,7 @@ class PostDisplayName extends StatelessWidget {
 
   Widget DisplayName(BuildContext context, AmityUser? user) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         final userId = user?.userId;
         if (userId != null && userId.isNotEmpty) {
@@ -169,6 +170,7 @@ class PostDisplayName extends StatelessWidget {
     }
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Text(
         targetName,

@@ -171,6 +171,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                     valueListenable: _selectedImagePath,
                                     builder: (context, imagePath, child) {
                                       return GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           _showBottomSheet(context);
                                         },

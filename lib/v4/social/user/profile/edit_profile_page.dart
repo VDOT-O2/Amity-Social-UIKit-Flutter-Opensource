@@ -66,6 +66,7 @@ class AmityEditUserProfilePage extends NewBasePage {
                           child: ListView(
                             children: [
                               GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () {
                                   context
                                       .read<EditProfileBloc>()

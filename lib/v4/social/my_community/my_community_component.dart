@@ -23,10 +23,8 @@ class AmityMyCommunitiesComponent extends NewBaseComponent {
   @override
   Widget buildComponent(BuildContext context) {
     return BlocProvider(
-      create: (context) => MyCommunityBloc(),
+      create: (context) => MyCommunityBloc()..add(MyCommunityEventInitial()),
       child: Builder(builder: (context) {
-        context.read<MyCommunityBloc>().add(MyCommunityEventInitial());
-
         return BlocBuilder<MyCommunityBloc, MyCommunityState>(
           builder: (context, state) {
             if (state is MyCommunityLoading) {

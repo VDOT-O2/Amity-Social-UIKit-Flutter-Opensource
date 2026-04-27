@@ -197,6 +197,7 @@ class _PostPollContentState extends State<PostPollContent> {
                 !poll.isVoted! &&
                 poll.status != AmityPollStatus.CLOSED)
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   if (widget.style == AmityPostContentComponentStyle.detail) {
                     // Toggle result state
@@ -334,6 +335,7 @@ class PollOptions extends StatelessWidget {
               final isSelected = selectedIndices.contains(index);
 
               return GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: canVote
                     ? () {
                         final newIndices = List<int>.from(selectedIndices);
