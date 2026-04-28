@@ -378,25 +378,25 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                 // Remove user from selection
                                 _removeUser(user);
                               },
-                              onAddTap: () async {
-                                // Navigate to select users screen with onMembersSelected callback
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AmitySelectGroupMemberPage(
-                                      isModifyMember: true,
-                                      selectedGroupMember:
-                                          _selectedUsersNotifier.value,
-                                      onMembersSelected: (updatedUsers) {
-                                        if (updatedUsers.isNotEmpty) {
-                                          _selectedUsersNotifier.value =
-                                              updatedUsers;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
+                              // onAddTap: () async {
+                              //   // Navigate to select users screen with onMembersSelected callback
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => AmitySelectGroupMemberPage(
+                              //         isModifyMember: true,
+                              //         selectedGroupMember:
+                              //             _selectedUsersNotifier.value,
+                              //         onMembersSelected: (updatedUsers) {
+                              //           if (updatedUsers.isNotEmpty) {
+                              //             _selectedUsersNotifier.value =
+                              //                 updatedUsers;
+                              //           }
+                              //         },
+                              //       ),
+                              //     ),
+                              //   );
+                              // },
                               excludeCurrentUser: false, // Show current user
                             ),
                           ],

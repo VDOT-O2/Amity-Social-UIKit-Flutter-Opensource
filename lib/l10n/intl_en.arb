@@ -1708,7 +1708,7 @@
   "@chat_member_permissions_title": {
     "description": "Title for member permissions page"
   },
-  "chat_member_label": "Member",
+  "chat_member_label": "Members",
   "@chat_member_label": {
     "description": "Label for member section"
   },

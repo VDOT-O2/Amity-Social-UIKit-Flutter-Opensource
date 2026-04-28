@@ -676,7 +676,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       // User will be updated in the HeaderEventChanged handler
     }
 
-    liveCollection?.getStreamController().stream.debounceTime(const Duration(milliseconds: 150)).listen((event) {
+    liveCollection?.getStreamController().stream.debounceTime(const Duration(milliseconds: 300)).listen((event) {
         final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
             ? (event.first.data as MessageTextData).text
             : "N/A";
