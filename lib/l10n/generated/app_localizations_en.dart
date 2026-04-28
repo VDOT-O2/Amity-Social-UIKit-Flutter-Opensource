@@ -258,40 +258,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get community_create_success_message =>
-      'Successfully created community.';
+      'Successfully created group.';
 
   @override
   String get community_create_error_message =>
-      'Failed to create community. Please try again.';
+      'Failed to create group. Please try again.';
 
   @override
   String get community_update_success_message =>
-      'Successfully updated community.';
+      'Successfully updated group.';
 
   @override
   String get community_update_error_message =>
-      'Failed to save your community profile. Please try again.';
+      'Failed to save your group profile. Please try again.';
 
   @override
   String get community_leave_success_message =>
-      'Successfully left the community.';
+      'Successfully left the group.';
 
   @override
-  String get community_leave_error_message => 'Failed to leave the community.';
+  String get community_leave_error_message => 'Failed to leave the group.';
 
   @override
   String get community_close_success_message =>
-      'Successfully closed the community.';
+      'Successfully closed the group.';
 
   @override
-  String get community_close_error_message => 'Failed to close the community.';
+  String get community_close_error_message => 'Failed to close the group.';
 
   @override
-  String get community_close => 'Close community?';
+  String get community_close => 'Delete group?';
 
   @override
   String get community_close_description =>
-      'All members will be removed from the community. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.';
+      'Deleting this group will remove the entire page, including all of its content and comments.';
 
   @override
   String get community_join => 'Join';
@@ -309,26 +309,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get community_placeholder_members => '1.2K members';
 
   @override
-  String get community_leave => 'Leave community';
+  String get community_leave => 'Leave group';
 
   @override
   String get community_leave_description =>
-      'Leave the community. You will no longer be able to post and interact in this community.';
+      'Leave the group. You will no longer be able to post and interact in this group.';
 
   @override
-  String get community_create => 'Create Community';
+  String get community_create => 'Create Group';
 
   @override
-  String get community_name => 'Community name';
+  String get community_name => 'Group name';
 
   @override
-  String get community_name_hint => 'Name your community';
+  String get community_name_hint => 'Name your group';
 
   @override
   String get community_description_hint => 'Enter description';
 
   @override
-  String get community_edit => 'Edit Community';
+  String get community_edit => 'Edit Group';
 
   @override
   String get community_members => 'Members';
@@ -341,11 +341,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get community_public_description =>
-      'Anyone can join, view and search the posts in this community.';
+      'Anyone can join, view and search the posts in this group.';
 
   @override
   String get community_private_description =>
-      'Only members invited by the moderators can join, view, and search the posts in this community.';
+      'Only members invited by the moderators can join, view, and search the posts in this group.';
 
   @override
   String get community_about => 'About';
