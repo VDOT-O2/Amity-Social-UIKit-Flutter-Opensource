@@ -244,7 +244,7 @@
         "message_reaction_list_page/message_reaction_list/user_display_name": {},
         "message_reaction_list_page/message_reaction_list/reaction_image_view": {},
         "social_home_page/top_navigation/header_label": {
-            "text": "Community"
+            "text": "Group"
         },
         "social_home_page/top_navigation/global_search_button": {
             "icon": "searchButtonIcon"
@@ -268,11 +268,11 @@
             "text": "Your Feed is empty"
         },
         "social_home_page/empty_newsfeed/description": {
-            "text": "Find community or create your own"
+            "text": "Find group or create your own"
         },
         "social_home_page/empty_newsfeed/explore_communitties_button": {
             "icon": "exploreCommunityIcon",
-            "text": "Explore Community"
+            "text": "Explore Group"
         },
         "social_home_page/empty_newsfeed/create_community_button": {
             "icon": "createCommunityIcon"
@@ -485,7 +485,7 @@
             "text": "Story comments"
         },
         "community_setting_page/*/leave_community": {
-            "text": "Leave community"
+            "text": "Leave group"
         },
         "community_setting_page/*/close_community": {
             "text": "Delete group"
