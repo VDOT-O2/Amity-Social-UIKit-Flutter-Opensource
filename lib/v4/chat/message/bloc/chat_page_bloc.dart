@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_thumbnail/flutter_video_thumbnail.dart';
 import 'package:intl/intl.dart';
-import 'package:rxdart/transformers.dart';
 
 part 'chat_page_events.dart';
 part 'chat_page_state.dart';
@@ -24,17 +23,19 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   var messagesCount = 0;
   MessageLiveCollection? liveCollection;
 
-  late final StreamSubscription<List<ConnectivityResult>> subscription;
+  late final StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  late final StreamSubscription<LiveResult<AmityMessage>> _messagesSubscription;
+
   late ScrollController _scrollController;
   bool _isScrollListenerAdded = false;
   bool _isJumpScrollInProgress = false; // Flag to track jump scroll state
   Timer? _jumpToMessageTimeoutTimer;
 
   final AmityToastBloc toastBloc;
-  BuildContext _context;
+  final BuildContext _context;
 
-  ChatPageBloc(String? channelId, String? userId, String? userDisplayName,
-      String? avatarUrl, this.toastBloc, this._context,
+  ChatPageBloc(
+      String? channelId, String? userId, String? userDisplayName, String? avatarUrl, this.toastBloc, this._context,
       {String? jumpToMessageId})
       : super(ChatPageStateInitial(
             channelId: channelId ?? "",
@@ -46,23 +47,14 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
     on<ChatPageEventRefresh>((event, emit) async {
       AmityLog.debug("ChatPageEventRefresh triggered");
-      emit(state.copyWith(
-          messages: const [],
-          isFetching: true,
-          isLoadingMore: false,
-          hasNextPage: true,
-          hasPrevious: false));
+      emit(state
+          .copyWith(messages: const [], isFetching: true, isLoadingMore: false, hasNextPage: true, hasPrevious: false));
       try {
         liveCollection?.reset();
-        liveCollection?.loadNext();
       } catch (e) {
         AmityLog.error("Error refreshing chat page", e);
         emit(state.copyWith(
-            messages: const [],
-            isFetching: false,
-            isLoadingMore: false,
-            hasNextPage: false,
-            hasPrevious: false));
+            messages: const [], isFetching: false, isLoadingMore: false, hasNextPage: false, hasPrevious: false));
       }
     });
 
@@ -83,23 +75,15 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageEventFetchMuteState>((event, emit) async {
-      AmityCoreClient()
-          .notifications()
-          .channel(state.channelId)
-          .getSettings()
-          .then((value) => {
-                addEvent(ChatPageIsMuteEventChanged(
-                    isMute: !(value.isEnabled ?? true))),
-              });
+      AmityCoreClient().notifications().channel(state.channelId).getSettings().then((value) => {
+            addEvent(ChatPageIsMuteEventChanged(isMute: !(value.isEnabled ?? true))),
+          });
     });
 
     on<ChatPageEventMuteUnmute>((event, emit) async {
       if (state.isMute) {
         try {
-          await AmityCoreClient()
-              .notifications()
-              .channel(state.channelId)
-              .enable();
+          await AmityCoreClient().notifications().channel(state.channelId).enable();
           addEvent(const ChatPageIsMuteEventChanged(isMute: false));
 
           await Future.delayed(const Duration(milliseconds: 300));
@@ -109,15 +93,11 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             icon: AmityToastIcon.success,
           ));
         } catch (error) {
-          toastBloc.add(AmityToastShort(
-              message: _context.l10n.notification_turn_on_error));
+          toastBloc.add(AmityToastShort(message: _context.l10n.notification_turn_on_error));
         }
       } else {
         try {
-          await AmityCoreClient()
-              .notifications()
-              .channel(state.channelId)
-              .disable();
+          await AmityCoreClient().notifications().channel(state.channelId).disable();
           addEvent(const ChatPageIsMuteEventChanged(isMute: true));
 
           await Future.delayed(const Duration(milliseconds: 300));
@@ -127,15 +107,15 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             icon: AmityToastIcon.success,
           ));
         } catch (error) {
-          toastBloc.add(AmityToastShort(
-              message: _context.l10n.notification_turn_off_error));
+          toastBloc.add(AmityToastShort(message: _context.l10n.notification_turn_off_error));
         }
       }
     });
 
     on<ChatPageEventChanged>((event, emit) async {
-      AmityLog.debug("ChatPageEventChanged: ${event.messages.length} messages, stateMessages: ${state.messages.length}");
-      
+      AmityLog.debug(
+          "ChatPageEventChanged: ${event.messages.length} messages, stateMessages: ${state.messages.length}");
+
       AmityMessage? newMessage;
       if (event.messages.isNotEmpty && state.messages.isNotEmpty) {
         final firstEventMessage = event.messages.first;
@@ -144,10 +124,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         final eventSegment = firstEventMessage.channelSegment;
         final stateSegment = firstStateMessage?.channelSegment;
 
-        if ((eventSegment != null &&
-                stateSegment != null &&
-                eventSegment > stateSegment &&
-                state.showScrollButton) ||
+        if ((eventSegment != null && stateSegment != null && eventSegment > stateSegment && state.showScrollButton) ||
             firstEventMessage.messageId == state.newMessage?.messageId) {
           newMessage = firstEventMessage;
         }
@@ -162,12 +139,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           if (lastCreatedDate == null) {
             lastCreatedDate = message.createdAt!.toLocal();
           } else {
-            if (lastCreatedDate
-                    .difference(message.createdAt!.toLocal())
-                    .inDays >
-                0) {
-              String dateString =
-                  DateFormat('EEE, d MMM').format(lastCreatedDate);
+            if (lastCreatedDate.difference(message.createdAt!.toLocal()).inDays > 0) {
+              String dateString = DateFormat('EEE, d MMM').format(lastCreatedDate);
               groupedMessages.add(ChatItem.date(dateString));
               lastCreatedDate = message.createdAt!.toLocal();
             }
@@ -204,8 +177,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         if (liveCollection?.hasNextPage() == true) {
           emit(state.copyWith(useReverseUI: true, isLoadingMore: true));
           if (_scrollController.hasClients) {
-            _scrollController
-                .jumpTo(_scrollController.position.maxScrollExtent);
+            _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
           }
           await liveCollection?.loadNext();
         }
@@ -217,8 +189,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         if (liveCollection?.hasPreviousPage() == true) {
           emit(state.copyWith(useReverseUI: false, isLoadingMore: true));
           if (_scrollController.hasClients) {
-            _scrollController
-                .jumpTo(_scrollController.position.maxScrollExtent);
+            _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
           }
           await liveCollection?.loadPrevious();
 
@@ -230,9 +201,12 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     on<ChatPageEventLoadingStateUpdated>((event, emit) async {
       emit(state.copyWith(isFetching: event.isFetching));
 
-      if (!event.isFetching && state is! ChatPageStateInitial && state.aroundMessageId != null && !_isJumpScrollInProgress) {
+      if (!event.isFetching &&
+          state is! ChatPageStateInitial &&
+          state.aroundMessageId != null &&
+          !_isJumpScrollInProgress) {
         _isJumpScrollInProgress = true;
-        
+
         Future.delayed(const Duration(milliseconds: 300), () {
           if (!_isJumpScrollInProgress || state.aroundMessageId == null) return;
           _startProgressiveScrollToTop(state.aroundMessageId!);
@@ -277,9 +251,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             useCache: true,
           );
           if (uint8list != null && uint8list.isNotEmpty) {
-            Map<String, Uint8List?> currentLocalThumbnails = {
-              ...state.localThumbnails
-            };
+            Map<String, Uint8List?> currentLocalThumbnails = {...state.localThumbnails};
             currentLocalThumbnails[event.uniqueId] = uint8list;
             emit(state.copyWith(localThumbnails: currentLocalThumbnails));
           }
@@ -301,49 +273,29 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             return;
           }
           await message.delete();
-          await messageRepo
-              .createMessage(subChannelId)
-              .text(text)
-              .parentId(message.parentId)
-              .send();
-          await messageRepo
-              .createMessage(subChannelId)
-              .text(text)
-              .parentId(message.parentId)
-              .send();
+          await messageRepo.createMessage(subChannelId).text(text).parentId(message.parentId).send();
+          await messageRepo.createMessage(subChannelId).text(text).parentId(message.parentId).send();
         } else if (message.data is MessageImageData) {
-          final localPath =
-              (message.data as MessageImageData).image?.getFilePath;
+          final localPath = (message.data as MessageImageData).image?.getFilePath;
           if (localPath == null) {
             return;
           }
           final uri = Uri.file(localPath);
           await message.delete();
-          await messageRepo
-              .createMessage(subChannelId)
-              .image(uri)
-              .parentId(message.parentId)
-              .send();
-          await messageRepo
-              .createMessage(subChannelId)
-              .image(uri)
-              .parentId(message.parentId)
-              .send();
+          await messageRepo.createMessage(subChannelId).image(uri).parentId(message.parentId).send();
+          await messageRepo.createMessage(subChannelId).image(uri).parentId(message.parentId).send();
         } else if (message.data is MessageVideoData) {
-          final localPath =
-              (message.data as MessageVideoData).getVideo().getFilePath;
+          final localPath = (message.data as MessageVideoData).getVideo().getFilePath;
           if (localPath == null) {
             return;
           }
           final uri = Uri.file(localPath);
           await message.delete();
-          await messageRepo
-              .createMessage(subChannelId)
-              .video(uri)
-              .parentId(message.parentId)
-              .send();
+          await messageRepo.createMessage(subChannelId).video(uri).parentId(message.parentId).send();
         }
-      } catch (e) {}
+      } catch (e) {
+        AmityLog.error("Error resending message", e);
+      }
     });
 
     on<ChatPageEventCreateNewChannel>((event, emit) async {
@@ -355,16 +307,15 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
       final channelId = channel.channelId;
       if (channelId != null) {
-        initLiveCollection(channelId);
+        await initLiveCollection(channelId);
         addEvent(ChatPageEventChannelIdChanged(channelId));
-        addEvent(ChatPageEventRefresh());
+        addEvent(const ChatPageEventRefresh());
         addEvent(const ChatPageEventFetchMuteState());
       }
     });
 
     on<ChatPageReplyEvent>((event, emit) async {
-      emit(
-          state.copyWith(replyingMessage: event.message, editingMessage: null));
+      emit(state.copyWith(replyingMessage: event.message, editingMessage: null));
     });
 
     on<ChatPageRemoveReplyEvent>((event, emit) async {
@@ -372,8 +323,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageEditEvent>((event, emit) async {
-      emit(
-          state.copyWith(editingMessage: event.message, replyingMessage: null));
+      emit(state.copyWith(editingMessage: event.message, replyingMessage: null));
     });
 
     on<ChatPageEventMarkReadMessage>((event, emit) async {
@@ -393,8 +343,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           final updatedUser = await user.report().flag();
 
           // Dispatch the state change event
-          addEvent(
-              ChatPageUserFlagStateChanged(isFlagged: true, user: updatedUser));
+          addEvent(ChatPageUserFlagStateChanged(isFlagged: true, user: updatedUser));
 
           // Use a small delay before showing toast
           await Future.delayed(const Duration(milliseconds: 300));
@@ -416,8 +365,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           final updatedUser = await user.report().unflag();
 
           // Dispatch the state change event
-          addEvent(ChatPageUserFlagStateChanged(
-              isFlagged: false, user: updatedUser));
+          addEvent(ChatPageUserFlagStateChanged(isFlagged: false, user: updatedUser));
 
           // Use a small delay before showing toast
           await Future.delayed(const Duration(milliseconds: 300));
@@ -444,9 +392,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       }
 
       try {
-        final followInfo = await AmityCoreClient.newUserRepository()
-            .relationship()
-            .getFollowInfo(userId);
+        final followInfo = await AmityCoreClient.newUserRepository().relationship().getFollowInfo(userId);
 
         final isBlocking = followInfo.status == AmityFollowStatus.BLOCKED;
         addEvent(ChatPageFollowInfoUpdated(isUserBlocked: isBlocking));
@@ -470,9 +416,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       try {
         if (event.isUserBlocked) {
           // Block the user
-          await AmityCoreClient.newUserRepository()
-              .relationship()
-              .blockUser(user.userId!);
+          await AmityCoreClient.newUserRepository().relationship().blockUser(user.userId!);
 
           // Update state to reflect blocking
           addEvent(const ChatPageFollowInfoUpdated(isUserBlocked: true));
@@ -486,9 +430,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           ));
         } else {
           // Unblock the user
-          await AmityCoreClient.newUserRepository()
-              .relationship()
-              .unblockUser(user.userId!);
+          await AmityCoreClient.newUserRepository().relationship().unblockUser(user.userId!);
 
           // Update state to reflect unblocking
           addEvent(const ChatPageFollowInfoUpdated(isUserBlocked: false));
@@ -503,9 +445,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         }
       } catch (error) {
         toastBloc.add(AmityToastShort(
-          message: event.isUserBlocked
-              ? _context.l10n.user_block_error
-              : _context.l10n.user_unblock_error,
+          message: event.isUserBlocked ? _context.l10n.user_block_error : _context.l10n.user_unblock_error,
           icon: AmityToastIcon.warning,
         ));
       }
@@ -513,12 +453,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
     on<ChatPageEventJumpToMessage>((event, emit) async {
       // Set the aroundMessageId in state and reinitialize live collection
-      addEvent(ChatPageSetAroundMessage(
-          aroundMessageId: event.aroundMessageId));
+      addEvent(ChatPageSetAroundMessage(aroundMessageId: event.aroundMessageId));
 
       // Reinitialize the live collection with the aroundMessageId
-      initLiveCollection(state.channelId,
-          aroundMessageId: event.aroundMessageId);
+      initLiveCollection(state.channelId, aroundMessageId: event.aroundMessageId);
 
       // Refresh to load messages around the target message
       addEvent(ChatPageEventRefresh());
@@ -528,7 +466,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       // Reset jump scroll flag when setting new aroundMessageId
       if (event.aroundMessageId != null) {
         _isJumpScrollInProgress = false;
-        
+
         // Start timeout timer for jump-to-message (10 seconds)
         _jumpToMessageTimeoutTimer?.cancel();
         _jumpToMessageTimeoutTimer = Timer(const Duration(seconds: 10), () {
@@ -542,13 +480,13 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         _jumpToMessageTimeoutTimer?.cancel();
         _jumpToMessageTimeoutTimer = null;
       }
-      
+
       emit(state.copyWith(aroundMessageId: event.aroundMessageId));
     });
 
     on<ChatPageTriggerBounceEvent>((event, emit) async {
       // emit(state.copyWith(bounceTargetIndex: event.targetIndex));
-      
+
       // Future.delayed(const Duration(milliseconds: 500), () {
       //   if (state.bounceTargetIndex == event.targetIndex) {
       //     add(const ChatPageClearBounceEvent());
@@ -568,7 +506,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
     if (channelId != null && channelId.isNotEmpty) {
       addEvent(ChatPageSetAroundMessage(aroundMessageId: jumpToMessageId));
-      
+
       initLiveCollection(channelId, aroundMessageId: jumpToMessageId);
       addEvent(ChatPageEventChannelIdChanged(channelId));
       addEvent(ChatPageEventRefresh());
@@ -595,7 +533,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         }
 
         final position = _scrollController.position;
-        
+
         if (state.useReverseUI) {
           if (position.pixels <= -50) {
             add(const ChatPageEventLoadPrevious());
@@ -637,19 +575,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   @override
   Future<void> close() {
     _scrollController.dispose();
-    subscription.cancel();
+    _messagesSubscription.cancel();
+    _connectivitySubscription.cancel();
+
     _jumpToMessageTimeoutTimer?.cancel();
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
     return super.close();
   }
 
-  void initLiveCollection(String channelId, {String? aroundMessageId}) async {
+  Future initLiveCollection(String channelId, {String? aroundMessageId}) async {
     if (liveCollection != null) {
       liveCollection?.getStreamController().close();
       await liveCollection?.dispose();
     }
-    
+
     MessageGetQueryBuilder query = AmityChatClient.newMessageRepository()
         .getMessages(channelId)
         .stackFromEnd(true)
@@ -657,34 +597,36 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         .excludingTags([])
         .includeDeleted(true)
         .filterByParent(false);
-    
+
     // Use aroundMessageId if provided to load messages around a specific message
     if (aroundMessageId != null) {
       query = query.aroundMessageId(aroundMessageId);
     }
-    
-    liveCollection = query.getLiveCollection();
 
-    final list = await AmityChatClient.newChannelRepository()
-        .membership(channelId)
-        .getMembersFromCache();
-    final otherMember = list
-        .firstWhere((element) => element.userId != AmityCoreClient.getUserId());
+    final messagesLiveCollection = query.getLiveCollection();
+    liveCollection = messagesLiveCollection;
+
+    final list = await AmityChatClient.newChannelRepository().membership(channelId).getMembersFromCache();
+    final otherMember = list.firstWhere((element) => element.userId != AmityCoreClient.getUserId());
 
     if (otherMember.user != null) {
       addEvent(ChatPageHeaderEventChanged(channelMember: otherMember));
       // User will be updated in the HeaderEventChanged handler
     }
 
-    liveCollection?.getStreamController().stream.listen((event) {
-        final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
-            ? (event.first.data as MessageTextData).text
-            : "N/A";
+    _messagesSubscription = messagesLiveCollection.getStream().listen((result) {
+      final messages = result.data;
 
-      AmityLog.debug("ChatPageEventChanged: $lastMessageText (${event.length} total)");
+      if (messages.isEmpty) {
+        AmityLog.debug("ChatPageEventChanged: Received empty message list");
+      }
 
-      addEvent(
-          ChatPageEventChanged(messages: event, isFetching: state.isFetching));
+      final lastMessageText =
+          messages.isNotEmpty && messages.first.data is MessageTextData ? (messages.first.data as MessageTextData).text : "N/A";
+
+      AmityLog.debug("ChatPageEventChanged: $lastMessageText (${messages.length} total)");
+
+      addEvent(ChatPageEventChanged(messages: messages, isFetching: result.isFetching));
     });
 
     liveCollection?.observeLoadingState().listen((event) {
@@ -693,8 +635,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     // Observe Network Connectivity status here
-    subscription =
-        Connectivity().onConnectivityChanged.listen((connectivityEvent) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((connectivityEvent) {
       if (connectivityEvent.contains(ConnectivityResult.none)) {
         addEvent(const ChatPageNetworkConnectivityChanged(isConnected: false));
       } else {
@@ -704,7 +645,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   }
 
   /// Start progressive scroll animation to find and highlight target message
-  /// 
+  ///
   /// This method smoothly scrolls through the chat to locate a specific message
   /// identified by [targetMessageId]. Once found, the message will be highlighted
   /// with a bounce animation.
@@ -714,25 +655,27 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       _isJumpScrollInProgress = false;
       return;
     }
-    
+
     if (!_scrollController.hasClients) {
       _isJumpScrollInProgress = false;
       add(const ChatPageSetAroundMessage(aroundMessageId: null));
       return;
     }
-    
+
     final position = _scrollController.position;
     final maxScrollExtent = position.maxScrollExtent;
-    
+
     if (maxScrollExtent > 0) {
       _isJumpScrollInProgress = true;
-      
+
       // Use linear curve for smoother and more predictable scrolling
-      _scrollController.animateTo(
+      _scrollController
+          .animateTo(
         maxScrollExtent,
         duration: const Duration(milliseconds: 300),
         curve: Curves.linear,
-      ).then((_) {
+      )
+          .then((_) {
         _isJumpScrollInProgress = false;
       });
     } else {

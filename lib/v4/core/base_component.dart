@@ -62,3 +62,57 @@ abstract class NewBaseComponent extends StatelessWidget {
     }
   }
 }
+
+abstract class BaseStatefulComponent extends StatefulWidget {
+  final String? pageId;
+  final String componentId;
+
+  const BaseStatefulComponent({
+    super.key,
+    this.pageId,
+    required this.componentId,
+  });
+}
+
+abstract class BaseStatefulComponentState<T extends BaseStatefulComponent>
+    extends State<T> {
+  late final AmityThemeColor theme;
+  late final ConfigProvider configProvider;
+  late final Map<String, dynamic> config;
+  late final AmityUIConfig uiConfig;
+  
+  @override
+  Widget build(BuildContext context) {
+    if (!isInitialized()) {
+      configProvider = context.watch<ConfigProvider>();
+      theme = configProvider.getTheme(widget.pageId, widget.componentId);
+      config = configProvider.getMapConfig(widget.pageId, widget.componentId, null);
+      uiConfig = configProvider.getUIConfig(widget.pageId, widget.componentId, null);
+    }
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: theme.primaryColor,
+          selectionColor: theme.primaryColor.withAlpha(77), // 30% opacity
+          selectionHandleColor: theme.primaryColor,
+        ),
+      ),
+      child: buildComponent(context),
+    );
+  }
+
+  Widget buildComponent(BuildContext context);
+
+  bool isInitialized() {
+    try {
+      configProvider;
+      theme;
+      config;
+      uiConfig;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+}

@@ -724,8 +724,8 @@ class ChatListItem extends BaseElement {
       ),
       child: Text(
         unreadCount > 99 ? '99+' : unreadCount.toString(),
-        style: const TextStyle(
-          color: Colors.black,
+        style:  TextStyle(
+          color: theme.vdotGreenText,
           fontSize: 12,
           fontWeight: FontWeight.bold,
         ),

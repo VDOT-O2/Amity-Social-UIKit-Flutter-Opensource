@@ -13,14 +13,11 @@ Widget communityList(
   ScrollController scrollController,
   List<AmityCommunity> communities,
   AmityThemeColor theme,
-  void Function() loadMore,
 ) {
-  scrollController.addListener(() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      loadMore();
-    }
-  });
-
+  if (communities.isEmpty) {
+    return communityEmptyList(context);
+  }
+  
   return Container(
     decoration: BoxDecoration(color: theme.backgroundColor),
     child: IntrinsicHeight(
@@ -203,5 +200,11 @@ Widget communitySkeletonRow() {
         ]),
       ],
     ),
+  );
+}
+
+Widget communityEmptyList(BuildContext context) {
+  return const Center(
+    child: Text('There are no communities.'),
   );
 }

@@ -16,7 +16,7 @@ class PostContentVideo extends StatelessWidget {
 
     Widget backgroundThumbnail(String fileUrl, int index, {BorderRadius? borderRadius}) {
       AmityLog.debug("PostContentVideo: Displaying thumbnail for post at index $index with URL: $fileUrl");
-      final debugText = "PostContentVideo: post at index $index with URL: $fileUrl";
+      //sfinal debugText = "PostContentVideo: post at index $index with URL: $fileUrl";
 
       return Padding(
         padding: const EdgeInsets.all(2.0),
@@ -32,10 +32,10 @@ class PostContentVideo extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.topCenter,
-              child: Text(debugText, style: const TextStyle(fontSize: 12, color: Colors.red)), // Debug text overlay
-            ),
+            // Container(
+            //   alignment: Alignment.topCenter,
+            //   child: Text(debugText, style: const TextStyle(fontSize: 12, color: Colors.red)), // Debug text overlay
+            // ),
             Align(
               alignment: Alignment.center,
               child: Container(
