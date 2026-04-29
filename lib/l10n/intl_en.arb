@@ -354,11 +354,11 @@
 
 
 
-  "community_close": "Close community?",
+  "community_close": "Delete group?",
   "@community_close": {
     "description": "Label for close button"
   },
-  "community_close_description": "All members will be removed from the community. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.",
+  "community_close_description": "All members will be removed from the group. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.",
   "@community_close_description": {
     "description": "Confirmation message for closing a community"
   },

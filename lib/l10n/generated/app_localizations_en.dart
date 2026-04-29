@@ -758,14 +758,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_delete_post => 'Failed to delete post. Please try again.';
 
   @override
-  String get error_leave_community => 'Unable to leave community';
+  String get error_leave_community => 'Unable to leave group';
 
   @override
   String get error_leave_community_description =>
-      'You’re the only moderator in this group. To leave community, nominate other members to moderator role';
+      'You’re the only moderator in this group. To leave group, nominate other members to moderator role';
 
   @override
-  String get error_close_community => 'Unable to close community';
+  String get error_close_community => 'Unable to delete group';
 
   @override
   String get error_close_community_description =>
@@ -879,11 +879,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get community_story_comments => 'Story comments';
 
   @override
-  String get community_setting_close_label => 'Close community';
+  String get community_setting_close_label => 'Delete group';
 
   @override
   String get community_setting_close_description =>
-      'Closing this community will remove the community  page and all its content and comments.';
+      'Deleting this group will remove the entire page, including all of its content and comments.';
 
   @override
   String get community_post_permission_title_label =>

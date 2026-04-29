@@ -4,6 +4,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/bloc/global_feed_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/bloc/post_composer_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/detailed_media_attachment_component.dart';
@@ -26,8 +27,7 @@ import '../../core/ui/mention/mention_text_editing_controller.dart';
 // ignore: must_be_immutable
 class AmityPostComposerPage extends NewBasePage {
   final AmityPostComposerOptions options;
-  final MentionTextEditingController textController =
-      MentionTextEditingController();
+  final MentionTextEditingController textController = MentionTextEditingController();
   final void Function(bool shouldPopCaller)? onPopRequested;
   ImagePicker imagePicker = ImagePicker();
   late String currentPostText = '';
@@ -52,10 +52,7 @@ class AmityPostComposerPage extends NewBasePage {
   Widget buildPage(BuildContext context) {
     _getAppName();
     String? communityId =
-        (options.targetType == AmityPostTargetType.COMMUNITY &&
-                options.targetId != null)
-            ? options.targetId
-            : null;
+        (options.targetType == AmityPostTargetType.COMMUNITY && options.targetId != null) ? options.targetId : null;
 
     if (options.mode == AmityPostComposerMode.edit) {
       AmityPost post = options.post!;
@@ -119,8 +116,7 @@ class AmityPostComposerPage extends NewBasePage {
                 final selection = textController.selection;
                 textController.text = state.text;
                 // Restore cursor position if still valid
-                if (selection.baseOffset <= state.text.length &&
-                    selection.baseOffset >= 0) {
+                if (selection.baseOffset <= state.text.length && selection.baseOffset >= 0) {
                   textController.selection = selection;
                 }
               }
@@ -143,15 +139,13 @@ class AmityPostComposerPage extends NewBasePage {
               } else {
                 if (selectedFiles.entries.first.value.type == FileType.video) {
                   selectedMediaType = FileType.video;
-                } else if (selectedFiles.entries.first.value.type ==
-                    FileType.image) {
+                } else if (selectedFiles.entries.first.value.type == FileType.image) {
                   selectedMediaType = FileType.image;
                 }
                 if (currentUrlsCount != selectedFiles.length) {
                   isFileCountChanged = true;
                 } else {
-                  isFileCountChanged =
-                      !setEquals(existingFileKeys, newFileKeys);
+                  isFileCountChanged = !setEquals(existingFileKeys, newFileKeys);
                 }
                 checkAllFilesAreUploaded(context);
               }
@@ -181,8 +175,7 @@ class AmityPostComposerPage extends NewBasePage {
                             child: Column(
                               children: [
                                 const SizedBox(height: 10),
-                                buildTextField(context, communityId,
-                                    minBottomSheetSize, maxBottomSheetSize),
+                                buildTextField(context, communityId, minBottomSheetSize, maxBottomSheetSize),
                                 const SizedBox(height: 10),
                                 Container(
                                   color: Colors.transparent,
@@ -207,12 +200,10 @@ class AmityPostComposerPage extends NewBasePage {
                         onCameraTap(context);
                       },
                       onImageTap: () async {
-                        pickMultipleFiles(context, FileType.image,
-                            maxFiles: 10);
+                        pickMultipleFiles(context, FileType.image, maxFiles: 10);
                       },
                       onVideoTap: () async {
-                        pickMultipleFiles(context, FileType.video,
-                            maxFiles: 10);
+                        pickMultipleFiles(context, FileType.video, maxFiles: 10);
                       },
                       mediaType: selectedMediaType,
                     ),
@@ -221,12 +212,10 @@ class AmityPostComposerPage extends NewBasePage {
                           onCameraTap(context);
                         },
                         onImageTap: () {
-                          pickMultipleFiles(context, FileType.image,
-                              maxFiles: 10);
+                          pickMultipleFiles(context, FileType.image, maxFiles: 10);
                         },
                         onVideoTap: () {
-                          pickMultipleFiles(context, FileType.video,
-                              maxFiles: 10);
+                          pickMultipleFiles(context, FileType.video, maxFiles: 10);
                         },
                         mediaType: selectedMediaType),
                   ),
@@ -246,7 +235,7 @@ class AmityPostComposerPage extends NewBasePage {
       isPostButtonEnabled = false;
       return;
     }
-    
+
     // For create mode, enable button if there's text or files
     if (options.mode == AmityPostComposerMode.create) {
       if (textController.text.isNotEmpty && selectedFiles.isEmpty) {
@@ -296,7 +285,7 @@ class AmityPostComposerPage extends NewBasePage {
         isPostButtonEnabled = true;
         return;
       }
-      
+
       // If text changed and files exist, ensure all files are ready
       if (isTextChanged && selectedFiles.isNotEmpty) {
         isPostButtonEnabled = isMediaReady;
@@ -311,11 +300,10 @@ class AmityPostComposerPage extends NewBasePage {
   void checkAllFilesAreUploaded(BuildContext context) {
     // Check if any file has an error
     bool hasAnyError = selectedFiles.values.any((file) => file.isError == true);
-    
+
     // Check if all files are uploaded
-    bool isAllImageUploaded =
-        selectedFiles.values.every((image) => image.isUploaded == true);
-    
+    bool isAllImageUploaded = selectedFiles.values.every((image) => image.isUploaded == true);
+
     if (hasAnyError) {
       // If any file failed, media is not ready
       isMediaReady = false;
@@ -353,8 +341,7 @@ class AmityPostComposerPage extends NewBasePage {
             if (selectedFiles.length == 10) {
               AmityV4Dialog().showAlertErrorDialog(
                 title: localize.error_max_upload_reached,
-                message:
-                    localize.error_max_upload_videos_reached_description(10),
+                message: localize.error_max_upload_videos_reached_description(10),
                 closeText: localize.general_close,
               );
             } else {
@@ -366,8 +353,7 @@ class AmityPostComposerPage extends NewBasePage {
             if (selectedFiles.length == 10) {
               AmityV4Dialog().showAlertErrorDialog(
                   title: localize.error_max_upload_reached,
-                  message:
-                      localize.error_max_upload_image_reached_description(10),
+                  message: localize.error_max_upload_image_reached_description(10),
                   closeText: localize.general_close);
             } else {
               context.read<PostComposerBloc>().add(
@@ -381,23 +367,19 @@ class AmityPostComposerPage extends NewBasePage {
   }
 
   void _initializeController(BuildContext context) {
-    if (options.mode == AmityPostComposerMode.edit &&
-        options.post?.data is TextData) {
+    if (options.mode == AmityPostComposerMode.edit && options.post?.data is TextData) {
       final text = (options.post!.data as TextData).text ?? '';
       var mentionList = List<AmityUserMentionMetadata>.empty();
 
       if (options.post!.metadata != null) {
-        final mentionedGetter =
-            AmityMentionMetadataGetter(metadata: options.post!.metadata!);
+        final mentionedGetter = AmityMentionMetadataGetter(metadata: options.post!.metadata!);
         mentionList = mentionedGetter.getMentionedUsers();
       }
 
       textController.populate(text, mentionList);
     }
     textController.addListener(() {
-      context
-          .read<PostComposerBloc>()
-          .add(PostComposerTextChangeEvent(text: textController.text));
+      context.read<PostComposerBloc>().add(PostComposerTextChangeEvent(text: textController.text));
     });
   }
 
@@ -406,7 +388,7 @@ class AmityPostComposerPage extends NewBasePage {
     if (isPosting) {
       return;
     }
-    
+
     ConfirmationV4Dialog().show(
       context: context,
       title: context.l10n.post_discard,
@@ -440,15 +422,13 @@ class AmityPostComposerPage extends NewBasePage {
     // Get mention metadata
     final mentionMetadataList = textController.getAmityMentionMetadata();
     final mentionUserIds = textController.getMentionUserIds();
-    final mentionMetadataJson =
-        AmityMentionMetadataCreator(mentionMetadataList).create();
+    final mentionMetadataJson = AmityMentionMetadataCreator(mentionMetadataList).create();
 
     if (selectedMediaType == FileType.image) {
       List<AmityImage> images = existingImages.toList();
       var imageList = selectedFiles.entries;
       for (var image in imageList) {
-        if (image.value.fileInfo != null &&
-            image.value.fileInfo!.getFileProperties != null) {
+        if (image.value.fileInfo != null && image.value.fileInfo!.getFileProperties != null) {
           images.add(AmityImage(image.value.fileInfo!.getFileProperties!));
         }
       }
@@ -461,13 +441,21 @@ class AmityPostComposerPage extends NewBasePage {
           .metadata(mentionMetadataJson)
           .build()
           .update()
-          .then((post) {
+          .then((post) async {
+        await Future.delayed(const Duration(milliseconds: 500)); // Small delay to ensure update is processed
+        if (!context.mounted) {
+          return;
+        }
+
         Navigator.pop(context);
       }).onError((error, stackTrace) {
+        if (!context.mounted) {
+          return;
+        }
+
         // Re-enable button on error to allow retry
         isPosting = false;
-        _showToast(
-            context, context.l10n.error_edit_post, AmityToastIcon.warning);
+        _showToast(context, context.l10n.error_edit_post, AmityToastIcon.warning);
       });
     } else {
       final postEditBuilder = options.post?.edit();
@@ -506,11 +494,8 @@ class AmityPostComposerPage extends NewBasePage {
         }
 
         // If it's a new video, add it
-        if (!isExisting &&
-            entry.value.fileInfo != null &&
-            entry.value.fileInfo!.getFileProperties != null) {
-          AmityVideo video =
-              AmityVideo(entry.value.fileInfo!.getFileProperties!);
+        if (!isExisting && entry.value.fileInfo != null && entry.value.fileInfo!.getFileProperties != null) {
+          AmityVideo video = AmityVideo(entry.value.fileInfo!.getFileProperties!);
           videosToUpload.add(video);
         }
       }
@@ -522,19 +507,30 @@ class AmityPostComposerPage extends NewBasePage {
         postEditBuilder?.video([]);
       }
 
+      AmityLog.debug(
+          "Editing post with text: ${textController.text}, mentionUserIds: $mentionUserIds, mentionMetadata: $mentionMetadataJson, videosToUpload count: ${videosToUpload.length}");
+
       postEditBuilder
           ?.text(textController.text)
           .mentionUsers(mentionUserIds)
           .metadata(mentionMetadataJson)
           .build()
           .update()
-          .then((post) {
+          .then((post) async {
+        await Future.delayed(const Duration(milliseconds: 500)); // Small delay to ensure update is processed
+
+        if (!context.mounted) {
+          return;
+        }
         Navigator.pop(context);
       }).onError((error, stackTrace) {
+        if (!context.mounted) {
+          return;
+        }
+
         // Re-enable button on error to allow retry
         isPosting = false;
-        _showToast(
-            context, context.l10n.error_edit_post, AmityToastIcon.warning);
+        _showToast(context, context.l10n.error_edit_post, AmityToastIcon.warning);
       });
     }
   }
@@ -542,14 +538,14 @@ class AmityPostComposerPage extends NewBasePage {
   void _createPost(BuildContext context) {
     final targetId = options.targetId;
 
-    context.read<AmityToastBloc>().add(AmityToastLoading(
-        message: context.l10n.general_posting, icon: AmityToastIcon.loading));
+    context
+        .read<AmityToastBloc>()
+        .add(AmityToastLoading(message: context.l10n.general_posting, icon: AmityToastIcon.loading));
 
     var targetBuilder = AmitySocialClient.newPostRepository().createPost();
 
     AmityPostCreateDataTypeSelector dataTypeSelector;
-    if (options.targetType == AmityPostTargetType.COMMUNITY &&
-        targetId != null) {
+    if (options.targetType == AmityPostTargetType.COMMUNITY && targetId != null) {
       dataTypeSelector = targetBuilder.targetCommunity(targetId);
     } else {
       dataTypeSelector = targetBuilder.targetMe();
@@ -562,40 +558,43 @@ class AmityPostComposerPage extends NewBasePage {
         List<AmityVideo> videos = [];
 
         for (var amityVideo in selectedFiles.entries) {
-          AmityVideo video =
-              AmityVideo(amityVideo.value.fileInfo!.getFileProperties!);
+          AmityVideo video = AmityVideo(amityVideo.value.fileInfo!.getFileProperties!);
           videos.add(video);
         }
-        postCreatorBuilder =
-            dataTypeSelector.video(videos).text(textController.text);
+        postCreatorBuilder = dataTypeSelector.video(videos).text(textController.text);
       } else {
         List<AmityImage> images = [];
         var imageList = selectedFiles.entries;
         for (var image in imageList) {
           images.add(AmityImage(image.value.fileInfo!.getFileProperties!));
         }
-        postCreatorBuilder =
-            dataTypeSelector.image(images).text(textController.text);
+        postCreatorBuilder = dataTypeSelector.image(images).text(textController.text);
       }
     } else {
       postCreatorBuilder = dataTypeSelector.text(textController.text);
     }
     final mentionMetadataList = textController.getAmityMentionMetadata();
     final mentionUserIds = textController.getMentionUserIds();
-    final mentionMetadataJson =
-        AmityMentionMetadataCreator(mentionMetadataList).create();
+    final mentionMetadataJson = AmityMentionMetadataCreator(mentionMetadataList).create();
 
-    postCreatorBuilder
-        .mentionUsers(mentionUserIds)
-        .metadata(mentionMetadataJson)
-        .post()
-        .then((post) {
+    AmityLog.debug(
+        "Creating post with text: ${textController.text}, mentionUserIds: $mentionUserIds, mentionMetadata: $mentionMetadataJson, selectedFiles count: ${selectedFiles.length}");
+
+    postCreatorBuilder.mentionUsers(mentionUserIds).metadata(mentionMetadataJson).post().then((post) async {
+      await Future.delayed(const Duration(milliseconds: 500)); // Small delay to ensure update is processed
+      if (!context.mounted) {
+        return;
+      }
+
       _onPostSuccess(context, post);
     }).onError((error, stackTrace) {
+      if (!context.mounted) {
+        return;
+      }
+
       // Re-enable button on error to allow retry
       isPosting = false;
-      _showToast(
-          context, context.l10n.error_create_post, AmityToastIcon.warning);
+      _showToast(context, context.l10n.error_create_post, AmityToastIcon.warning);
     });
   }
 
@@ -606,18 +605,24 @@ class AmityPostComposerPage extends NewBasePage {
     // Check if post review is enabled or not
     if (post.target is CommunityTarget) {
       final commTarget = post.target as CommunityTarget;
-      isPostReviewEnabled =
-          commTarget.targetCommunity?.isPostReviewEnabled ?? false;
+      isPostReviewEnabled = commTarget.targetCommunity?.isPostReviewEnabled ?? false;
 
       // Check if user has moderator permission
-      isModerator =
-          AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY)
-              .atCommunity(commTarget.targetCommunityId ?? "")
-              .check();
+      isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY)
+          .atCommunity(commTarget.targetCommunityId ?? "")
+          .check();
     }
 
     context.read<AmityToastBloc>().add(AmityToastDismiss());
+
+    AmityLog.debug(
+        "Post created successfully with ID: ${post.postId}, isPostReviewEnabled: $isPostReviewEnabled, isModerator: $isModerator");
+
     Future.delayed(const Duration(milliseconds: 500), () {
+      if (!context.mounted) {
+        return;
+      }
+
       final shouldShowModeratorPost = isModerator;
       final shouldShowMemberPost = !isPostReviewEnabled && !isModerator;
       // We do not want to show posts which requires moderator approval in feed immediately after creation.
@@ -630,8 +635,6 @@ class AmityPostComposerPage extends NewBasePage {
   }
 
   void _showToast(BuildContext context, String message, AmityToastIcon icon) {
-    context
-        .read<AmityToastBloc>()
-        .add(AmityToastShort(message: message, icon: icon));
+    context.read<AmityToastBloc>().add(AmityToastShort(message: message, icon: icon));
   }
 }
