@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -149,6 +150,8 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
   }
 
   void initializeVideoPlayer(String filePath) {
+    AmityLog.debug("[AmityMessageCameraScreen] Initializing video player for file=$filePath");
+
     setState(() {
       _controller = VideoPlayerController.file(File(filePath));
       _initializeVideoPlayerFuture = _controller!.initialize();

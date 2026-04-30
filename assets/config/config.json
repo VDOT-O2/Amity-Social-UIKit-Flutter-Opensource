@@ -597,7 +597,7 @@
             "text": "New group"
         },
         "create_group_chat_page/*/create_group_chat_title": {
-            "text": "New group"
+            "text": "New group chat"
         },
         "group_chat_page/*/*": {},
         "group_chat_page/message_bubble/*": {

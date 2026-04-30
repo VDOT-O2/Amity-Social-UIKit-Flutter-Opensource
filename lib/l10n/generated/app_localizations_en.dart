@@ -1476,13 +1476,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Failed to create group chat. Please try again.';
 
   @override
-  String get chat_create_title => 'New Group';
+  String get chat_create_title => 'New Group Chat';
 
   @override
   String get chat_create_button => 'Create';
 
   @override
-  String get chat_group_name_label => 'Group name';
+  String get chat_group_name_label => 'Group chat name';
 
   @override
   String get chat_group_name_optional => '(Optional)';
@@ -1502,14 +1502,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chat_privacy_private_desc =>
-      'Group is hidden from search and only accessible by invitation from moderators.';
+      'Group chat is hidden from search and only accessible by invitation from moderators.';
 
   @override
   String get chat_privacy_warning =>
       'Ensure the correct privacy setting is chosen for your group, as it can\'t be changed later.';
 
   @override
-  String get chat_select_member_title => 'New group';
+  String get chat_select_member_title => 'New group chat';
 
   @override
   String get general_next => 'Next';

@@ -23,12 +23,14 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   var messagesCount = 0;
   MessageLiveCollection? liveCollection;
 
-  late final StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   late final StreamSubscription<LiveResult<AmityMessage>> _messagesSubscription;
+  late final StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   late ScrollController _scrollController;
   bool _isScrollListenerAdded = false;
   bool _isJumpScrollInProgress = false; // Flag to track jump scroll state
+  bool _isFetchingMessages = false;
+
   Timer? _jumpToMessageTimeoutTimer;
 
   final AmityToastBloc toastBloc;
@@ -585,6 +587,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   }
 
   Future initLiveCollection(String channelId, {String? aroundMessageId}) async {
+    AmityLog.debug("[ChatPage] Initializing live collection for channelId=$channelId, aroundMessageId=$aroundMessageId");
+
     if (liveCollection != null) {
       liveCollection?.getStreamController().close();
       await liveCollection?.dispose();
@@ -615,24 +619,28 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     }
 
     _messagesSubscription = messagesLiveCollection.getStream().listen((result) {
+      if (result.isFetching != _isFetchingMessages) {
+        _isFetchingMessages = result.isFetching;
+        addEvent(ChatPageEventLoadingStateUpdated(isFetching: _isFetchingMessages));
+      }
+
       final messages = result.data;
 
       if (messages.isEmpty) {
-        AmityLog.debug("ChatPageEventChanged: Received empty message list");
+        AmityLog.debug("[ChatPage] ChatPageEventChanged: Received empty message list");
       }
 
       final lastMessageText =
           messages.isNotEmpty && messages.first.data is MessageTextData ? (messages.first.data as MessageTextData).text : "N/A";
-
-      AmityLog.debug("ChatPageEventChanged: $lastMessageText (${messages.length} total)");
+      AmityLog.debug("[ChatPage] ChatPageEventChanged: $lastMessageText (${messages.length} total)");
 
       addEvent(ChatPageEventChanged(messages: messages, isFetching: result.isFetching));
     });
 
-    liveCollection?.observeLoadingState().listen((event) {
-      AmityLog.debug("ChatPageEventLoadingStateUpdated: isFetching=$event");
-      addEvent(ChatPageEventLoadingStateUpdated(isFetching: event));
-    });
+// liveCollection?.observeLoadingState().listen((event) {
+//       AmityLog.debug("[ChatPage] ChatPageEventLoadingStateUpdated: isFetching=$event");
+//       addEvent(ChatPageEventLoadingStateUpdated(isFetching: event));
+//     });
 
     // Observe Network Connectivity status here
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((connectivityEvent) {
