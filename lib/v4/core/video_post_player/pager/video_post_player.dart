@@ -49,9 +49,7 @@ class VideoPostPlayerBuilder extends StatelessWidget {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          context.read<VideoPostPlayerBloc>().add(VideoPostPlayerEventDispose());
-        }
+        
       },
       child: BlocBuilder<VideoPostPlayerBloc, VideoPostPlayerState>(
           builder: (context, state) {
@@ -80,9 +78,6 @@ class VideoPostPlayerBuilder extends StatelessWidget {
                 ),
                 color: Colors.white,
                 onPressed: () {
-                  context
-                      .read<VideoPostPlayerBloc>()
-                      .add(VideoPostPlayerEventDispose());
                   Navigator.of(context).pop();
                 },
               )),

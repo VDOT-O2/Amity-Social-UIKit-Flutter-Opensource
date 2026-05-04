@@ -2640,7 +2640,7 @@ abstract class AppLocalizations {
   /// Description for private group privacy setting
   ///
   /// In en, this message translates to:
-  /// **'Group is hidden from search and only accessible by invitation from moderators.'**
+  /// **'Group chat is hidden from search and only accessible by invitation from moderators.'**
   String get chat_privacy_private_desc;
 
   /// Warning message about privacy setting being permanent

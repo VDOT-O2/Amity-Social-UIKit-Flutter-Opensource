@@ -19,4 +19,3 @@ class SingleVideoPlayerEventPageChanged extends SingleVideoPlayerEvent {
   List<Object> get props => [currentIndex];
 }
 
-class SingleVideoPlayerEventDispose extends SingleVideoPlayerEvent {}

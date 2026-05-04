@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/draft/amity_story_media_type.dart';
 import 'package:chewie/chewie.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +20,8 @@ class StoryVideoPlayerBloc extends Bloc<StoryVideoPlayerEvent, StoryVideoPlayerS
   }
 
   Future<void> _onInitialize(InitializeStoryVideoPlayerEvent event, Emitter<StoryVideoPlayerState> emit) async {
+    AmityLog.debug("[StoryVideoPlayerBloc] Initializing video player with url=${event.url} file=${event.file?.path} metadata=${event.metadata} isFromGallery=${event.isFromGallery} looping=${event.looping}");
+
   final previousVideoController = state.videoController;
   final previousChewieController = state.chewieController;
 

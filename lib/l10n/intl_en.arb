@@ -354,11 +354,11 @@
 
 
 
-  "community_close": "Close community?",
+  "community_close": "Delete group?",
   "@community_close": {
     "description": "Label for close button"
   },
-  "community_close_description": "All members will be removed from the community. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.",
+  "community_close_description": "All members will be removed from the group. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.",
   "@community_close_description": {
     "description": "Confirmation message for closing a community"
   },
@@ -1828,13 +1828,13 @@
   "@chat_create_error_retry": {
     "description": "Toast error message prompting user to retry group creation"
   },
-  "chat_create_title": "New Group",
+  "chat_create_title": "New Group Chat",
   "@chat_create_title": {
     "description": "AppBar title for create group page"
   },
   "chat_create_button": "Create",
   "@chat_create_button": {
-    "description": "Button text to create a new group"
+    "description": "Button text to create a new group chat"
   },
   "chat_group_name_label": "Group name",
   "@chat_group_name_label": {
@@ -1860,7 +1860,7 @@
   "@chat_privacy_private": {
     "description": "Label for private privacy option"
   },
-  "chat_privacy_private_desc": "Group is hidden from search and only accessible by invitation from moderators.",
+  "chat_privacy_private_desc": "Group chat is hidden from search and only accessible by invitation from moderators.",
   "@chat_privacy_private_desc": {
     "description": "Description for private group privacy setting"
   },

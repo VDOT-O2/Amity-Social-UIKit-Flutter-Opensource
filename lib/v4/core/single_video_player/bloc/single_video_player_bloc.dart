@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
@@ -6,13 +7,10 @@ import 'package:video_player/video_player.dart';
 part 'single_video_player_events.dart';
 part 'single_video_player_state.dart';
 
-class VideoPostPlayerBloc
-    extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayerState> {
-  VideoPostPlayerBloc({required AmityPost post})
-      : super(SingleVideoPlayerStateInitial(post)) {
+class VideoPostPlayerBloc extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayerState> {
+  VideoPostPlayerBloc({required AmityPost post}) : super(SingleVideoPlayerStateInitial(post)) {
     on<SingleVideoPlayerEventInitial>((event, emit) async {
-      final AmityVideo video =
-          await (post.data as VideoData).getVideo(AmityVideoQuality.HIGH);
+      final AmityVideo video = await (post.data as VideoData).getVideo(AmityVideoQuality.HIGH);
       final videoUrl = video.getFileProperties!.fileUrl ?? "";
       final thumbnail = (post.data as VideoData).thumbnail?.fileUrl ?? "";
 
@@ -26,9 +24,12 @@ class VideoPostPlayerBloc
         videoController: controller,
       ));
     });
-
-    on<SingleVideoPlayerEventDispose>((event, emit) async {
-      state.videoController?.dispose();
-    });
   }
+
+  @override
+  Future close() {
+    state.videoController?.dispose();
+    return super.close();
+  }
+
 }

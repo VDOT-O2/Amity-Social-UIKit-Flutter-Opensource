@@ -147,7 +147,9 @@ class _ExpandableTextState extends State<ExpandableText> {
     try {
       // Process in background
       AmityLog.debug("Processing text in background for: $text");
-      final entities = await compute(processTextInBackground, data);
+      final entities = await processTextInBackground(data);
+
+      // final entities = await compute(processTextInBackground, data);
 
       // Cache the result
       _textCache.put(text, entities);

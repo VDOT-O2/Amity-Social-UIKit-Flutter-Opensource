@@ -1,5 +1,5 @@
-
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:video_player/video_player.dart';
@@ -10,8 +10,10 @@ part 'video_post_player_state.dart';
 class VideoPostPlayerBloc extends Bloc<VideoPostPlayerEvent, VideoPostPlayerState> {
   VideoPostPlayerBloc({required List<AmityPost> posts, required int initialIndex})
       : super(VideoPostPlayerStateInitial(posts, initialIndex)) {
-    
     on<VideoPostPlayerEventInitial>((event, emit) async {
+      AmityLog.debug(
+          "[VideoPostPlayerBloc] Initial event received, loading videos for ${posts.length} posts, initialIndex=$initialIndex");
+
       var urls = <String>[];
       var thumbnails = <String>[];
       for (var post in posts) {
@@ -24,14 +26,12 @@ class VideoPostPlayerBloc extends Bloc<VideoPostPlayerEvent, VideoPostPlayerStat
       final uri = Uri.parse(urls[initialIndex]);
       final controller = VideoPlayerController.networkUrl(uri);
       await controller.initialize();
-      emit(
-        state.copyWith(
-          urls: urls,
-          thumbnails: thumbnails,
-          currentIndex: initialIndex,
-          videoController: controller,
-        )
-      );
+      emit(state.copyWith(
+        urls: urls,
+        thumbnails: thumbnails,
+        currentIndex: initialIndex,
+        videoController: controller,
+      ));
     });
 
     on<VideoPostPlayerEventPageChanged>((event, emit) async {
@@ -40,18 +40,16 @@ class VideoPostPlayerBloc extends Bloc<VideoPostPlayerEvent, VideoPostPlayerStat
       final controller = VideoPlayerController.networkUrl(uri);
       await controller.initialize();
       state.videoController?.dispose();
-      emit(
-        state.copyWith(
-          currentIndex: event.currentIndex,
-          videoController: controller,
-        )
-      );
+      emit(state.copyWith(
+        currentIndex: event.currentIndex,
+        videoController: controller,
+      ));
     });
-
-    on<VideoPostPlayerEventDispose>((event, emit) async {
-      state.videoController?.dispose();
-    });
-
   }
 
+  @override
+  Future close() {
+    state.videoController?.dispose();
+    return super.close();
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
@@ -7,10 +8,11 @@ import 'package:video_player/video_player.dart';
 part 'single_video_player_state.dart';
 part 'single_video_player_event.dart';
 
-class SingleVideoPlayerBloc
-    extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayerState> {
+class SingleVideoPlayerBloc extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayerState> {
   SingleVideoPlayerBloc({required String? filePath, required String? fileUrl})
       : super(VideoPostPlayerStateInitial(filePath, fileUrl)) {
+    AmityLog.debug("[SingleVideoPlayerBloc] Initializing with filePath=$filePath fileUrl=$fileUrl");
+
     on<SingleVideoPlayerEventInitial>((event, emit) async {
       if (filePath != null) {
         final controller = VideoPlayerController.file(File(filePath));
@@ -32,8 +34,11 @@ class SingleVideoPlayerBloc
       }
     });
 
-    on<SingleVideoPlayerEventDispose>((event, emit) async {
-      state.videoController?.dispose();
-    });
+  }
+
+  @override
+  Future close() {
+    state.videoController?.dispose();
+    return super.close();
   }
 }

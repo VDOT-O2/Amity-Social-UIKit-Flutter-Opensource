@@ -16,6 +16,7 @@
             "base_inverse_color": "#000000",
             "highlight_color": "#111111",
             "vdot_green": "#00C805",
+            "vdot_green_text": "#FFFFFF",
             "avatar_background_color": "#000000",
             "avatar_border_color": "#D9D9D9",
             "avatar_text_color": "#FFFFFF",
@@ -39,6 +40,7 @@
             "base_inverse_color": "#FFFFFF",
             "highlight_color": "#ffffff",
             "vdot_green": "#3AFF64",
+            "vdot_green_text": "#000000",
             "avatar_background_color": "#0f1217",
             "avatar_border_color": "#2E3742",
             "avatar_text_color": "#FFFFFF",
@@ -595,7 +597,7 @@
             "text": "New group"
         },
         "create_group_chat_page/*/create_group_chat_title": {
-            "text": "New group"
+            "text": "New group chat"
         },
         "group_chat_page/*/*": {},
         "group_chat_page/message_bubble/*": {
