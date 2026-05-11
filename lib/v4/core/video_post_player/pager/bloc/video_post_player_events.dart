@@ -17,5 +17,3 @@ class VideoPostPlayerEventPageChanged extends VideoPostPlayerEvent {
   @override
   List<Object> get props => [currentIndex];
 }
-
-class VideoPostPlayerEventDispose extends VideoPostPlayerEvent {}

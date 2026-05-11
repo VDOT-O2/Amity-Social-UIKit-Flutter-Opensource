@@ -12,9 +12,7 @@ part 'video_message_player_state.dart';
 class VideoMessagePlayerBloc extends Bloc<VideoMessagePlayerEvent, VideoMessagePlayerState> {
   VideoMessagePlayerBloc({required AmityVideo video, required String thumbnailUrl})
       : super(VideoMessagePlayerStateInitial(video, thumbnailUrl)) {
-    
     on<VideoMessagePlayerEventInitial>((event, emit) async {
-     
       final videoUrl = video.getVideoUrl(AmityVideoResolution.RES_1080) ??
           video.getVideoUrl(AmityVideoResolution.RES_720) ??
           video.getVideoUrl(AmityVideoResolution.RES_480) ??

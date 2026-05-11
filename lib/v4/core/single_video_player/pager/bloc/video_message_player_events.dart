@@ -8,5 +8,3 @@ abstract class  VideoMessagePlayerEvent extends Equatable {
 }
 
 class  VideoMessagePlayerEventInitial extends  VideoMessagePlayerEvent {}
-
-class  VideoMessagePlayerEventDispose extends  VideoMessagePlayerEvent {}

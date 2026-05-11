@@ -11,8 +11,6 @@ part 'single_video_player_event.dart';
 class SingleVideoPlayerBloc extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayerState> {
   SingleVideoPlayerBloc({required String? filePath, required String? fileUrl})
       : super(VideoPostPlayerStateInitial(filePath, fileUrl)) {
-    AmityLog.debug("[SingleVideoPlayerBloc] Initializing with filePath=$filePath fileUrl=$fileUrl");
-
     on<SingleVideoPlayerEventInitial>((event, emit) async {
       if (filePath != null) {
         final controller = VideoPlayerController.file(File(filePath));
