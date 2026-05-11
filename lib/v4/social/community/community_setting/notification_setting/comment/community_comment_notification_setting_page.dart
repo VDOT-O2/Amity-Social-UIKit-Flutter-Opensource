@@ -44,6 +44,7 @@ class AmityCommunityCommentsNotificationSettingPage extends NewBasePage {
               theme: theme,
             ),
             tailingButton: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: state.settingsChanged
                   ? () {
                       context

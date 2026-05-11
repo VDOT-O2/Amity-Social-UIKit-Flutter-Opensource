@@ -44,6 +44,7 @@ class AmityCommunityInfoView extends BaseElement {
         ),
         const SizedBox(width: 16),
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => {
             Navigator.of(context).push(
               MaterialPageRoute(

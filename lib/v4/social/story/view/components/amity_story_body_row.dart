@@ -127,6 +127,7 @@ class _AmityStoryBodyRowState extends State<AmityStoryBodyRow> {
                     top: 90,
                     left: 16,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         setState(() {
                           isVolumeOn = !isVolumeOn;

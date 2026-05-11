@@ -16,6 +16,7 @@ class AmityStoryHyperlinkView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             onClick();
           },

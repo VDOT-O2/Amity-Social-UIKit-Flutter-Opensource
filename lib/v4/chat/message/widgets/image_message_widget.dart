@@ -39,6 +39,7 @@ extension ImageMessageWidget on MessageBubbleView {
               child: Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     _showActionSheet(context);
                   },
@@ -130,6 +131,7 @@ extension ImageMessageWidget on MessageBubbleView {
     return StatefulBuilder(
       builder: (context, setState) {
         return GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             onTap?.call();
           },

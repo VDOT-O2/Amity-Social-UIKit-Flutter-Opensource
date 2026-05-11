@@ -89,6 +89,7 @@ class _MessageReportOthersView extends StatelessWidget {
                 child: Row(
                   children: [
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         if (cubit.onBack != null) {
                           cubit.onBack!();
@@ -114,6 +115,7 @@ class _MessageReportOthersView extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         if (cubit.onCancel != null) {
                           cubit.onCancel!();

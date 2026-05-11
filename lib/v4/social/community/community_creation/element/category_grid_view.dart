@@ -48,6 +48,7 @@ class _CategoryGridViewState extends State<CategoryGridView> {
       children: [
         for (var item in widget.items)
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               widget.onTap?.call(item);
               setState(() {}); // Update the state when an item is tapped

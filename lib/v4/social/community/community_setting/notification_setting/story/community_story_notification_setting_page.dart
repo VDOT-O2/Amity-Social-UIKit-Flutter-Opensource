@@ -42,6 +42,7 @@ class AmityCommunityStoriesNotificationSettingPage extends NewBasePage {
                 shouldShowConfirmationDialog: state.settingsChanged,
                 theme: theme),
             tailingButton: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: state.settingsChanged
                   ? () {
                       context

@@ -9,6 +9,7 @@ import 'package:amity_uikit_beta_service/v4/core/shared/user/user_list.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/top_search_bar/top_search_bar.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/debouncer.dart';
@@ -36,8 +37,11 @@ class AmityGroupMemberListPage extends NewBasePage {
 
   @override
   Widget buildPage(BuildContext context) {
+    
     return BlocProvider(
       create: (context) {
+         AmityLog.debug('AmityGroupMemberListPage: create');
+
         final cubit = AmityGroupMemberListCubit(channel: channel, toastBloc: context.read<AmityToastBloc>());
         return cubit;
       },

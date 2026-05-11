@@ -12,8 +12,7 @@ part 'my_community_state.dart';
 class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
   final int pageSize = 20;
   late CommunityLiveCollection communityLiveCollection;
-  late StreamSubscription<List<AmityCommunity>> _subscription;
-  var isInitialLoad = true;
+  late StreamSubscription<LiveResult<AmityCommunity>> _subscription;
 
   MyCommunityBloc() : super(const MyCommunityState()) {
     communityLiveCollection = AmitySocialClient.newCommunityRepository()
@@ -23,25 +22,29 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
         .sortBy(AmityCommunitySortOption.DISPLAY_NAME)
         .getLiveCollection(pageSize: 20);
 
-    _subscription = communityLiveCollection
-        .getStreamController()
-        .stream
-        .debounceTime(const Duration(milliseconds: 150))
-        .listen((communities) async {
-      if ((communityLiveCollection.isFetching == true || isInitialLoad) && communities.isEmpty) {
+    _subscription =
+        communityLiveCollection.getStream().debounceTime(const Duration(milliseconds: 150)).listen((result) async {
+      final communities = result.data;
+      AmityLog.debug(
+          "MyCommunityBloc: Received update with ${communities.length} communities. isFetching: ${result.isFetching}, hasNextPage: ${communityLiveCollection.hasNextPage()}");
+
+      if (result.isFetching == true && communities.isEmpty) {
         add(MyCommunityEventLoading());
+      } else if (result.isFetching == false && communities.isEmpty) {
+        add(const MyCommunityEventLoaded(MyCommunityLoaded(list: [], hasMoreItems: false, isFetching: false)));
       } else {
         var state = MyCommunityLoaded(
           list: communities,
           hasMoreItems: communityLiveCollection.hasNextPage(),
-          isFetching: communityLiveCollection.isFetching,
+          isFetching: result.isFetching,
         );
         add(MyCommunityEventLoaded(state));
-        isInitialLoad = false;
       }
     });
 
     on<MyCommunityEventLoaded>((event, emit) async {
+      AmityLog.debug("MyCommunityEventLoaded");
+
       emit(event.loadedState);
     });
 
@@ -50,8 +53,9 @@ class MyCommunityBloc extends Bloc<MyCommunityEvent, MyCommunityState> {
     });
 
     on<MyCommunityEventInitial>((event, emit) async {
+      AmityLog.debug("MyCommunityBloc: Initial event triggered, resetting live collection");
+
       communityLiveCollection.reset();
-      communityLiveCollection.loadNext();
     });
 
     on<MyCommunityEventLoadMore>((event, emit) async {

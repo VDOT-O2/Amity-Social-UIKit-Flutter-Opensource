@@ -15,6 +15,8 @@ class AmityTheme {
   final Color backgroundColor;
   final Color backgroundShade1Color;
   final Color highlightColor;
+  final Color vdotGreen;
+  final Color vdotGreenText;
   final Color avatarBackgroundColor;
   final Color avatarBorderColor;
   final Color avatarTextColor;
@@ -38,11 +40,13 @@ class AmityTheme {
     required this.backgroundColor,
     required this.backgroundShade1Color,
     required this.highlightColor,
+    required this.vdotGreen,
+    required this.vdotGreenText,
     required this.avatarBackgroundColor,
     required this.avatarBorderColor,
     required this.avatarTextColor,
     required this.leftBubbleColor,
-    required this.leftBubbleTextColor,  
+    required this.leftBubbleTextColor,
     required this.rightBubbleColor,
     required this.rightBubbleTextColor,
   });
@@ -63,6 +67,8 @@ class AmityTheme {
       backgroundColor: _colorFromHex(json['background_color']) ?? fallbackTheme.backgroundColor,
       backgroundShade1Color: _colorFromHex(json['background_shade1_color']) ?? fallbackTheme.backgroundShade1Color,
       highlightColor: _colorFromHex(json['highlight_color']) ?? fallbackTheme.highlightColor,
+      vdotGreen: _colorFromHex(json['vdot_green']) ?? fallbackTheme.vdotGreen,
+      vdotGreenText: _colorFromHex(json['vdot_green_text']) ?? fallbackTheme.vdotGreenText,
       avatarBackgroundColor: _colorFromHex(json['avatar_background_color']) ?? fallbackTheme.avatarBackgroundColor,
       avatarBorderColor: _colorFromHex(json['avatar_border_color']) ?? fallbackTheme.avatarBorderColor,
       avatarTextColor: _colorFromHex(json['avatar_text_color']) ?? fallbackTheme.avatarTextColor,
@@ -109,6 +115,8 @@ class AmityThemeColor {
   final Color backgroundColor;
   final Color backgroundShade1Color;
   final Color highlightColor;
+  final Color vdotGreen;
+  final Color vdotGreenText;
   final Color avatarBackgroundColor;
   final Color avatarBorderColor;
   final Color avatarTextColor;
@@ -132,6 +140,8 @@ class AmityThemeColor {
     required this.backgroundColor,
     required this.backgroundShade1Color,
     required this.highlightColor,
+    required this.vdotGreen,
+    required this.vdotGreenText,
     required this.avatarBackgroundColor,
     required this.avatarBorderColor,
     required this.avatarTextColor,
@@ -160,6 +170,8 @@ final lightTheme = AmityTheme(
   backgroundColor: const Color(0xFFFFFFFF),
   backgroundShade1Color: const Color(0xFFF6F7F8),
   highlightColor: const Color(0xFF1054DE),
+  vdotGreen: const Color(0xFF00C805),
+  vdotGreenText: const Color(0xFFFFFFFF),
   avatarBackgroundColor: const Color(0xff000000),
   avatarBorderColor: const Color(0xffd9d9d9),
   avatarTextColor: const Color(0xffffffff),
@@ -184,6 +196,8 @@ final darkTheme = AmityTheme(
   backgroundColor: const Color(0xFF191919),
   backgroundShade1Color: const Color(0xFF40434E),
   highlightColor: const Color(0xFF1054DE),
+  vdotGreen: const Color(0xFF3AFF64),
+  vdotGreenText: const Color(0xFF000000),
   avatarBackgroundColor: const Color(0xff0f1217),
   avatarBorderColor: const Color(0xff2E3742),
   avatarTextColor: const Color(0xFFFFFFFF),

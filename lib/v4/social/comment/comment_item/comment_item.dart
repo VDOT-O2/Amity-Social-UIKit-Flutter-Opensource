@@ -93,6 +93,7 @@ class CommentItem extends BaseElement {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               final userId = comment.user?.userId;
               if (userId != null && userId.isNotEmpty) {
@@ -143,6 +144,7 @@ class CommentItem extends BaseElement {
                                     Container(
                                       padding: const EdgeInsets.only(bottom: 4),
                                       child: GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           final userId = comment.user?.userId;
                                           if (userId != null && userId.isNotEmpty) {
@@ -471,6 +473,7 @@ class CommentItem extends BaseElement {
               const SizedBox(width: 8),
               (comment.parentId == null)
                   ? GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () => {commentAction.onReply(comment)},
                       child: Text(
                         context.l10n.comment_reply,
@@ -484,6 +487,7 @@ class CommentItem extends BaseElement {
                   : Container(),
               const SizedBox(width: 8),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   showCommentAction(context, comment);
                 },
@@ -538,6 +542,7 @@ class CommentItem extends BaseElement {
             );
     } else {
       return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           if (hasMyReaction) {
             context.read<CommentItemBloc>().add(
@@ -583,6 +588,7 @@ class CommentItem extends BaseElement {
       return Container(
         padding: const EdgeInsets.only(top: 12, bottom: 4),
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             context.read<CommentListBloc>().add(CommentListEventExpandItem(commentId: comment.commentId!));
           },
@@ -750,6 +756,7 @@ class CommentItem extends BaseElement {
     }
     if (showReactionIcon) {
       return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           showReactionsBottomSheet();
         },
@@ -873,6 +880,7 @@ class CommentItem extends BaseElement {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () => {context.read<CommentItemBloc>().add(CommentItemCancelEdit())},
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -909,6 +917,7 @@ class CommentItem extends BaseElement {
             ),
             const SizedBox(width: 8),
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () => {
                 if (hasChanges)
                   {
@@ -922,7 +931,7 @@ class CommentItem extends BaseElement {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: ShapeDecoration(
-                  color: (hasChanges) ? theme.primaryColor : theme.primaryColor.withAlpha(100),
+                  color: (hasChanges) ? theme.buttonColor : theme.buttonColor.withAlpha(100),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 child: Column(
@@ -941,8 +950,8 @@ class CommentItem extends BaseElement {
                         children: [
                           Text(
                             context.l10n.general_save,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: theme.buttonTextColor,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                             ),

@@ -42,7 +42,7 @@ class PostItem extends NewBaseComponent {
     return BlocProvider(
         create: (context) => PostItemBloc(context, post),
         child: Builder(builder: (context) {
-          AmityLog.debug("Building PostItem for postId: ${post.postId}, initial reactions: ${post.myReactions?.length ?? 0}");
+          // AmityLog.debug("Building PostItem for postId: ${post.postId}, initial reactions: ${post.myReactions?.length ?? 0}");
 
           onAddReaction(reactionType) {
             context.read<PostItemBloc>().add(AddReactionToPost(post: post, reactionType: reactionType));
@@ -86,6 +86,7 @@ class PostItem extends NewBaseComponent {
     bool isReacting = false,
   }) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         _goToDetail(context, post, postAction);
       },
@@ -173,7 +174,10 @@ class PostItem extends NewBaseComponent {
   }
 
   Widget getImagePostContent(List<ImageData> images) {
+    
     final imageUrl = images.first.image?.getUrl(AmityImageSize.LARGE) ?? "";
+    AmityLog.debug("Rendering image post content with $imageUrl");
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -226,111 +230,111 @@ class PostItem extends NewBaseComponent {
     }
   }
 
-  Widget _listMediaGrid(List<AmityPost> files) {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: files.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        String fileImage = _getFileImage(files[index].data!.fileInfo.fileName!);
+  // Widget _listMediaGrid(List<AmityPost> files) {
+  //   return ListView.builder(
+  //     padding: EdgeInsets.zero,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemCount: files.length,
+  //     shrinkWrap: true,
+  //     itemBuilder: (context, index) {
+  //       String fileImage = _getFileImage(files[index].data!.fileInfo.fileName!);
 
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(4.0),
-            border: Border.all(
-              color: theme.baseColorShade4,
-              width: 1.0,
-            ),
-          ),
-          margin: const EdgeInsets.all(8.0),
-          child: Stack(
-            children: [
-              ListTile(
-                onTap: () {
-                  _launchUrl(
-                    files[index].data!.fileInfo.fileUrl!,
-                  );
-                },
-                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-                // Reduced padding
-                tileColor: Colors.white.withOpacity(0.0),
-                leading: Container(
-                  height: 100, // Reduced height to make it slimmer
-                  width: 40, // Added width to align the image
-                  alignment: Alignment.centerLeft, // Center alignment for the image
-                  child: Image(
-                    image: AssetImage(fileImage, package: 'amity_uikit_beta_service'),
-                  ),
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min, // Reduce extra space
-                  children: [
-                    Text(
-                      "${files[index].data!.fileInfo.fileName}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      '${(files[index].data!.fileInfo.fileSize)} KB',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //       return Container(
+  //         decoration: BoxDecoration(
+  //           color: Colors.transparent,
+  //           borderRadius: BorderRadius.circular(4.0),
+  //           border: Border.all(
+  //             color: theme.baseColorShade4,
+  //             width: 1.0,
+  //           ),
+  //         ),
+  //         margin: const EdgeInsets.all(8.0),
+  //         child: Stack(
+  //           children: [
+  //             ListTile(
+  //               onTap: () {
+  //                 _launchUrl(
+  //                   files[index].data!.fileInfo.fileUrl!,
+  //                 );
+  //               },
+  //               contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+  //               // Reduced padding
+  //               tileColor: Colors.white.withOpacity(0.0),
+  //               leading: Container(
+  //                 height: 100, // Reduced height to make it slimmer
+  //                 width: 40, // Added width to align the image
+  //                 alignment: Alignment.centerLeft, // Center alignment for the image
+  //                 child: Image(
+  //                   image: AssetImage(fileImage, package: 'amity_uikit_beta_service'),
+  //                 ),
+  //               ),
+  //               title: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 mainAxisSize: MainAxisSize.min, // Reduce extra space
+  //                 children: [
+  //                   Text(
+  //                     "${files[index].data!.fileInfo.fileName}",
+  //                     style: const TextStyle(
+  //                       fontSize: 16,
+  //                       color: Colors.black,
+  //                     ),
+  //                   ),
+  //                   Text(
+  //                     '${(files[index].data!.fileInfo.fileSize)} KB',
+  //                     style: const TextStyle(
+  //                       fontSize: 12,
+  //                       color: Colors.grey,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  String _getFileImage(String filePath) {
-    String extension = filePath.split('.').last;
-    switch (extension) {
-      case 'audio':
-        return 'assets/images/fileType/audio_small.png';
-      case 'avi':
-        return 'assets/images/fileType/avi_large.png';
-      case 'csv':
-        return 'assets/images/fileType/csv_large.png';
-      case 'doc':
-        return 'assets/images/fileType/doc_large.png';
-      case 'exe':
-        return 'assets/images/fileType/exe_large.png';
-      case 'html':
-        return 'assets/images/fileType/html_large.png';
-      case 'img':
-        return 'assets/images/fileType/img_large.png';
-      case 'mov':
-        return 'assets/images/fileType/mov_large.png';
-      case 'mp3':
-        return 'assets/images/fileType/mp3_large.png';
-      case 'mp4':
-        return 'assets/images/fileType/mp4_large.png';
-      case 'pdf':
-        return 'assets/images/fileType/pdf_large.png';
-      case 'ppx':
-        return 'assets/images/fileType/ppx_large.png';
-      case 'rar':
-        return 'assets/images/fileType/rar_large.png';
-      case 'txt':
-        return 'assets/images/fileType/txt_large.png';
-      case 'xls':
-        return 'assets/images/fileType/xls_large.png';
-      case 'zip':
-        return 'assets/images/fileType/zip_large.png';
-      default:
-        return 'assets/images/fileType/default.png';
-    }
-  }
+  // String _getFileImage(String filePath) {
+  //   String extension = filePath.split('.').last;
+  //   switch (extension) {
+  //     case 'audio':
+  //       return 'assets/images/fileType/audio_small.png';
+  //     case 'avi':
+  //       return 'assets/images/fileType/avi_large.png';
+  //     case 'csv':
+  //       return 'assets/images/fileType/csv_large.png';
+  //     case 'doc':
+  //       return 'assets/images/fileType/doc_large.png';
+  //     case 'exe':
+  //       return 'assets/images/fileType/exe_large.png';
+  //     case 'html':
+  //       return 'assets/images/fileType/html_large.png';
+  //     case 'img':
+  //       return 'assets/images/fileType/img_large.png';
+  //     case 'mov':
+  //       return 'assets/images/fileType/mov_large.png';
+  //     case 'mp3':
+  //       return 'assets/images/fileType/mp3_large.png';
+  //     case 'mp4':
+  //       return 'assets/images/fileType/mp4_large.png';
+  //     case 'pdf':
+  //       return 'assets/images/fileType/pdf_large.png';
+  //     case 'ppx':
+  //       return 'assets/images/fileType/ppx_large.png';
+  //     case 'rar':
+  //       return 'assets/images/fileType/rar_large.png';
+  //     case 'txt':
+  //       return 'assets/images/fileType/txt_large.png';
+  //     case 'xls':
+  //       return 'assets/images/fileType/xls_large.png';
+  //     case 'zip':
+  //       return 'assets/images/fileType/zip_large.png';
+  //     default:
+  //       return 'assets/images/fileType/default.png';
+  //   }
+  // }
 
   void _goToDetail(BuildContext context, AmityPost post, AmityPostAction postAction) {
     Navigator.of(context).push(MaterialPageRoute(

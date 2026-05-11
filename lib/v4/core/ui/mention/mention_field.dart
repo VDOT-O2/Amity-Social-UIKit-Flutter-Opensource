@@ -799,6 +799,7 @@ class _MentionTextFieldState extends State<MentionTextField>
                     left: horizontalMargin,
                     top: topPosition,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       // This prevents taps on the suggestion list from dismissing
                       onTap: () {/* Do nothing, preventing tap propagation */},
                       child: ConstrainedBox(
@@ -856,6 +857,7 @@ class _MentionTextFieldState extends State<MentionTextField>
                     right: 8.0,
                     bottom: bottomOffset,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       // This prevents taps on the suggestion list from dismissing
                       onTap: () {/* Do nothing, preventing tap propagation */},
                       child: Stack(

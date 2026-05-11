@@ -22,6 +22,7 @@ class ProfileTabItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           onTap?.call();
         },

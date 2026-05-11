@@ -61,6 +61,7 @@ class AmityCommunityProfilePage extends NewBasePage {
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
               floatingActionButton: (state.isJoined)
                   ? GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         showActions(context, state.canManageStory, state.community, state.isModerator);
                       },
@@ -302,6 +303,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     final createOptions = AmityPostComposerOptions.createOptions(
                         targetId: communityId, community: community, targetType: AmityPostTargetType.COMMUNITY);
@@ -374,6 +376,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                 ),
                 if (canManageStory)
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.of(context).push(
@@ -419,6 +422,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     ),
                   ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     Navigator.of(context).push(
                       PageRouteBuilder(
@@ -518,6 +522,7 @@ class AmityCommunityProfilePage extends NewBasePage {
             leading: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => {Navigator.pop(context)},
                 child: Container(
                   height: 32,
@@ -579,6 +584,7 @@ class AmityCommunityProfilePage extends NewBasePage {
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => {
                     if (state.community != null)
                       {

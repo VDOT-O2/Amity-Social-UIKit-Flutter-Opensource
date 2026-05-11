@@ -85,6 +85,7 @@ extension GenericWidget on MessageBubbleView {
     final avatarUrl = message.user?.avatarUrl;
     final userId = message.user?.userId;
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         AmityUIKit4Manager.behavior.messageBubbleBehavior.onAvatarTap(
           context,
@@ -119,6 +120,7 @@ extension GenericWidget on MessageBubbleView {
 
   Widget _buildCancelDownloadButton() {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         final uploadId = message.uniqueId;
         if (uploadId != null) {

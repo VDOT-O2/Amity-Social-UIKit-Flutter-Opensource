@@ -68,6 +68,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           context.read<SocialHomeBloc>().add(TabSelectedEvent(1));
                         },
@@ -123,6 +124,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                       ),
                       const SizedBox(height: 4),
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) => const CreateCommunityPage()));

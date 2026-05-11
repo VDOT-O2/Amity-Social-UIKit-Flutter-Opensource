@@ -241,6 +241,7 @@ Widget _groupUserRow({
   required bool isCurrentUserModerator,
 }) {
   return GestureDetector(
+    behavior: HitTestBehavior.translucent,
     onTap: () => onTap(user),
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -584,6 +585,7 @@ Widget addUserItem(
     width: 64,
     height: 75, // Increased from 62 to match horizontalUserItem
     child: GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.only(top: 12, left: 0, right: 0, bottom: 8),
@@ -674,6 +676,7 @@ Widget horizontalUserItem(
                         top: -1,
                         right: -4,
                         child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             onTap(user);
                           },
@@ -747,6 +750,7 @@ Widget userRow(BuildContext context, AmityUser user, AmityThemeColor theme,
     {void Function(AmityUser)? onActionTap,
     Map<String, List<String>>? memberRoles}) {
   return GestureDetector(
+    behavior: HitTestBehavior.translucent,
     onTap: () {
       onTap(user);
     },
@@ -785,6 +789,7 @@ Widget userRow(BuildContext context, AmityUser user, AmityThemeColor theme,
 Widget multiSelectUserRow(BuildContext context, AmityUser user,
     AmityThemeColor theme, bool isSelected, void Function(AmityUser) onTap) {
   return GestureDetector(
+    behavior: HitTestBehavior.translucent,
     onTap: () {
       onTap(user);
     },

@@ -296,6 +296,7 @@ class AmityPollPostComposerPage extends NewBasePage {
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 0.0),
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: state.isPosting
                         ? null
                         : () {
@@ -356,6 +357,7 @@ class AmityPollPostComposerPage extends NewBasePage {
               children: [
                 Expanded(
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: state.isPosting
                         ? null
                         : () {
@@ -504,6 +506,7 @@ class AmityPollPostComposerPage extends NewBasePage {
         ),
         const SizedBox(height: 8),
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: state.isPosting
               ? null
               : () async {
@@ -717,6 +720,7 @@ class AmityPollPostComposerPage extends NewBasePage {
         const SizedBox(width: 8),
         // Date Picker Trigger
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: state.isPosting
               ? null
               : () async {
@@ -768,6 +772,7 @@ class AmityPollPostComposerPage extends NewBasePage {
         const SizedBox(width: 8),
         // Time Picker Trigger
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: state.isPosting
               ? null
               : () async {

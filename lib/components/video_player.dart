@@ -23,6 +23,7 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
 
   @override
   void initState() {
+    AmityLog.debug("[LocalVideoPlayer] Initializing with file=${widget.file.path}");
     super.initState();
     initializePlayer();
   }
@@ -35,6 +36,7 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
   }
 
   Future<void> initializePlayer() async {
+    AmityLog.debug("[LocalVideoPlayer] Initializing player for file=${widget.file.path}");
     videoPlayerController = VideoPlayerController.file(widget.file);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(

@@ -80,6 +80,7 @@ class _AmityImageViewerState extends State<AmityImageViewer> {
                         children: [
                           if (_showDeleteButton) ...[
                             GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 if (_onDelete != null) _onDelete!();
                               },
@@ -101,6 +102,7 @@ class _AmityImageViewerState extends State<AmityImageViewer> {
                           ],
                           if (_showSaveButton)
                             GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 if (_onSave != null) _onSave!();
                               },

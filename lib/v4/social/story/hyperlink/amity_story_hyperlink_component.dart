@@ -301,6 +301,7 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                 ? Column(
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           ConfirmationDialog().show(
                             context: context,

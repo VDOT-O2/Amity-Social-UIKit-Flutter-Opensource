@@ -42,6 +42,7 @@ extension VideoMessageWidget on MessageBubbleView {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(bottom: 8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     _showActionSheet(context);
                   },
@@ -101,6 +102,7 @@ extension VideoMessageWidget on MessageBubbleView {
                 _buildCancelDownloadButton(),
               if (message.syncState == AmityMessageSyncState.SYNCED)
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(

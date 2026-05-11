@@ -64,6 +64,7 @@ class AmitySocialHomeTopNavigationComponent extends NewBaseComponent {
           AmityCreatePostMenuComponent(),
         if (selectedTab == AmitySocialHomePageTab.myCommunities)
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 fullscreenDialog: true,
                 builder: (context) =>

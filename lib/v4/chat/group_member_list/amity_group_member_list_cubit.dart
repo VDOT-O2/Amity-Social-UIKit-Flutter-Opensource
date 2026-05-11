@@ -8,46 +8,39 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
   StreamSubscription<bool>? _loadingSubscription;
   String _searchQuery = '';
 
-  AmityGroupMemberListCubit({required this.channel, this.toastBloc})
-      : super(const AmityGroupMemberListState()) {
+  AmityGroupMemberListCubit({required this.channel, this.toastBloc}) : super(const AmityGroupMemberListState()) {
+    AmityLog.debug('AmityGroupMemberListCubit');
+    
     loadChannelMembers();
     _loadCurrentUserRoles();
   }
 
   Future<void> loadChannelMembers() async {
     emit(state.copyWith(isLoading: true));
+
+    AmityLog.debug("Loading channel members with search query: '$_searchQuery' and active tab: '${state.activeTab}'");
+
     // If activeTab is 'moderators', filter by role
     memberLiveCollection = state.activeTab == 'moderators'
         ? AmityChatClient.newChannelRepository()
             .membership(channel.channelId ?? "")
             .searchMembers(_searchQuery)
             .role("channel-moderator")
-                        .membershipFilter([
-            AmityChannelMembership.MEMBER,
-            AmityChannelMembership.MUTED
-          ])
-
-            .getLiveCollection()
+            .membershipFilter([AmityChannelMembership.MEMBER, AmityChannelMembership.MUTED]).getLiveCollection()
         : AmityChatClient.newChannelRepository()
             .membership(channel.channelId ?? "")
             .searchMembers(_searchQuery)
-            .membershipFilter([AmityChannelMembership.MEMBER, AmityChannelMembership.MUTED])
-            .getLiveCollection();
+            .membershipFilter([AmityChannelMembership.MEMBER, AmityChannelMembership.MUTED]).getLiveCollection();
 
     _loadingSubscription?.cancel();
     _membersSubscription?.cancel();
 
-    _loadingSubscription =
-        memberLiveCollection.observeLoadingState().listen((isLoading) {
+    _loadingSubscription = memberLiveCollection.observeLoadingState().listen((isLoading) {
       emit(state.copyWith(isLoading: isLoading));
     });
 
-    _membersSubscription = memberLiveCollection
-        .getStreamController()
-        .stream
-        .listen((members) async {
-      final users =
-          members.map((member) => member.user).whereType<AmityUser>().toList();
+    _membersSubscription = memberLiveCollection.getStreamController().stream.listen((members) async {
+      final users = members.map((member) => member.user).whereType<AmityUser>().toList();
 
       final memberRolesMap = <String, List<String>>{};
       final mutedUsersMap = <String, bool>{};
@@ -59,29 +52,26 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
           if (member.roles != null) {
             memberRolesMap[member.userId!] = member.roles!.roles ?? [];
           }
-          
+
           // Check if member is muted using the isMuted property directly
           mutedUsersMap[member.userId!] = member.isMuted ?? false;
         }
       }
 
       try {
-        final myMembership = await AmityChatClient.newChannelRepository()
-            .membership(channel.channelId ?? "")
-            .getMyMembership();
+        final myMembership =
+            await AmityChatClient.newChannelRepository().membership(channel.channelId ?? "").getMyMembership();
 
         final currentUser = myMembership.user;
         if (currentUser != null) {
           // Add current user's roles to memberRolesMap
           if (myMembership.userId != null && myMembership.roles != null) {
-            memberRolesMap[myMembership.userId!] =
-                myMembership.roles!.roles ?? [];
+            memberRolesMap[myMembership.userId!] = myMembership.roles!.roles ?? [];
           }
 
           // Check if we should put current user first
-          final shouldPutCurrentUserFirst = state.activeTab != 'moderators' ||
-              (myMembership.roles?.roles?.contains("channel-moderator") ??
-                  false);
+          final shouldPutCurrentUserFirst =
+              state.activeTab != 'moderators' || (myMembership.roles?.roles?.contains("channel-moderator") ?? false);
 
           if (shouldPutCurrentUserFirst) {
             users.removeWhere((user) => user.userId == currentUser.userId);
@@ -92,15 +82,14 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
         // Fallback to previous method if getMyMembership fails
         final currentUserId = AmityCoreClient.getUserId();
         if (currentUserId.isNotEmpty) {
-          final currentUserIndex =
-              users.indexWhere((user) => user.userId == currentUserId);
+          final currentUserIndex = users.indexWhere((user) => user.userId == currentUserId);
           if (currentUserIndex != -1) {
             final currentUser = users.removeAt(currentUserIndex);
 
             // Check if we should put current user first
             final currentUserRoles = memberRolesMap[currentUserId] ?? [];
-            final shouldPutCurrentUserFirst = state.activeTab != 'moderators' ||
-                currentUserRoles.contains("channel-moderator");
+            final shouldPutCurrentUserFirst =
+                state.activeTab != 'moderators' || currentUserRoles.contains("channel-moderator");
 
             if (shouldPutCurrentUserFirst) {
               users.insert(0, currentUser);
@@ -177,44 +166,38 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       );
 
       toastBloc?.add(AmityToastShort(
-          message: userIds.length > 1 ? successMessageMultiple : successMessageSingle,
-          icon: AmityToastIcon.success));
+          message: userIds.length > 1 ? successMessageMultiple : successMessageSingle, icon: AmityToastIcon.success));
       // Refresh the member list
       loadChannelMembers();
       // Refresh current user roles in case they were affected
       _loadCurrentUserRoles();
     } catch (e) {
       toastBloc?.add(AmityToastShort(
-          message: userIds.length > 1
-              ? errorMessageMultiple
-              : errorMessageSingle,
-          icon: AmityToastIcon.warning));
+          message: userIds.length > 1 ? errorMessageMultiple : errorMessageSingle, icon: AmityToastIcon.warning));
     }
   }
 
-  Future<void> removeMember(String userId, {
+  Future<void> removeMember(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
     try {
-      await AmityChatClient.newChannelRepository()
-          .removeMembers(channel.channelId ?? "", [userId]);
+      await AmityChatClient.newChannelRepository().removeMembers(channel.channelId ?? "", [userId]);
 
       // Refresh the member list
 
-      toastBloc?.add(AmityToastShort(
-          message: successMessage, icon: AmityToastIcon.success));
+      toastBloc?.add(AmityToastShort(message: successMessage, icon: AmityToastIcon.success));
       loadChannelMembers();
       // Refresh current user roles in case they were affected
       _loadCurrentUserRoles();
     } catch (e) {
-      toastBloc?.add(AmityToastShort(
-          message: errorMessage,
-          icon: AmityToastIcon.warning));
+      toastBloc?.add(AmityToastShort(message: errorMessage, icon: AmityToastIcon.warning));
     }
   }
 
-  Future<void> addModerator(String userId, {
+  Future<void> addModerator(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
@@ -224,8 +207,7 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
           .addRole("channel-moderator", [userId]);
 
       // Show success toast
-      toastBloc?.add(AmityToastShort(
-          message: successMessage, icon: AmityToastIcon.success));
+      toastBloc?.add(AmityToastShort(message: successMessage, icon: AmityToastIcon.success));
 
       // Refresh the member list
       loadChannelMembers();
@@ -233,13 +215,12 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       _loadCurrentUserRoles();
     } catch (e) {
       // Show failure toast
-      toastBloc?.add(AmityToastShort(
-          message: errorMessage,
-          icon: AmityToastIcon.warning));
+      toastBloc?.add(AmityToastShort(message: errorMessage, icon: AmityToastIcon.warning));
     }
   }
 
-  Future<void> removeModerator(String userId, {
+  Future<void> removeModerator(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
@@ -249,8 +230,7 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
           .removeRole("channel-moderator", [userId]);
 
       // Show success toast
-      toastBloc?.add(AmityToastShort(
-          message: successMessage, icon: AmityToastIcon.success));
+      toastBloc?.add(AmityToastShort(message: successMessage, icon: AmityToastIcon.success));
 
       // Refresh the member list
       loadChannelMembers();
@@ -258,39 +238,34 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       _loadCurrentUserRoles();
     } catch (e) {
       // Show failure toast
-      toastBloc?.add(AmityToastShort(
-          message: errorMessage,
-          icon: AmityToastIcon.warning));
+      toastBloc?.add(AmityToastShort(message: errorMessage, icon: AmityToastIcon.warning));
     }
   }
 
-  Future<void> banUser(String userId, {
+  Future<void> banUser(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
     try {
-      await AmityChatClient.newChannelRepository()
-          .moderation(channel.channelId ?? "")
-          .banMembers([userId]);
+      await AmityChatClient.newChannelRepository().moderation(channel.channelId ?? "").banMembers([userId]);
 
       // Refresh the member list
       loadChannelMembers();
 
       await Future.delayed(const Duration(milliseconds: 300));
 
-      toastBloc?.add(AmityToastShort(
-          message: successMessage, icon: AmityToastIcon.success));
+      toastBloc?.add(AmityToastShort(message: successMessage, icon: AmityToastIcon.success));
 
       // Refresh current user roles in case they were affected
       _loadCurrentUserRoles();
     } catch (e) {
-      toastBloc?.add(AmityToastShort(
-          message: errorMessage,
-          icon: AmityToastIcon.warning));
+      toastBloc?.add(AmityToastShort(message: errorMessage, icon: AmityToastIcon.warning));
     }
   }
 
-  Future<void> reportUser(AmityUser user, {
+  Future<void> reportUser(
+    AmityUser user, {
     required String unreportSuccessMessage,
     required String reportSuccessMessage,
     required String errorMessage,
@@ -336,7 +311,7 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
     required String unmuteErrorMessage,
   }) async {
     final isMuted = state.mutedUsers[userId] ?? false;
-    
+
     if (isMuted) {
       await unmuteUser(
         userId,
@@ -351,9 +326,10 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       );
     }
   }
-  
+
   // Public method for muting a user
-  Future<void> muteUser(String userId, {
+  Future<void> muteUser(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
@@ -362,12 +338,12 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       await AmityChatClient.newChannelRepository()
           .moderation(channel.channelId ?? "")
           .muteMembers([userId], millis: -1);
-      
+
       // Update local state
       final updatedMutedUsers = Map<String, bool>.from(state.mutedUsers);
       updatedMutedUsers[userId] = true;
       emit(state.copyWith(mutedUsers: updatedMutedUsers));
-      
+
       toastBloc?.add(AmityToastShort(
         message: successMessage,
         icon: AmityToastIcon.success,
@@ -379,28 +355,26 @@ class AmityGroupMemberListCubit extends Cubit<AmityGroupMemberListState> {
       ));
     }
   }
-  
+
   // Public method for unmuting a user
-  Future<void> unmuteUser(String userId, {
+  Future<void> unmuteUser(
+    String userId, {
     required String successMessage,
     required String errorMessage,
   }) async {
     try {
       // Unmute user using the channel repository
-      await AmityChatClient.newChannelRepository()
-          .moderation(channel.channelId ?? "")
-          .unmuteMembers([userId]);
-      
+      await AmityChatClient.newChannelRepository().moderation(channel.channelId ?? "").unmuteMembers([userId]);
+
       // Update local state
       final updatedMutedUsers = Map<String, bool>.from(state.mutedUsers);
       updatedMutedUsers[userId] = false;
       emit(state.copyWith(mutedUsers: updatedMutedUsers));
-      
+
       toastBloc?.add(AmityToastShort(
         message: successMessage,
         icon: AmityToastIcon.success,
       ));
-  
     } catch (e) {
       toastBloc?.add(AmityToastShort(
         message: errorMessage,

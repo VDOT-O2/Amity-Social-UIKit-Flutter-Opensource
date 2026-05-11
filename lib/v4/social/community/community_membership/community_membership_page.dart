@@ -226,6 +226,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
 
             if (member.user != null && member.user!.userId != AmityCoreClient.getUserId())
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   if (member.user != null) {
                     _showBottomSheet(context, state, member);

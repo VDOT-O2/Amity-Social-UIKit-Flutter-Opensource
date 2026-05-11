@@ -133,6 +133,7 @@ class AmityChatPage extends NewBasePage {
                           skeletonHeader()
                         else ...[
                           GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () {
                               final avatarUrl = state.avatarUrl;
                               final userId = state.channelMember?.userId;

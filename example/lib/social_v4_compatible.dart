@@ -201,6 +201,7 @@ class RecommendationSection extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
@@ -507,6 +508,7 @@ class CategorySection extends StatelessWidget {
                     height: 30,
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -542,6 +544,7 @@ class CategorySection extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final category = vm.amityCategories[index];
                   return GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.push(
                         context,

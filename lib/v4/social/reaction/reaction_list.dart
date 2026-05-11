@@ -263,6 +263,7 @@ class AmityReactionList extends NewBaseComponent {
         _calculateTabWidth(displayText, tabData['imagePath'], tabTextStyle);
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () =>
           _handleTabTap(context, setState, index, tabData['reactionName']),
       child: Container(
@@ -463,6 +464,7 @@ class AmityReactionList extends NewBaseComponent {
         reaction.creator?.userId == AmityCoreClient.getUserId();
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () => _handleReactionTap(context, reaction, isCurrentUser),
       child: SizedBox(
         height: 56,

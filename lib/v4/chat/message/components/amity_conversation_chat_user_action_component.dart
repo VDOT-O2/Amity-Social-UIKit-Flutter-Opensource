@@ -71,6 +71,7 @@ class AmityConversationChatUserActionComponent extends NewBaseComponent {
           // Mute/Unmute option
           if (showMute)
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
                 if (onMuteToggleTap != null) {
@@ -117,6 +118,7 @@ class AmityConversationChatUserActionComponent extends NewBaseComponent {
           // Report user option
           if (showReport)
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
                 if (onReportUserTap != null) {
@@ -162,6 +164,7 @@ class AmityConversationChatUserActionComponent extends NewBaseComponent {
           // Block/Unblock user option
           if (showBlock)
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
                 if (onBlockToggleTap != null) {

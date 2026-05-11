@@ -68,6 +68,7 @@ extension TextMessageWidget on MessageBubbleView {
             Container(
               padding: const EdgeInsets.only(bottom: 8),
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _showActionSheet(context);
                 },
@@ -248,6 +249,7 @@ extension TextMessageWidget on MessageBubbleView {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () {
                                   onSeeMoreTap?.call(text);
                                 },

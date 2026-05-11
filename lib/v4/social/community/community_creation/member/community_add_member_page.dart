@@ -70,6 +70,7 @@ class AmityCommunityAddMemberPage extends NewBasePage {
                     itemCount: state.selectedUsers.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             context.read<CommunityAddMemberPageBloc>().add(
                                 CommunityAddMemberPageSelectUserEvent(
@@ -90,6 +91,7 @@ class AmityCommunityAddMemberPage extends NewBasePage {
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             context.read<CommunityAddMemberPageBloc>().add(
                                 CommunityAddMemberPageSelectUserEvent(
@@ -221,6 +223,7 @@ class AmityCommunityAddMemberPage extends NewBasePage {
         children: [
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               if (state.selectedUsers.isNotEmpty) {
                 onAddedAction.call(state.selectedUsers);

@@ -33,12 +33,10 @@ class AmityCreateGroupChatPage extends NewBasePage {
 
   final TextEditingController _groupNameController = TextEditingController();
   // Define ValueNotifier for selected privacy option
-  final ValueNotifier<String> _selectedNotifier =
-      ValueNotifier<String>('Private');
+  final ValueNotifier<String> _selectedNotifier = ValueNotifier<String>('Private');
   final ScrollController _selectedUsersController = ScrollController();
   // Add state variable for selected image
-  final ValueNotifier<String?> _selectedImagePath =
-      ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _selectedImagePath = ValueNotifier<String?>(null);
   final MediaPermissionHandler _mediaHandler = MediaPermissionHandler();
   // Add a ValueNotifier for character count
   final ValueNotifier<int> _charCount = ValueNotifier<int>(0);
@@ -48,8 +46,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
   @override
   Widget buildPage(BuildContext context) {
     // Initialize the selected users notifier with the initial list
-    _selectedUsersNotifier =
-        ValueNotifier<List<AmityUser>>(List.from(selectedUsers));
+    _selectedUsersNotifier = ValueNotifier<List<AmityUser>>(List.from(selectedUsers));
 
     // Set up text controller listener to update character count
     _groupNameController.addListener(() {
@@ -63,9 +60,9 @@ class AmityCreateGroupChatPage extends NewBasePage {
           if (state.status == CreateGroupStatus.success) {
             // Navigate to the group chat page with the created channel
             if (state.createdChannel?.channelId != null) {
-              context.read<AmityToastBloc>().add(AmityToastShort(
-                  message: context.l10n.chat_create_success,
-                  icon: AmityToastIcon.success));
+              context
+                  .read<AmityToastBloc>()
+                  .add(AmityToastShort(message: context.l10n.chat_create_success, icon: AmityToastIcon.success));
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -85,9 +82,9 @@ class AmityCreateGroupChatPage extends NewBasePage {
               closeText: 'OK',
             );
           } else if (state.status == CreateGroupStatus.failure) {
-            context.read<AmityToastBloc>().add(AmityToastShort(
-                message: context.l10n.chat_create_error_retry,
-                icon: AmityToastIcon.warning));
+            context
+                .read<AmityToastBloc>()
+                .add(AmityToastShort(message: context.l10n.chat_create_error_retry, icon: AmityToastIcon.warning));
           }
         },
         builder: (context, state) {
@@ -127,15 +124,12 @@ class AmityCreateGroupChatPage extends NewBasePage {
                       final currentUser = AmityCoreClient.getCurrentUser();
                       final List<AmityUser> allUsers = [
                         currentUser,
-                        ..._selectedUsersNotifier.value
-                            .where((user) => user.userId != currentUser.userId)
+                        ..._selectedUsersNotifier.value.where((user) => user.userId != currentUser.userId)
                       ];
-                      displayName =
-                          cubit.generateDisplayNameFromMembers(allUsers);
+                      displayName = cubit.generateDisplayNameFromMembers(allUsers);
                     }
 
-                    final File? groupImage =
-                        imagePath != null ? File(imagePath) : null;
+                    final File? groupImage = imagePath != null ? File(imagePath) : null;
 
                     await cubit.createGroup(
                       groupName: displayName,
@@ -171,6 +165,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                     valueListenable: _selectedImagePath,
                                     builder: (context, imagePath, child) {
                                       return GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           _showBottomSheet(context);
                                         },
@@ -181,14 +176,11 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                               width: 120,
                                               height: 120,
                                               decoration: BoxDecoration(
-                                                color: theme.primaryColor.blend(
-                                                    ColorBlendingOption.shade2),
-                                                borderRadius:
-                                                    BorderRadius.circular(24),
+                                                color: theme.primaryColor.blend(ColorBlendingOption.shade2),
+                                                borderRadius: BorderRadius.circular(24),
                                                 image: imagePath != null
                                                     ? DecorationImage(
-                                                        image: FileImage(
-                                                            File(imagePath)),
+                                                        image: FileImage(File(imagePath)),
                                                         fit: BoxFit.cover,
                                                       )
                                                     : null,
@@ -197,8 +189,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                                   ? Center(
                                                       child: SvgPicture.asset(
                                                         'assets/Icons/amity_ic_group_chat_avatar_placeholder.svg',
-                                                        package:
-                                                            'amity_uikit_beta_service',
+                                                        package: 'amity_uikit_beta_service',
                                                         width: 40,
                                                         height: 40,
                                                       ),
@@ -210,16 +201,13 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                               width: 120,
                                               height: 120,
                                               decoration: BoxDecoration(
-                                                color: Colors.black
-                                                    .withOpacity(0.3),
-                                                borderRadius:
-                                                    BorderRadius.circular(24),
+                                                color: Colors.black.withOpacity(0.3),
+                                                borderRadius: BorderRadius.circular(24),
                                               ),
                                               child: Center(
                                                 child: SvgPicture.asset(
                                                   'assets/Icons/amity_ic_camera.svg',
-                                                  package:
-                                                      'amity_uikit_beta_service',
+                                                  package: 'amity_uikit_beta_service',
                                                   width: 32,
                                                   height: 28,
                                                   color: Colors.white,
@@ -240,21 +228,18 @@ class AmityCreateGroupChatPage extends NewBasePage {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   RichText(
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
                                           text: context.l10n.chat_group_name_label,
-                                          style: AmityTextStyle.titleBold(
-                                              theme.baseColor),
+                                          style: AmityTextStyle.titleBold(theme.baseColor),
                                         ),
                                         TextSpan(
                                           text: ' ${context.l10n.chat_group_name_optional}',
-                                          style: AmityTextStyle.caption(
-                                              theme.baseColorShade3),
+                                          style: AmityTextStyle.caption(theme.baseColorShade3),
                                         ),
                                       ],
                                     ),
@@ -265,9 +250,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                       return Text(
                                         '$count/100',
                                         style: AmityTextStyle.caption(
-                                          count > 100
-                                              ? Colors.red
-                                              : theme.baseColorShade1,
+                                          count > 100 ? Colors.red : theme.baseColorShade1,
                                         ),
                                       );
                                     },
@@ -279,20 +262,16 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                 controller: _groupNameController,
                                 decoration: InputDecoration(
                                   hintText: context.l10n.chat_group_name_placeholder,
-                                  hintStyle: AmityTextStyle.body(
-                                      theme.baseColorShade3),
+                                  hintStyle: AmityTextStyle.body(theme.baseColorShade3),
                                   contentPadding: EdgeInsets.only(bottom: 8),
                                   border: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(color: Colors.grey.shade300),
                                   ),
                                   enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(color: Colors.grey.shade300),
                                   ),
                                   focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: theme.primaryColor),
+                                    borderSide: BorderSide(color: theme.primaryColor),
                                   ),
                                   counterText: '', // Hide the default counter
                                 ),
@@ -301,10 +280,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 textInputAction: TextInputAction.newline,
-                                buildCounter: (context,
-                                    {required currentLength,
-                                    required isFocused,
-                                    maxLength}) {
+                                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
                                   return null;
                                 },
                               ),
@@ -312,8 +288,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                           ),
                           const SizedBox(height: 24),
 
-                          Text(context.l10n.settings_privacy,
-                              style: AmityTextStyle.titleBold(theme.baseColor)),
+                          Text(context.l10n.settings_privacy, style: AmityTextStyle.titleBold(theme.baseColor)),
                           const SizedBox(height: 4),
                           ValueListenableBuilder<String>(
                               valueListenable: _selectedNotifier,
@@ -330,8 +305,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                     _buildOption(
                                       title: context.l10n.chat_privacy_private,
                                       description: context.l10n.chat_privacy_private_desc,
-                                      iconPath:
-                                          'assets/Icons/amity_ic_create_group_private_button.svg',
+                                      iconPath: 'assets/Icons/amity_ic_create_group_private_button.svg',
                                       selected: selected,
                                     ),
                                   ],
@@ -358,11 +332,9 @@ class AmityCreateGroupChatPage extends NewBasePage {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, top: 8.0, bottom: 4.0),
+                              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 4.0),
                               child: Text(context.l10n.chat_member_label,
-                                  style: AmityTextStyle.titleBold(
-                                      theme.baseColor)),
+                                  style: AmityTextStyle.titleBold(theme.baseColor)),
                             ),
                             // Remove height constraint to allow all users to be visible
                             gridUserList(
@@ -377,25 +349,23 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                 // Remove user from selection
                                 _removeUser(user);
                               },
-                              onAddTap: () async {
-                                // Navigate to select users screen with onMembersSelected callback
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AmitySelectGroupMemberPage(
-                                      isModifyMember: true,
-                                      selectedGroupMember:
-                                          _selectedUsersNotifier.value,
-                                      onMembersSelected: (updatedUsers) {
-                                        if (updatedUsers.isNotEmpty) {
-                                          _selectedUsersNotifier.value =
-                                              updatedUsers;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
+                              // onAddTap: () async {
+                              //   // Navigate to select users screen with onMembersSelected callback
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => AmitySelectGroupMemberPage(
+                              //         isModifyMember: true,
+                              //         selectedGroupMember: _selectedUsersNotifier.value,
+                              //         onMembersSelected: (updatedUsers) {
+                              //           if (updatedUsers.isNotEmpty) {
+                              //             _selectedUsersNotifier.value = updatedUsers;
+                              //           }
+                              //         },
+                              //       ),
+                              //     ),
+                              //   );
+                              // },
                               excludeCurrentUser: false, // Show current user
                             ),
                           ],

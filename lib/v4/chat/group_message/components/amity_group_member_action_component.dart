@@ -76,6 +76,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
           if (isBannedUser)
             // Unban user option
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
                 if (onUnbanUserTap != null) {
@@ -115,6 +116,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
             if (isCurrentUserModerator) ...[
               // Promote/Demote moderator option
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.pop(context);
                   if (onModeratorToggleTap != null) {
@@ -155,6 +157,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
 
               // Mute/Unmute option - only available to moderators
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.pop(context);
                   if (onMuteToggleTap != null) {
@@ -196,6 +199,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
 
             // Report/Unreport option - available to all users
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
                 if (onReportUserTap != null) {
@@ -237,6 +241,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
             if (isCurrentUserModerator) ...[
               // Ban user option
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.pop(context);
                   if (onBanUserTap != null) {
@@ -275,6 +280,7 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
 
               // Remove from group option
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.pop(context);
                   if (onRemoveTap != null) {
