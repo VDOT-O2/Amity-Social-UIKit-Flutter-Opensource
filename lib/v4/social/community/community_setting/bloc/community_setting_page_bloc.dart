@@ -46,7 +46,7 @@ class CommunitySettingPageBloc extends Bloc<CommunitySettingPageEvent, Community
 
     on<CommunityNotificaitonSettingEvent>((event, emit) async {
       emit(state.copyWith(
-        shouldShowNotificationSetting: event.isSocialNetworkEnabled,
+        shouldShowNotificationSetting: true,
         isNotificationEnabled: event.isNotificationEnabled,
       ));
     });

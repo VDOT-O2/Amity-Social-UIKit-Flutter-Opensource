@@ -13,6 +13,7 @@ import 'package:amity_uikit_beta_service/v4/chat/notification_preference/notific
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,7 +26,8 @@ class AmityGroupSettingPage extends NewBasePage {
   final AmityChannel channel;
   final bool isModerator;
 
-  AmityGroupSettingPage({Key? key, required this.channel, required this.isModerator})
+  AmityGroupSettingPage(
+      {Key? key, required this.channel, required this.isModerator})
       : super(key: key, pageId: 'group_setting_page');
 
   @override
@@ -42,7 +44,8 @@ class AmityGroupSettingPage extends NewBasePage {
             appBar: AppBar(
               backgroundColor: theme.backgroundColor,
               title: Text(
-                state.channel.displayName ?? context.l10n.settings_group_settings,
+                state.channel.displayName ??
+                    context.l10n.settings_group_settings,
                 style: AmityTextStyle.titleBold(theme.baseColor),
               ),
               leading: IconButton(
@@ -89,8 +92,8 @@ class AmityGroupSettingPage extends NewBasePage {
                                 await Navigator.push<Map<String, dynamic>>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    AmityEditGroupProfilePage(channel: state.channel),
+                                builder: (context) => AmityEditGroupProfilePage(
+                                    channel: state.channel),
                               ),
                             );
 
@@ -98,8 +101,10 @@ class AmityGroupSettingPage extends NewBasePage {
                             handleNavigationResult(
                               context,
                               result,
-                              successMessage: context.l10n.toast_group_profile_updated,
-                              errorMessage: context.l10n.toast_group_profile_error,
+                              successMessage:
+                                  context.l10n.toast_group_profile_updated,
+                              errorMessage:
+                                  context.l10n.toast_group_profile_error,
                               shouldPopOnSuccess: true,
                               shouldPopOnError: true,
                             );
@@ -111,22 +116,26 @@ class AmityGroupSettingPage extends NewBasePage {
                           iconAsset:
                               'assets/Icons/amity_ic_edit_group_notification_button.svg',
                           theme: theme,
-                          trailingText: _getLocalizedNotificationMode(context, state.channel.notificationMode),
+                          trailingText: _getLocalizedNotificationMode(
+                              context, state.channel.notificationMode),
                           onTap: () async {
                             final result =
                                 await Navigator.push<Map<String, dynamic>>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AmityEditGroupNotificationPage(
-                                    channel: state.channel),
+                                builder: (context) =>
+                                    AmityEditGroupNotificationPage(
+                                        channel: state.channel),
                               ),
                             );
 
                             handleNavigationResult(
                               context,
                               result,
-                              successMessage: context.l10n.toast_group_notification_updated,
-                              errorMessage: context.l10n.toast_group_notification_error,
+                              successMessage:
+                                  context.l10n.toast_group_notification_updated,
+                              errorMessage:
+                                  context.l10n.toast_group_notification_error,
                             );
                           },
                         ),
@@ -151,8 +160,10 @@ class AmityGroupSettingPage extends NewBasePage {
                             handleNavigationResult(
                               context,
                               result,
-                              successMessage: context.l10n.toast_member_permissions_updated,
-                              errorMessage: context.l10n.toast_member_permissions_error,
+                              successMessage:
+                                  context.l10n.toast_member_permissions_updated,
+                              errorMessage:
+                                  context.l10n.toast_member_permissions_error,
                             );
                           },
                         ),
@@ -168,8 +179,8 @@ class AmityGroupSettingPage extends NewBasePage {
                               await Navigator.push<Map<String, dynamic>>(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  AmityGroupMemberListPage(channel: state.channel),
+                              builder: (context) => AmityGroupMemberListPage(
+                                  channel: state.channel),
                             ),
                           );
 
@@ -178,8 +189,10 @@ class AmityGroupSettingPage extends NewBasePage {
                             handleNavigationResult(
                               context,
                               result,
-                              successMessage: context.l10n.toast_member_list_updated,
-                              errorMessage: context.l10n.toast_member_list_error,
+                              successMessage:
+                                  context.l10n.toast_member_list_updated,
+                              errorMessage:
+                                  context.l10n.toast_member_list_error,
                             );
                           } else {
                             // Fetch updated channel data when returning from member list (fallback)
@@ -201,8 +214,9 @@ class AmityGroupSettingPage extends NewBasePage {
                                 await Navigator.push<Map<String, dynamic>>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AmityBannedGroupMemberListPage(
-                                    channel: state.channel),
+                                builder: (context) =>
+                                    AmityBannedGroupMemberListPage(
+                                        channel: state.channel),
                               ),
                             );
 
@@ -211,8 +225,10 @@ class AmityGroupSettingPage extends NewBasePage {
                               handleNavigationResult(
                                 context,
                                 result,
-                                successMessage: context.l10n.toast_banned_users_updated,
-                                errorMessage: context.l10n.toast_banned_users_error,
+                                successMessage:
+                                    context.l10n.toast_banned_users_updated,
+                                errorMessage:
+                                    context.l10n.toast_banned_users_error,
                               );
                             }
                           },
@@ -226,23 +242,24 @@ class AmityGroupSettingPage extends NewBasePage {
                         style: AmityTextStyle.titleBold(theme.baseColor),
                       ),
                       GroupSettingsTile(
-                        title: context.l10n.general_notifications_lowercase,
+                        title: context.l10n.settings_notifications,
                         iconAsset:
                             'assets/Icons/amity_ic_edit_group_notification_button.svg',
                         theme: theme,
-                        trailingText:
-                            state.isNotificationsEnabled ? context.l10n.general_on : context.l10n.general_off,
+                        // trailingText:
+                        //     state.isNotificationsEnabled ? context.l10n.general_on : context.l10n.general_off,
                         onTap: () async {
                           // Wait for navigation to complete and then refresh notification settings
+                          await context.read<NavigationProvider>().handleNavigation(
+                              context,
+                              event: AmityNavigationEvent
+                                  .showChatNotificationPreferences,
+                              params: {'channel': state.channel, 'state': state});
 
-                          await Navigator.push<Map<String, dynamic>>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AmityGroupNotificationPreferencePage(
-                                channel: state.channel,
-                              ),
-                            ),
-                          );
+                          if (!context.mounted) {
+                            return;
+                          } 
+
                           context
                               .read<AmityGroupSettingCubit>()
                               .refreshNotificationSettings();
@@ -267,8 +284,10 @@ class AmityGroupSettingPage extends NewBasePage {
                               bool? shouldOpenMemberList;
                               await PermissionAlertV4Dialog().show(
                                 context: context,
-                                title: context.l10n.chat_leave_group_last_mod_title,
-                                detailText: context.l10n.chat_leave_group_last_mod_message,
+                                title: context
+                                    .l10n.chat_leave_group_last_mod_title,
+                                detailText: context
+                                    .l10n.chat_leave_group_last_mod_message,
                                 bottomButtonText: context.l10n.general_cancel,
                                 topButtonText: context.l10n.chat_promote_member,
                                 onTopButtonAction: () {
@@ -282,7 +301,8 @@ class AmityGroupSettingPage extends NewBasePage {
                                     await Navigator.push<Map<String, dynamic>>(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AmityGroupMemberListPage(
+                                    builder: (context) =>
+                                        AmityGroupMemberListPage(
                                       channel: state.channel,
                                     ),
                                   ),
@@ -293,8 +313,10 @@ class AmityGroupSettingPage extends NewBasePage {
                                   handleNavigationResult(
                                     context,
                                     result,
-                                    successMessage: context.l10n.toast_member_list_updated,
-                                    errorMessage: context.l10n.toast_member_list_error,
+                                    successMessage:
+                                        context.l10n.toast_member_list_updated,
+                                    errorMessage:
+                                        context.l10n.toast_member_list_error,
                                   );
                                 }
                               }
@@ -324,7 +346,8 @@ class AmityGroupSettingPage extends NewBasePage {
                               // Show success toast message after leaving
                               context.read<AmityToastBloc>().add(
                                     AmityToastShort(
-                                      message: context.l10n.toast_group_chat_left,
+                                      message:
+                                          context.l10n.toast_group_chat_left,
                                       icon: AmityToastIcon.success,
                                       bottomPadding: 56,
                                     ),
@@ -335,7 +358,8 @@ class AmityGroupSettingPage extends NewBasePage {
                             } catch (e) {
                               context.read<AmityToastBloc>().add(
                                     AmityToastShort(
-                                      message: context.l10n.toast_group_chat_left_error,
+                                      message: context
+                                          .l10n.toast_group_chat_left_error,
                                       icon: AmityToastIcon.warning,
                                       bottomPadding: 56,
                                     ),
@@ -409,7 +433,8 @@ class AmityGroupSettingPage extends NewBasePage {
     }
   }
 
-  String _getLocalizedNotificationMode(BuildContext context, NotificationMode? mode) {
+  String _getLocalizedNotificationMode(
+      BuildContext context, NotificationMode? mode) {
     switch (mode) {
       case NotificationMode.defaultMode:
         return context.l10n.notification_default_mode;

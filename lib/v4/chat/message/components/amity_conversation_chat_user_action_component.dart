@@ -3,6 +3,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/config_repository.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -91,9 +92,7 @@ class AmityConversationChatUserActionComponent extends NewBaseComponent {
                       width: 24,
                       height: 24,
                       child: SvgPicture.asset(
-                        isMute
-                            ? 'assets/Icons/amity_ic_chat_unmute.svg'
-                            : 'assets/Icons/amity_ic_chat_mute.svg',
+                        'assets/Icons/amity_ic_chat_unmute.svg',
                         package: 'amity_uikit_beta_service',
                         width: 24,
                         height: 24,
@@ -104,9 +103,7 @@ class AmityConversationChatUserActionComponent extends NewBaseComponent {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        isMute
-                            ? context.l10n.notification_turn_on_success
-                            : context.l10n.notification_turn_off_success,
+                        context.l10n.settings_notifications,
                         style: AmityTextStyle.bodyBold(theme.baseColor),
                       ),
                     ),

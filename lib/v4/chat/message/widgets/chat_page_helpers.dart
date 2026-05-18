@@ -26,7 +26,11 @@ extension ChatPageHelpers on AmityChatPage {
             user: state.channelMember!.user!,
             isMute: state.isMute,
             isUserBlocked: state.isUserBlocked,
-            onMuteToggleTap: () {
+            onMuteToggleTap: () async {
+              await context.read<NavigationProvider>().handleNavigation(context,
+                  event: AmityNavigationEvent.showChatNotificationPreferences,
+                  params: {'channelId': chatPageBloc.state.channelId});
+
               chatPageBloc.add(const ChatPageEventMuteUnmute());
             },
             onReportUserTap: () {
@@ -342,7 +346,9 @@ extension ChatPageHelpers on AmityChatPage {
       {shouldAnimated = false, int millisecBeforeAnimated = 0}) {
     state.scrollController
         .animateTo(
-      (state.useReverseUI && state.contentOverflowsScreen) ? 0.0 : state.scrollController.position.maxScrollExtent,
+      (state.useReverseUI && state.contentOverflowsScreen)
+          ? 0.0
+          : state.scrollController.position.maxScrollExtent,
       curve: Curves.easeOut,
       duration: const Duration(milliseconds: 300),
     )

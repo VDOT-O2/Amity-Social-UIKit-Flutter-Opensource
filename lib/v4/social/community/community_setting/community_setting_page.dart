@@ -64,11 +64,11 @@ class AmityCommunitySettingPage extends NewBasePage {
                       context.l10n.settings_notifications, 'assets/Icons/amity_ic_notification_setting.svg', onTap: () {
                     _goToNotificationSettingPage(context, state);
                   }, pageId: pageId, componentId: '*', elementId: 'notifications'),
-                  Positioned(
-                    right: 45,
-                    child: Text(state.isNotificationEnabled ? context.l10n.general_on : context.l10n.general_off,
-                        style: TextStyle(color: theme.baseColorShade1, fontSize: 15, fontWeight: FontWeight.w400)),
-                  ),
+                  // Positioned(
+                  //   right: 45,
+                  //   child: Text(state.isNotificationEnabled ? context.l10n.general_on : context.l10n.general_off,
+                  //       style: TextStyle(color: theme.baseColorShade1, fontSize: 15, fontWeight: FontWeight.w400)),
+                  // ),
                 ],
               ),
 
@@ -198,12 +198,9 @@ class AmityCommunitySettingPage extends NewBasePage {
   }
 
   void _goToNotificationSettingPage(BuildContext context, CommunitySettingPageState state) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => AmityCommunityNotificationSettingPage(
-              community: community, notificationSettings: state.notificationSettings)),
-    );
+    context.read<NavigationProvider>().handleNavigation(context,
+        event: AmityNavigationEvent.showCommunityNotificationPreferences, params: {'community': community, 'state': state});
+
     context.read<CommunitySettingPageBloc>().add(const CommunityNotificationSettingPageLoadEvent());
   }
 

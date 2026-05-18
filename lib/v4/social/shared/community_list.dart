@@ -3,21 +3,25 @@ import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/amity_community_profile_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/my_community/my_community_component.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
 import 'package:amity_uikit_beta_service/v4/utils/skeleton.dart';
 import 'package:amity_uikit_beta_service/v4/utils/url_builder.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget communityList(
   BuildContext context,
   ScrollController scrollController,
   List<AmityCommunity> communities,
-  AmityThemeColor theme,
-) {
+  AmityThemeColor theme, {
+  Set<String>? unseenCommunityIds,
+}) {
   if (communities.isEmpty) {
     return communityEmptyList(context);
   }
-  
+
   return Container(
     decoration: BoxDecoration(color: theme.backgroundColor),
     child: IntrinsicHeight(
@@ -43,7 +47,10 @@ Widget communityList(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [communityRow(context, communities[index], theme)],
+                  children: [
+                    communityRow(context, communities[index], theme,
+                        isUnseen: unseenCommunityIds?.contains(communities[index].communityId) ?? false)
+                  ],
                 ),
               ),
             ],
@@ -54,17 +61,15 @@ Widget communityList(
   );
 }
 
-Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeColor theme) {
+Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeColor theme, {bool isUnseen = false}) {
   var categoriesName = community.categories?.map((category) => category?.name).toList();
 
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
     onTap: () {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => AmityCommunityProfilePage(communityId: community.communityId!),
-        ),
-      );
+      context
+          .read<NavigationProvider>()
+          .handleNavigation(context, event: AmityNavigationEvent.showCommunity, params: {'communityId': community.communityId});
     },
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,10 +121,28 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                 ],
               ),
               const SizedBox(height: 4),
-              if (categoriesName != null && categoriesName.isNotEmpty)
+              if (categoriesName != null && categoriesName.isNotEmpty) ...[
                 AmityCommunityCategoriesName(tags: categoriesName),
-              CommunityMemberCountElement(
-                memberCount: community.membersCount,
+              ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (isUnseen || kDebugMode) ...[
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: theme.vdotGreen,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                  Expanded(
+                      child: CommunityMemberCountElement(
+                    memberCount: community.membersCount,
+                  )),
+                ],
               )
             ],
           ),
