@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/v4/social/my_community/bloc/my_communit
 import 'package:amity_uikit_beta_service/v4/social/shared/community_list.dart';
 import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,8 +17,9 @@ part 'my_community_ui_ids.dart';
 
 class AmityMyCommunitiesComponent extends BaseStatefulComponent {
   final String? noCommunitiesHint;
+  final Set<String>? unseenCommunityIds;
 
-  AmityMyCommunitiesComponent({Key? key, String? pageId, this.noCommunitiesHint})
+  AmityMyCommunitiesComponent({Key? key, String? pageId, this.noCommunitiesHint, this.unseenCommunityIds})
       : super(key: key, pageId: pageId, componentId: AmityComponent.myCommunities.stringValue);
 
   @override
@@ -39,6 +41,22 @@ class _AmityMyCommunitiesComponentState extends BaseStatefulComponentState<Amity
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AmityMyCommunitiesComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!setEquals(widget.unseenCommunityIds, oldWidget.unseenCommunityIds)) {
+      setState(() {
+        // Trigger rebuild to update unseen state
+      });
+    }
+  }
+
+  @override
   Widget buildComponent(BuildContext context) {
     return BlocProvider(
       create: (context) => MyCommunityBloc()..add(MyCommunityEventInitial()),
@@ -57,7 +75,7 @@ class _AmityMyCommunitiesComponentState extends BaseStatefulComponentState<Amity
 
               return Column(children: [
                 Expanded(
-                  child: communityList(context, scrollController, state.list, theme),
+                  child: communityList(context, scrollController, state.list, theme, unseenCommunityIds: widget.unseenCommunityIds),
                 ),
               ]);
             } else {

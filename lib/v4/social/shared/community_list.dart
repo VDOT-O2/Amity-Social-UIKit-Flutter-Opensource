@@ -127,7 +127,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (isUnseen || kDebugMode) ...[
+                  if (isUnseen) ...[
                     Container(
                       width: 8,
                       height: 8,
