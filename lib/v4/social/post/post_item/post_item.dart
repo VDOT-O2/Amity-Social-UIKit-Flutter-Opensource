@@ -13,6 +13,7 @@ import 'package:amity_uikit_beta_service/v4/social/post/post_detail/amity_post_d
 import 'package:amity_uikit_beta_service/v4/social/post/post_item/bloc/post_item_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/post_item/post_item_bottom.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/post_item/post_item_bottom_nonmember.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,8 +58,7 @@ class PostItem extends NewBaseComponent {
           }
 
           var postAction = (action != null)
-              ? action!.copyWith(
-                  onAddReaction: onAddReaction, onRemoveReaction: onRemoveReaction, onPostUpdated: onPostUpdated)
+              ? action!.copyWith(onAddReaction: onAddReaction, onRemoveReaction: onRemoveReaction, onPostUpdated: onPostUpdated)
               : AmityPostAction(
                   onAddReaction: onAddReaction,
                   onRemoveReaction: onRemoveReaction,
@@ -174,7 +174,6 @@ class PostItem extends NewBaseComponent {
   }
 
   Widget getImagePostContent(List<ImageData> images) {
-    
     final imageUrl = images.first.image?.getUrl(AmityImageSize.LARGE) ?? "";
     AmityLog.debug("Rendering image post content with $imageUrl");
 
@@ -204,11 +203,7 @@ class PostItem extends NewBaseComponent {
       return PostContentVideo(posts: post.children!, theme: theme);
     } else if (post.children!.first.data is PollData) {
       return PostPollContent(
-          post: post.children!.first,
-          style: AmityPostContentComponentStyle.feed,
-          theme: theme,
-          hideMenu: hideMenu,
-          goToDetail: goToDetail);
+          post: post.children!.first, style: AmityPostContentComponentStyle.feed, theme: theme, hideMenu: hideMenu, goToDetail: goToDetail);
     } else {
       return Container();
     }
@@ -337,14 +332,9 @@ class PostItem extends NewBaseComponent {
   // }
 
   void _goToDetail(BuildContext context, AmityPost post, AmityPostAction postAction) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AmityPostDetailPage(
-        postId: post.postId!,
-        category: category,
-        hideMenu: hideMenu,
-        action: postAction,
-      ),
-    ));
+    context.read<NavigationProvider>().handleNavigation(context,
+        event: AmityNavigationEvent.showPostDetail,
+        params: {'postId': post.postId!, 'category': category, 'hideMenu': hideMenu, 'action': postAction});
   }
 
   void _goToUserProfilePage(BuildContext context, String userId) {

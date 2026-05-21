@@ -65,7 +65,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                       onTap: () {
                         showActions(context, state.canManageStory, state.community, state.isModerator);
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 64,
                         height: 64,
                         child: Stack(
@@ -78,14 +78,14 @@ class AmityCommunityProfilePage extends NewBasePage {
                                 height: 64,
                                 decoration: ShapeDecoration(
                                   color: theme.buttonColor,
-                                  shape: OvalBorder(),
+                                  shape: const OvalBorder(),
                                 ),
                               ),
                             ),
                             Positioned(
                               left: 16,
                               top: 16,
-                              child: Container(
+                              child: SizedBox(
                                 width: 32,
                                 height: 32,
                                 child: Row(
