@@ -405,7 +405,7 @@ class ChatListItem extends BaseElement {
       } else {
         displayNameWidget = Text(
           displayName,
-          style: _getHightlightedTextStyle(),
+          style: _getTitleTextStyle(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         );
@@ -542,7 +542,7 @@ class ChatListItem extends BaseElement {
 
   TextStyle _getTitleTextStyle() {
     final isUnread = (channel.unreadCount ?? 0) > 0;
-    return AmityTextStyle.body(theme.baseColor, fontWeight: isUnread ? FontWeight.w700 : FontWeight.w400);
+    return AmityTextStyle.body(theme.baseColor, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500);
   }
 
   TextStyle _getPreviewTextStyle() {

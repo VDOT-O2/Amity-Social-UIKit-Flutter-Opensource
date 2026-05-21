@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_controller.dart';
 import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_entry.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -35,15 +36,11 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
     );
 
     on<CommunityProfileEventUpdated>((event, emit) async {
-      final isModerator =
-          AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check();
+      final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check();
       final canManageStory =
           AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check();
       emit(state.copyWith(
-          community: event.community,
-          isJoined: event.community.isJoined,
-          isModerator: isModerator,
-          canManageStory: canManageStory));
+          community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
 
       _log(
         action: 'CommunityProfileEventUpdated',
@@ -96,7 +93,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
           _log(
             action: 'CommunityProfileEventRefreshFromPendingPage',
             message: 'Error fetching pending post count: $e',
-            level: AmityDebugLogLevel.error,
+            level: AmityLogLevel.error,
             snapshot: state.toString(),
           );
         }
@@ -125,7 +122,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         _log(
           action: 'CommunityProfileEventJoining',
           message: 'Failed to join community: ${event.communityId} ($e)',
-          level: AmityDebugLogLevel.error,
+          level: AmityLogLevel.error,
           snapshot: state.toString(),
         );
       }
@@ -144,7 +141,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         _log(
           action: 'CommunityProfileEventRefresh',
           message: 'Failed to refresh community ${event.communityId}: $e',
-          level: AmityDebugLogLevel.error,
+          level: AmityLogLevel.error,
           snapshot: state.toString(),
         );
       }
@@ -165,17 +162,17 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         addEvent(CommunityProfileEventGetPendingPosts());
         _log(
           action: 'communityStream',
-          message: 'Received live community update',
+          message: 'Received live community update ${community.postsCount} posts, ${community.membersCount} members',
         );
       }, onError: (error) {
         _log(
           action: 'communityStream',
           message: 'Live community stream error: $error',
-          level: AmityDebugLogLevel.error,
+          level: AmityLogLevel.error,
         );
       });
 
-      AmityLog.debug( "CommunityProfileBloc listening to community updates for communityId: $communityId");
+      AmityLog.debug("CommunityProfileBloc listening to community updates for communityId: $communityId");
       _scrollListener = () {
         if (state.scrollController.hasClients && state.scrollController.offset > 330 && state.isExpanded) {
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, collapsing header");
@@ -197,7 +194,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
       _log(
         action: 'init',
         message: 'Error initializing bloc: $e',
-        level: AmityDebugLogLevel.error,
+        level: AmityLogLevel.error,
         snapshot: state.toString(),
       );
     }
@@ -206,7 +203,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
   void _log({
     required String action,
     required String message,
-    AmityDebugLogLevel level = AmityDebugLogLevel.debug,
+    AmityLogLevel level = AmityLogLevel.debug,
     String? snapshot,
   }) {
     addDebugLog(

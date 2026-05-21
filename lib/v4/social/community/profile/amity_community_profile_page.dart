@@ -23,6 +23,7 @@ import 'package:amity_uikit_beta_service/v4/social/story/target/amity_story_tab_
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -59,19 +60,21 @@ class AmityCommunityProfilePage extends NewBasePage {
                     _buildFeedTabSelector(context, state),
                     _buildFeed(context, state),
                   ]),
-                  Positioned(
-                    left: 12,
-                    right: 12,
-                    bottom: 90,
-                    child: AmityDebugLogComponent(
-                      theme: theme,
-                      title: 'Community Debug Logs',
-                      previewCount: 3,
-                      initialLogs: bloc.debugLogHistory,
-                      logStream: bloc.debugLogHistoryStream,
-                      onClearHistory: bloc.clearDebugLogHistory,
+                  if (kDebugMode) ...[
+                    Positioned(
+                      left: 12,
+                      right: 12,
+                      bottom: 90,
+                      child: AmityDebugLogComponent(
+                        theme: theme,
+                        title: 'Community Debug Logs',
+                        previewCount: 3,
+                        initialLogs: bloc.debugLogHistory,
+                        logStream: bloc.debugLogHistoryStream,
+                        onClearHistory: bloc.clearDebugLogHistory,
+                      ),
                     ),
-                  ),
+                  ]
                 ],
               ),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -518,8 +521,7 @@ class AmityCommunityProfilePage extends NewBasePage {
   void _showPostReviewDialog(BuildContext context) {
     AmityV4Dialog().showAlertErrorDialog(
       title: "Posts sent for review",
-      message:
-          "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
+      message: "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
       closeText: "OK",
     );
   }
@@ -588,11 +590,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     ),
                   ),
                   if (state.community?.isOfficial == true)
-                    Container(
-                        width: 28,
-                        height: 28,
-                        margin: const EdgeInsets.only(top: 2),
-                        child: AmityOfficialBadgeElement()),
+                    Container(width: 28, height: 28, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement()),
                 ],
               ),
             ),
@@ -604,8 +602,8 @@ class AmityCommunityProfilePage extends NewBasePage {
                   onTap: () => {
                     if (state.community != null)
                       {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
                       }
                   },
                   child: Container(
@@ -698,10 +696,7 @@ class AmityCommunityProfilePage extends NewBasePage {
 
   Widget _buildPendingPost(BuildContext context, CommunityProfileState state) {
     return SliverToBoxAdapter(
-      child: (state.community != null &&
-              state.isJoined &&
-              state.pendingPostCount > 0 &&
-              (state.community!.isPostReviewEnabled ?? false))
+      child: (state.community != null && state.isJoined && state.pendingPostCount > 0 && (state.community!.isPostReviewEnabled ?? false))
           ? Container(
               color: theme.backgroundColor,
               padding: const EdgeInsets.all(16),

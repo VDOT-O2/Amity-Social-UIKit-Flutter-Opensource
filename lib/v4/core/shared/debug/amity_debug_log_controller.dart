@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_entry.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 
 class AmityDebugLogController {
   AmityDebugLogController({this.maxHistory = 100});
@@ -18,9 +20,13 @@ class AmityDebugLogController {
     required String action,
     required String message,
     String scope = '',
-    AmityDebugLogLevel level = AmityDebugLogLevel.debug,
+    AmityLogLevel level = AmityLogLevel.debug,
     String? snapshot,
   }) {
+    if (_ignoreLogLevel(level)) {
+      return;
+    }
+
     _history.add(
       AmityDebugLogEntry(
         timestamp: DateTime.now(),
@@ -50,5 +56,9 @@ class AmityDebugLogController {
 
   void dispose() {
     _historyController.close();
+  }
+
+  bool _ignoreLogLevel(AmityLogLevel logLevel) {
+    return AmityLog.logLevel.index > logLevel.index;
   }
 }

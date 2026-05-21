@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-enum AmityDebugLogLevel { debug, info, warn, error }
+import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 
 class AmityDebugLogEntry extends Equatable {
   const AmityDebugLogEntry({
@@ -16,7 +15,7 @@ class AmityDebugLogEntry extends Equatable {
   final String scope;
   final String action;
   final String message;
-  final AmityDebugLogLevel level;
+  final AmityLogLevel level;
   final String? snapshot;
 
   @override
