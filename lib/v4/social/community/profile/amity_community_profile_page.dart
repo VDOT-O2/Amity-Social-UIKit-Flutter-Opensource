@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
+import 'package:amity_uikit_beta_service/v4/core/ui/amity_debug_log_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/bottom_sheet_menu.dart';
-import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_feed/community_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_image_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_video_feed_component.dart';
@@ -46,18 +44,36 @@ class AmityCommunityProfilePage extends NewBasePage {
         child: Builder(builder: (context) {
           return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
+            final bloc = context.read<CommunityProfileBloc>();
 
             return Scaffold(
               backgroundColor: theme.baseColorShade4,
-              body: CustomScrollView(controller: state.scrollController, slivers: <Widget>[
-                _buildAppBar(context, state),
-                _buildHeader(context, state),
-                _buildJoinButton(context, state, theme),
-                _buildStoryTab(context, state, featureConfig),
-                _buildPendingPost(context, state),
-                _buildFeedTabSelector(context, state),
-                _buildFeed(context, state),
-              ]),
+              body: Stack(
+                children: [
+                  CustomScrollView(controller: state.scrollController, slivers: <Widget>[
+                    _buildAppBar(context, state),
+                    _buildHeader(context, state),
+                    _buildJoinButton(context, state, theme),
+                    _buildStoryTab(context, state, featureConfig),
+                    _buildPendingPost(context, state),
+                    _buildFeedTabSelector(context, state),
+                    _buildFeed(context, state),
+                  ]),
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 90,
+                    child: AmityDebugLogComponent(
+                      theme: theme,
+                      title: 'Community Debug Logs',
+                      previewCount: 3,
+                      initialLogs: bloc.debugLogHistory,
+                      logStream: bloc.debugLogHistoryStream,
+                      onClearHistory: bloc.clearDebugLogHistory,
+                    ),
+                  ),
+                ],
+              ),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
               floatingActionButton: (state.isJoined)
                   ? GestureDetector(
