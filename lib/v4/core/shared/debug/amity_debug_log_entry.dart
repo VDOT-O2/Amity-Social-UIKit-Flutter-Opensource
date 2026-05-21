@@ -5,10 +5,10 @@ enum AmityDebugLogLevel { debug, info, warn, error }
 class AmityDebugLogEntry extends Equatable {
   const AmityDebugLogEntry({
     required this.timestamp,
-    this.scope = '',
     required this.action,
     required this.message,
     required this.level,
+    this.scope = '',
     this.snapshot,
   });
 

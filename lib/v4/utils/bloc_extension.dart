@@ -11,9 +11,9 @@ extension BlocExtension<Event,State> on Bloc<Event,State> {
 
   void addDebugLog({
     required AmityDebugLogController controller,
-    String scope = '',
     required String action,
     required String message,
+    String scope = '',
     AmityDebugLogLevel level = AmityDebugLogLevel.debug,
     String? snapshot,
   }) {

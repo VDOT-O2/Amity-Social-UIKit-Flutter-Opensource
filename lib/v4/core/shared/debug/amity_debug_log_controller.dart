@@ -15,9 +15,9 @@ class AmityDebugLogController {
   Stream<List<AmityDebugLogEntry>> get historyStream => _historyController.stream;
 
   void addEntry({
-    String scope = '',
     required String action,
     required String message,
+    String scope = '',
     AmityDebugLogLevel level = AmityDebugLogLevel.debug,
     String? snapshot,
   }) {
