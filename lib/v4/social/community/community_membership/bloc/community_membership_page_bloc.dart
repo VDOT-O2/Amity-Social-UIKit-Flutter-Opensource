@@ -23,8 +23,7 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
   StreamSubscription<List<AmityCommunityMember>>? memberStreamSubscription;
   StreamSubscription<List<AmityCommunityMember>>? moderatorStreamSubscription;
 
-  CommunityMembershipPageBloc(
-      {required this.community, required this.memberScrollController, required this.moderatorScrollController})
+  CommunityMembershipPageBloc({required this.community, required this.memberScrollController, required this.moderatorScrollController})
       : super(CommunityMembershipPageState()) {
     on<CommunityMembershipPageMemberLoadedEvent>((event, emit) {
       emit(state.copyWith(
@@ -40,7 +39,7 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
         .getLiveCollection();
 
     memberStreamSubscription =
-        memberLiveCollection.getStreamController().stream.debounceTime(Durations.short4).listen((event) {
+        memberLiveCollection.getStreamController().stream.debounceTime(const Duration(milliseconds: 200)).listen((event) {
       AmityLog.debug('Loaded ${event.length} members');
 
       add(CommunityMembershipPageMemberLoadedEvent(event));
@@ -83,7 +82,8 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
         .includeDeleted(false)
         .getLiveCollection();
 
-    moderatorStreamSubscription = moderatorLiveCollection.getStreamController().stream.debounceTime(Durations.short4).listen((event) {
+    moderatorStreamSubscription =
+        moderatorLiveCollection.getStreamController().stream.debounceTime(const Duration(milliseconds: 200)).listen((event) {
       add(CommunityMembershipPageModeratorLoadedEvent(event));
     });
 
@@ -100,10 +100,7 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
     });
 
     on<CommunityMembershipPageAddMemberEvent>((event, emit) {
-      AmitySocialClient.newCommunityRepository()
-          .membership(community.communityId ?? '')
-          .addMembers(event.userIds)
-          .then((value) {
+      AmitySocialClient.newCommunityRepository().membership(community.communityId ?? '').addMembers(event.userIds).then((value) {
         event.toastBloc.add(AmityToastShort(message: event.successMessage, icon: AmityToastIcon.success));
       }).onError((error, stackTrace) {
         event.toastBloc.add(AmityToastShort(message: event.errorMessage, icon: AmityToastIcon.warning));
@@ -134,18 +131,14 @@ class CommunityMembershipPageBloc extends Bloc<CommunityMembershipPageEvent, Com
 
       switch (event.action) {
         case CommunityMembershipPageBottomSheetAction.promote:
-          repository
-              .moderation(community.communityId ?? '')
-              .addRole('community-moderator', [event.member.userId ?? '']).then((value) {
+          repository.moderation(community.communityId ?? '').addRole('community-moderator', [event.member.userId ?? '']).then((value) {
             event.toastBloc.add(AmityToastShort(message: event.successMessage, icon: AmityToastIcon.success));
           }).onError((error, stackTrace) {
             event.toastBloc.add(AmityToastShort(message: event.errorMessage, icon: AmityToastIcon.warning));
           });
           break;
         case CommunityMembershipPageBottomSheetAction.demote:
-          repository
-              .moderation(community.communityId ?? '')
-              .removeRole('community-moderator', [event.member.userId ?? '']).then((value) {
+          repository.moderation(community.communityId ?? '').removeRole('community-moderator', [event.member.userId ?? '']).then((value) {
             event.toastBloc.add(AmityToastShort(message: event.successMessage, icon: AmityToastIcon.success));
           }).onError((error, stackTrace) {
             event.toastBloc.add(AmityToastShort(message: event.errorMessage, icon: AmityToastIcon.warning));

@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_thumbnail/flutter_video_thumbnail.dart';
 import 'package:intl/intl.dart';
-import 'package:rxdart/transformers.dart';
 
 part 'amity_group_chat_page_events.dart';
 part 'amity_group_chat_page_state.dart';
@@ -32,6 +31,8 @@ class AmityGroupChatPageBloc
   late ScrollController _scrollController;
   bool _isScrollListenerAdded = false;
   bool _isJumpScrollInProgress = false;
+  String? _lastMessagesFingerprint;
+  int _suppressedMessageChangedEvents = 0;
   Timer? _jumpToMessageTimeoutTimer;
 
   final AmityToastBloc toastBloc;
@@ -558,12 +559,27 @@ class AmityGroupChatPageBloc
 
     liveCollection = query.getLiveCollection();
 
-    liveCollection?.getStreamController().stream.debounceTime(const Duration(milliseconds: 300)).listen((event) {
+    liveCollection?.getStreamController().stream.listen((event) {
       final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
           ? (event.first.data as MessageTextData).text
           : "N/A";
 
       AmityLog.debug("GroupChatPageEventChanged: $lastMessageText (${event.length} total)");
+
+      final fingerprint = _createMessagesFingerprint(event, state.isFetching);
+      if (fingerprint == _lastMessagesFingerprint) {
+        _suppressedMessageChangedEvents++;
+        if (_suppressedMessageChangedEvents == 1 || _suppressedMessageChangedEvents % 20 == 0) {
+          _log(
+            action: 'GroupChatPageEventChanged.suppressed',
+            message: 'Suppressed duplicate GroupChatPageEventChanged count=$_suppressedMessageChangedEvents',
+          );
+        }
+        return;
+      }
+
+      _suppressedMessageChangedEvents = 0;
+      _lastMessagesFingerprint = fingerprint;
 
       addEvent(GroupChatPageEventChanged(
           messages: event, isFetching: state.isFetching));
@@ -606,6 +622,25 @@ class AmityGroupChatPageBloc
       level: level,
       snapshot: snapshot,
     );
+  }
+
+  String _createMessagesFingerprint(List<AmityMessage> messages, bool isFetching) {
+    if (messages.isEmpty) {
+      return 'count:0|fetch:$isFetching';
+    }
+
+    final first = messages.first;
+    final last = messages.last;
+
+    String pack(AmityMessage message) {
+      final id = message.messageId ?? message.uniqueId ?? '';
+      final createdAt = message.createdAt?.millisecondsSinceEpoch ?? 0;
+      final segment = message.channelSegment ?? -1;
+      final syncState = message.syncState?.index ?? -1;
+      return '$id:$createdAt:$segment:$syncState';
+    }
+
+    return 'count:${messages.length}|fetch:$isFetching|first:${pack(first)}|last:${pack(last)}';
   }
 
   // Helper method to load member roles and muted status

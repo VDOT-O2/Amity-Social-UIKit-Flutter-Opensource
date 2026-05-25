@@ -34,6 +34,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   bool _isScrollListenerAdded = false;
   bool _isJumpScrollInProgress = false; // Flag to track jump scroll state
   bool _isFetchingMessages = false;
+  String? _lastMessagesFingerprint;
+  int _suppressedMessageChangedEvents = 0;
 
   Timer? _jumpToMessageTimeoutTimer;
 
@@ -687,6 +689,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           messages.isNotEmpty && messages.first.data is MessageTextData ? (messages.first.data as MessageTextData).text : "N/A";
       AmityLog.debug("[ChatPage] ChatPageEventChanged: $lastMessageText (${messages.length} total)");
 
+      final fingerprint = _createMessagesFingerprint(messages, result.isFetching);
+      if (fingerprint == _lastMessagesFingerprint) {
+        _suppressedMessageChangedEvents++;
+        if (_suppressedMessageChangedEvents == 1 || _suppressedMessageChangedEvents % 20 == 0) {
+          _log(
+            action: 'ChatPageEventChanged.suppressed',
+            message: 'Suppressed duplicate ChatPageEventChanged count=$_suppressedMessageChangedEvents',
+          );
+        }
+        return;
+      }
+
+      _suppressedMessageChangedEvents = 0;
+      _lastMessagesFingerprint = fingerprint;
+
       addEvent(ChatPageEventChanged(messages: messages, isFetching: result.isFetching));
     });
 
@@ -763,6 +780,25 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       level: level,
       snapshot: snapshot,
     );
+  }
+
+  String _createMessagesFingerprint(List<AmityMessage> messages, bool isFetching) {
+    if (messages.isEmpty) {
+      return 'count:0|fetch:$isFetching';
+    }
+
+    final first = messages.first;
+    final last = messages.last;
+
+    String pack(AmityMessage message) {
+      final id = message.messageId ?? message.uniqueId ?? '';
+      final createdAt = message.createdAt?.millisecondsSinceEpoch ?? 0;
+      final segment = message.channelSegment ?? -1;
+      final syncState = message.syncState?.index ?? -1;
+      return '$id:$createdAt:$segment:$syncState';
+    }
+
+    return 'count:${messages.length}|fetch:$isFetching|first:${pack(first)}|last:${pack(last)}';
   }
 }
 
