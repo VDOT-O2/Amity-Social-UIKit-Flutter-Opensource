@@ -2889,6 +2889,13 @@ abstract class AppLocalizations {
   /// **'Members who are not moderators can read messages but cannot send any messages.'**
   String get settings_only_moderators_desc;
 
+  /// Label for everyone with approval messaging permission
+  String get settings_everyone_with_approval;
+
+  /// Description for everyone with approval messaging permission
+  String get settings_everyone_with_approval_desc;
+
+
   /// Success toast when leaving a group
   ///
   /// In en, this message translates to:

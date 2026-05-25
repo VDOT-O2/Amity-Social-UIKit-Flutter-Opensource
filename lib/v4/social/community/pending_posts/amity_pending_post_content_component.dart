@@ -92,8 +92,8 @@ class AmityPendingPostContentComponent extends NewBaseComponent {
                       state.isApprovingPost ? null : () => cubit.approvePost(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: state.isApprovingPost
-                        ? theme.primaryColor.withOpacity(0.6)
-                        : theme.primaryColor,
+                        ? theme.buttonColor.withOpacity(0.6)
+                        : theme.buttonColor,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.center,
                     shape: RoundedRectangleBorder(
@@ -113,7 +113,7 @@ class AmityPendingPostContentComponent extends NewBaseComponent {
                         )
                       : Text(
                           context.l10n.community_pending_post_accept,
-                          style: const TextStyle(color: Colors.white),
+                          style:  TextStyle(color: theme.buttonTextColor),
                         ),
                 ),
               ),

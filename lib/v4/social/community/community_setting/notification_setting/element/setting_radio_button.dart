@@ -32,10 +32,7 @@ class SettingRadioButtonWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: theme.baseColor),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: theme.baseColor),
                 ),
               ],
             ),
@@ -44,29 +41,29 @@ class SettingRadioButtonWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 description,
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: theme.baseColorShade1),
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: theme.baseColorShade1),
               ),
             ),
-            const SizedBox(height: 24.0),
+            const SizedBox(height: 32.0),
             _getRadioButtonTile(
               title: context.l10n.settings_everyone,
+              description: context.l10n.settings_everyone_desc,
               value: RadioButtonSetting.everyone,
               groupValue: groupValue,
               onChanged: onChanged,
             ),
             const SizedBox(height: 32.0),
             _getRadioButtonTile(
-              title: context.l10n.settings_only_moderators,
+              title: context.l10n.settings_everyone_with_approval,
+              description: context.l10n.settings_everyone_with_approval_desc,
               value: RadioButtonSetting.onlyModerator,
               groupValue: groupValue,
               onChanged: onChanged,
             ),
             const SizedBox(height: 32.0),
             _getRadioButtonTile(
-              title: context.l10n.settings_only_admins,
+              title: context.l10n.settings_only_moderators,
+              description: context.l10n.settings_only_moderators_desc,
               value: RadioButtonSetting.off,
               groupValue: groupValue,
               onChanged: onChanged,
@@ -77,6 +74,7 @@ class SettingRadioButtonWidget extends StatelessWidget {
 
   Widget _getRadioButtonTile<T>({
     required String title,
+    required String description,
     required T value,
     required T groupValue,
     required void Function(T?) onChanged,
@@ -84,11 +82,27 @@ class SettingRadioButtonWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: theme.baseColor,
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: theme.baseColor,
+                ),
+              ),
+              const SizedBox(height: 4.0),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.baseColorShade1,
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -137,9 +151,7 @@ class CustomRadioButton<T> extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: value == groupValue ? selectedColor : Colors.transparent,
-          border: value != groupValue
-              ? Border.all(color: unselectedColor, width: 2)
-              : null,
+          border: value != groupValue ? Border.all(color: unselectedColor, width: 2) : null,
         ),
         child: value == groupValue
             ? Center(

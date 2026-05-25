@@ -69,15 +69,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get post_delete => 'Excluir Publicação';
 
   @override
-  String get post_delete_description =>
-      'Esta publicação será excluída permanentemente.';
+  String get post_delete_description => 'Esta publicação será excluída permanentemente.';
 
   @override
   String get post_delete_confirmation => 'Excluir Publicação?';
 
   @override
-  String get post_delete_confirmation_description =>
-      'Você quer excluir sua publicação?';
+  String get post_delete_confirmation_description => 'Você quer excluir sua publicação?';
 
   @override
   String get post_report => 'Denunciar publicação';
@@ -98,8 +96,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get post_discard => 'Descartar esta publicação?';
 
   @override
-  String get post_discard_description =>
-      'A publicação será excluída permanentemente. Não pode ser desfeito.';
+  String get post_discard_description => 'A publicação será excluída permanentemente. Não pode ser desfeito.';
 
   @override
   String get post_write_comment => 'Escreva um comentário...';
@@ -108,8 +105,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get poll_duration => 'Duração da enquete';
 
   @override
-  String get poll_duration_hint =>
-      'Você sempre pode fechar a enquete antes do tempo definido.';
+  String get poll_duration_hint => 'Você sempre pode fechar a enquete antes do tempo definido.';
 
   @override
   String get poll_custom_edn_date => 'Data de término personalizada';
@@ -118,8 +114,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get poll_close => 'Fechar enquete';
 
   @override
-  String get poll_close_description =>
-      'Esta enquete está fechada. Você não pode mais votar.';
+  String get poll_close_description => 'Esta enquete está fechada. Você não pode mais votar.';
 
   @override
   String get poll_vote => 'Votar';
@@ -177,8 +172,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get poll_remaining_time => 'restante';
 
   @override
-  String get poll_vote_error =>
-      'Falha ao votar na enquete. Por favor, tente novamente.';
+  String get poll_vote_error => 'Falha ao votar na enquete. Por favor, tente novamente.';
 
   @override
   String get poll_ended => 'Encerrada';
@@ -250,39 +244,31 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get comment_create_error_ban_word =>
-      'Seu comentário contém uma palavra inadequada. Por favor, revise e exclua.';
+  String get comment_create_error_ban_word => 'Seu comentário contém uma palavra inadequada. Por favor, revise e exclua.';
 
   @override
-  String get comment_create_error_story_deleted =>
-      'Esta história não está mais disponível';
+  String get comment_create_error_story_deleted => 'Esta história não está mais disponível';
 
   @override
-  String get community_create_success_message =>
-      'Comunidade criada com sucesso.';
+  String get community_create_success_message => 'Comunidade criada com sucesso.';
 
   @override
-  String get community_create_error_message =>
-      'Falha ao criar comunidade. Por favor, tente novamente.';
+  String get community_create_error_message => 'Falha ao criar comunidade. Por favor, tente novamente.';
 
   @override
-  String get community_update_success_message =>
-      'Comunidade atualizada com sucesso.';
+  String get community_update_success_message => 'Comunidade atualizada com sucesso.';
 
   @override
-  String get community_update_error_message =>
-      'Falha ao salvar o perfil da comunidade. Por favor, tente novamente.';
+  String get community_update_error_message => 'Falha ao salvar o perfil da comunidade. Por favor, tente novamente.';
 
   @override
-  String get community_leave_success_message =>
-      'Você saiu da comunidade com sucesso.';
+  String get community_leave_success_message => 'Você saiu da comunidade com sucesso.';
 
   @override
   String get community_leave_error_message => 'Falha ao sair da comunidade.';
 
   @override
-  String get community_close_success_message =>
-      'Comunidade fechada com sucesso.';
+  String get community_close_success_message => 'Comunidade fechada com sucesso.';
 
   @override
   String get community_close_error_message => 'Falha ao fechar a comunidade.';
@@ -313,8 +299,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_leave => 'Sair da comunidade';
 
   @override
-  String get community_leave_description =>
-      'Sair da comunidade. Você não poderá mais publicar e interagir nesta comunidade.';
+  String get community_leave_description => 'Sair da comunidade. Você não poderá mais publicar e interagir nesta comunidade.';
 
   @override
   String get community_create => 'Criar Comunidade';
@@ -341,8 +326,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_public => 'Pública';
 
   @override
-  String get community_public_description =>
-      'Qualquer pessoa pode entrar, visualizar e pesquisar as publicações nesta comunidade.';
+  String get community_public_description => 'Qualquer pessoa pode entrar, visualizar e pesquisar as publicações nesta comunidade.';
 
   @override
   String get community_private_description =>
@@ -367,8 +351,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_pending_posts => 'Publicações Pendentes';
 
   @override
-  String get commnuity_pending_post_reviewing =>
-      'Suas publicações estão pendentes de revisão';
+  String get commnuity_pending_post_reviewing => 'Suas publicações estão pendentes de revisão';
 
   @override
   String commnuity_pending_post_count(int count) {
@@ -410,8 +393,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_discard_confirmation => 'Sair sem terminar?';
 
   @override
-  String get community_discard_description =>
-      'Seu progresso não será salvo e sua comunidade não será criada.';
+  String get community_discard_description => 'Seu progresso não será salvo e sua comunidade não será criada.';
 
   @override
   String get message_send => 'Enviar';
@@ -441,8 +423,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get message_reply_to_themself => 'Respondeu a si mesmo';
 
   @override
-  String get message_reply_you_to_deleted =>
-      'Você respondeu a uma mensagem excluída';
+  String get message_reply_you_to_deleted => 'Você respondeu a uma mensagem excluída';
 
   @override
   String get message_reply_to_deleted => 'Respondeu a uma mensagem excluída';
@@ -460,65 +441,55 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_new_posts => 'Novas publicações';
 
   @override
-  String get settings_new_posts_description =>
-      'Receba notificações quando alguém criar novas publicações nesta comunidade.';
+  String get settings_new_posts_description => 'Receba notificações quando alguém criar novas publicações nesta comunidade.';
 
   @override
   String get settings_react_posts => 'Reações às publicações';
 
   @override
-  String get settings_react_posts_description =>
-      'Receba notificações quando alguém reagir às suas publicações nesta comunidade.';
+  String get settings_react_posts_description => 'Receba notificações quando alguém reagir às suas publicações nesta comunidade.';
 
   @override
   String get settings_react_comments => 'Reações aos comentários';
 
   @override
-  String get settings_react_comments_description =>
-      'Receba notificações quando alguém curtir seu comentário nesta comunidade.';
+  String get settings_react_comments_description => 'Receba notificações quando alguém curtir seu comentário nesta comunidade.';
 
   @override
   String get settings_new_comments => 'Novos comentários';
 
   @override
-  String get settings_new_comments_description =>
-      'Receba notificações quando alguém comentar em sua publicação nesta comunidade.';
+  String get settings_new_comments_description => 'Receba notificações quando alguém comentar em sua publicação nesta comunidade.';
 
   @override
   String get settings_new_replies => 'Respostas';
 
   @override
-  String get settings_new_replies_description =>
-      'Receba notificações quando alguém comentar em seus comentários nesta comunidade.';
+  String get settings_new_replies_description => 'Receba notificações quando alguém comentar em seus comentários nesta comunidade.';
 
   @override
-  String get settings_allow_stories_comments =>
-      'Permitir comentários nas histórias da comunidade';
+  String get settings_allow_stories_comments => 'Permitir comentários nas histórias da comunidade';
 
   @override
-  String get settings_allow_stories_comments_description =>
-      'Ative para receber comentários nas histórias desta comunidade.';
+  String get settings_allow_stories_comments_description => 'Ative para receber comentários nas histórias desta comunidade.';
 
   @override
   String get settings_new_stories => 'Novas histórias';
 
   @override
-  String get settings_new_stories_description =>
-      'Receba notificações quando alguém criar uma nova história nesta comunidade.';
+  String get settings_new_stories_description => 'Receba notificações quando alguém criar uma nova história nesta comunidade.';
 
   @override
   String get settings_story_reactions => 'Reações às histórias';
 
   @override
-  String get settings_story_reactions_description =>
-      'Receba notificações quando alguém reagir à sua história nesta comunidade.';
+  String get settings_story_reactions_description => 'Receba notificações quando alguém reagir à sua história nesta comunidade.';
 
   @override
   String get settings_story_comments => 'Comentários nas histórias';
 
   @override
-  String get settings_story_comments_description =>
-      'Receba notificações quando alguém comentar em sua história nesta comunidade.';
+  String get settings_story_comments_description => 'Receba notificações quando alguém comentar em sua história nesta comunidade.';
 
   @override
   String get settings_everyone => 'Todos';
@@ -528,6 +499,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settings_only_admins => 'Apenas administradores podem publicar';
+
+  @override
+  String get settings_everyone_with_approval => 'Everyone - posts require approval';
+
+  @override
+  String get settings_everyone_with_approval_desc =>
+      'Any member can submit a post, but a moderator must approve it before it\'s visible to the community.';
 
   @override
   String get settings_privacy => 'Privacidade';
@@ -542,12 +520,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_leave_confirmation => 'Sair sem terminar?';
 
   @override
-  String get settings_leave_description =>
-      'As alterações que você fez podem não ser salvas.';
+  String get settings_leave_description => 'As alterações que você fez podem não ser salvas.';
 
   @override
-  String get settings_privacy_confirmation =>
-      'Alterar as configurações de privacidade da comunidade?';
+  String get settings_privacy_confirmation => 'Alterar as configurações de privacidade da comunidade?';
 
   @override
   String get settings_privacy_description =>
@@ -623,8 +599,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_allow_notification => 'Permitir Notificação';
 
   @override
-  String get settings_allow_notification_description =>
-      'Ative para receber notificações push desta comunidade.';
+  String get settings_allow_notification_description => 'Ative para receber notificações push desta comunidade.';
 
   @override
   String get general_reported => 'denunciado';
@@ -660,8 +635,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get post_unavailable_title => 'Algo deu errado';
 
   @override
-  String get post_unavailable_description =>
-      'O conteúdo que você está procurando não está disponível.';
+  String get post_unavailable_description => 'O conteúdo que você está procurando não está disponível.';
 
   @override
   String get comment_deleted_message => 'Este comentário foi excluído';
@@ -670,8 +644,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get comment_reply_deleted_message => 'Esta resposta foi excluída';
 
   @override
-  String get post_edit_globally_featured =>
-      'Editar publicação destacada globalmente?';
+  String get post_edit_globally_featured => 'Editar publicação destacada globalmente?';
 
   @override
   String get post_edit_globally_featured_description =>
@@ -760,8 +733,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user_unblock => 'Desbloquear usuário';
 
   @override
-  String get error_delete_post =>
-      'Falha ao excluir a publicação. Por favor, tente novamente.';
+  String get error_delete_post => 'Falha ao excluir a publicação. Por favor, tente novamente.';
 
   @override
   String get error_leave_community => 'Não foi possível sair da comunidade';
@@ -774,8 +746,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get error_close_community => 'Não foi possível fechar a comunidade';
 
   @override
-  String get error_close_community_description =>
-      'Algo deu errado. Por favor, tente novamente mais tarde.';
+  String get error_close_community_description => 'Algo deu errado. Por favor, tente novamente mais tarde.';
 
   @override
   String get error_max_upload_reached => 'Limite máximo de upload atingido';
@@ -791,20 +762,16 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get error_edit_post =>
-      'Falha ao editar a publicação. Por favor, tente novamente.';
+  String get error_edit_post => 'Falha ao editar a publicação. Por favor, tente novamente.';
 
   @override
-  String get error_create_post =>
-      'Falha ao criar a publicação. Por favor, tente novamente.';
+  String get error_create_post => 'Falha ao criar a publicação. Por favor, tente novamente.';
 
   @override
-  String get error_post_ban_word_found =>
-      'Your post wasn\'t posted because it contains a blocked word.';
+  String get error_post_ban_word_found => 'Your post wasn\'t posted because it contains a blocked word.';
 
   @override
-  String get error_post_link_not_allowed =>
-      'Your post wasn\'t posted because it contains a link that\'s not allowed.';
+  String get error_post_link_not_allowed => 'Your post wasn\'t posted because it contains a link that\'s not allowed.';
 
   @override
   String error_max_poll_characters(int maxQuestionLength) {
@@ -817,8 +784,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get error_create_poll =>
-      'Falha ao criar a enquete. Por favor, tente novamente.';
+  String get error_create_poll => 'Falha ao criar a enquete. Por favor, tente novamente.';
 
   @override
   String get error_poll_end_time_must_be_future =>
@@ -828,8 +794,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get error_message_too_long_title => 'Não é possível enviar a mensagem';
 
   @override
-  String get error_message_too_long_description =>
-      'Sua mensagem é muito longa. Por favor, encurte sua mensagem e tente novamente.';
+  String get error_message_too_long_description => 'Sua mensagem é muito longa. Por favor, encurte sua mensagem e tente novamente.';
 
   @override
   String get user_profile_unknown_name => 'Desconhecido';
@@ -886,8 +851,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profile_update_success => 'Perfil atualizado com sucesso!';
 
   @override
-  String get profile_update_failed =>
-      'Falha ao salvar seu perfil. Por favor, tente novamente.';
+  String get profile_update_failed => 'Falha ao salvar seu perfil. Por favor, tente novamente.';
 
   @override
   String get community_post_permission => 'Permissão de publicação';
@@ -903,58 +867,49 @@ class AppLocalizationsPt extends AppLocalizations {
       'Fechar esta comunidade removerá a página da comunidade e todo o seu conteúdo e comentários.';
 
   @override
-  String get community_post_permission_title_label =>
-      'Quem pode publicar nesta comunidade';
+  String get community_post_permission_title_label => 'Quem pode publicar nesta comunidade';
 
   @override
-  String get community_post_permission_description_label =>
-      'Você pode controlar quem pode criar publicações em sua comunidade.';
+  String get community_post_permission_description_label => 'Você pode controlar quem pode criar publicações em sua comunidade.';
 
   @override
-  String get post_item_bottom_nonmember_label =>
-      'Entre na comunidade para interagir com todas as publicações';
+  String get post_item_bottom_nonmember_label => 'Entre na comunidade para interagir com todas as publicações';
 
   @override
   String get notification_turn_on_success => 'Notificação ativada';
 
   @override
-  String get notification_turn_on_error =>
-      'Falha ao ativar notificação. Por favor, tente novamente.';
+  String get notification_turn_on_error => 'Falha ao ativar notificação. Por favor, tente novamente.';
 
   @override
   String get notification_turn_off_success => 'Notificação desativada';
 
   @override
-  String get notification_turn_off_error =>
-      'Falha ao desativar notificação. Por favor, tente novamente.';
+  String get notification_turn_off_error => 'Falha ao desativar notificação. Por favor, tente novamente.';
 
   @override
   String get user_report_success => 'Usuário denunciado.';
 
   @override
-  String get user_report_error =>
-      'Falha ao denunciar usuário. Por favor, tente novamente.';
+  String get user_report_error => 'Falha ao denunciar usuário. Por favor, tente novamente.';
 
   @override
   String get user_unreport_success => 'Denúncia de usuário removida.';
 
   @override
-  String get user_unreport_error =>
-      'Falha ao remover denúncia de usuário. Por favor, tente novamente.';
+  String get user_unreport_error => 'Falha ao remover denúncia de usuário. Por favor, tente novamente.';
 
   @override
   String get user_block_success => 'Usuário bloqueado.';
 
   @override
-  String get user_block_error =>
-      'Falha ao bloquear usuário. Por favor, tente novamente.';
+  String get user_block_error => 'Falha ao bloquear usuário. Por favor, tente novamente.';
 
   @override
   String get user_unblock_success => 'Usuário desbloqueado.';
 
   @override
-  String get user_unblock_error =>
-      'Falha ao desbloquear usuário. Por favor, tente novamente.';
+  String get user_unblock_error => 'Falha ao desbloquear usuário. Por favor, tente novamente.';
 
   @override
   String get search_no_members_found => 'Nenhum membro encontrado';
@@ -1000,33 +955,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user_ban_button => 'Banir';
 
   @override
-  String get member_add_success =>
-      'Membro adicionado com sucesso a esta comunidade.';
+  String get member_add_success => 'Membro adicionado com sucesso a esta comunidade.';
 
   @override
-  String get member_add_error =>
-      'Falha ao adicionar membro. Por favor, tente novamente.';
+  String get member_add_error => 'Falha ao adicionar membro. Por favor, tente novamente.';
 
   @override
   String get moderator_promote_success => 'Promovido a moderador com sucesso.';
 
   @override
-  String get moderator_promote_error =>
-      'Falha ao promover membro. Por favor, tente novamente.';
+  String get moderator_promote_error => 'Falha ao promover membro. Por favor, tente novamente.';
 
   @override
   String get moderator_demote_success => 'Rebaixado para membro com sucesso.';
 
   @override
-  String get moderator_demote_error =>
-      'Falha ao rebaixar membro. Por favor, tente novamente.';
+  String get moderator_demote_error => 'Falha ao rebaixar membro. Por favor, tente novamente.';
 
   @override
   String get member_remove_success => 'Membro removido desta comunidade.';
 
   @override
-  String get member_remove_error =>
-      'Falha ao remover membro. Por favor, tente novamente.';
+  String get member_remove_error => 'Falha ao remover membro. Por favor, tente novamente.';
 
   @override
   String get user_follow_success => 'Usuário seguido.';
@@ -1047,15 +997,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user_feed_blocked_title => 'Você bloqueou este usuário';
 
   @override
-  String get user_feed_blocked_description =>
-      'Desbloquear para ver suas publicações.';
+  String get user_feed_blocked_description => 'Desbloquear para ver suas publicações.';
 
   @override
   String get user_feed_private_title => 'Esta conta é privada';
 
   @override
-  String get user_feed_private_description =>
-      'Siga este usuário para ver suas publicações.';
+  String get user_feed_private_description => 'Siga este usuário para ver suas publicações.';
 
   @override
   String get timestamp_just_now => 'Agora mesmo';
@@ -1106,8 +1054,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user_follow_unable_title => 'Não foi possível seguir este usuário';
 
   @override
-  String get user_follow_unable_description =>
-      'Ops! algo deu errado. Por favor, tente novamente mais tarde.';
+  String get user_follow_unable_description => 'Ops! algo deu errado. Por favor, tente novamente mais tarde.';
 
   @override
   String get user_follow => 'Seguir';
@@ -1144,8 +1091,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user_unfollow_confirm_title => 'Deixar de seguir este usuário?';
 
   @override
-  String get user_unfollow_confirm_description =>
-      'Se você mudar de ideia, terá que solicitar para segui-los novamente.';
+  String get user_unfollow_confirm_description => 'Se você mudar de ideia, terá que solicitar para segui-los novamente.';
 
   @override
   String get user_unfollow_confirm_button => 'Deixar de seguir';
@@ -1160,16 +1106,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_pending_requests_title => 'Solicitações Pendentes';
 
   @override
-  String get community_pending_requests_empty_title =>
-      'Sem solicitações pendentes disponíveis';
+  String get community_pending_requests_empty_title => 'Sem solicitações pendentes disponíveis';
 
   @override
   String get community_pending_requests_empty_description =>
       'Ative a revisão de publicações ou aprovação de entrada nas configurações da comunidade para gerenciar solicitações.';
 
   @override
-  String get community_join_requests_coming_soon =>
-      'Funcionalidade de solicitações de entrada em breve';
+  String get community_join_requests_coming_soon => 'Funcionalidade de solicitações de entrada em breve';
 
   @override
   String get community_pending_posts_warning =>
@@ -1188,22 +1132,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get community_pending_post_delete_success => 'Publicação excluída.';
 
   @override
-  String get community_pending_post_delete_error =>
-      'Falha ao excluir publicação. Por favor, tente novamente.';
+  String get community_pending_post_delete_error => 'Falha ao excluir publicação. Por favor, tente novamente.';
 
   @override
   String get community_pending_post_approve_success => 'Publicação aceita.';
 
   @override
-  String get community_pending_post_approve_error =>
-      'Falha ao aceitar publicação. Esta publicação foi revisada por outro moderador.';
+  String get community_pending_post_approve_error => 'Falha ao aceitar publicação. Esta publicação foi revisada por outro moderador.';
 
   @override
   String get community_pending_post_decline_success => 'Publicação recusada.';
 
   @override
-  String get community_pending_post_decline_error =>
-      'Falha ao recusar publicação. Esta publicação foi revisada por outro moderador.';
+  String get community_pending_post_decline_error => 'Falha ao recusar publicação. Esta publicação foi revisada por outro moderador.';
 
   @override
   String poll_option_hint(int optionNumber) {
@@ -1217,8 +1158,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get poll_multiple_selection_title => 'Seleção múltipla';
 
   @override
-  String get poll_multiple_selection_description =>
-      'Permitir que os participantes votem em mais de uma opção.';
+  String get poll_multiple_selection_description => 'Permitir que os participantes votem em mais de uma opção.';
 
   @override
   String poll_ends_on(String endDate) {
@@ -1258,19 +1198,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profile_edit_about => 'Sobre';
 
   @override
-  String get profile_edit_unsupported_image_title =>
-      'Tipo de imagem não suportado';
+  String get profile_edit_unsupported_image_title => 'Tipo de imagem não suportado';
 
   @override
-  String get profile_edit_unsupported_image_description =>
-      'Por favor, envie uma imagem PNG ou JPG.';
+  String get profile_edit_unsupported_image_description => 'Por favor, envie uma imagem PNG ou JPG.';
 
   @override
   String get profile_edit_inappropriate_image_title => 'Imagem inapropriada';
 
   @override
-  String get profile_edit_inappropriate_image_description =>
-      'Por favor, escolha uma imagem diferente para enviar.';
+  String get profile_edit_inappropriate_image_description => 'Por favor, escolha uma imagem diferente para enviar.';
 
   @override
   String get profile_edit_unsaved_changes_title => 'Alterações não salvas';
@@ -1324,12 +1261,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_loading => 'Carregando chat...';
 
   @override
-  String get chat_blocked_message =>
-      'Você não pode enviar mensagens para esta pessoa.';
+  String get chat_blocked_message => 'Você não pode enviar mensagens para esta pessoa.';
 
   @override
-  String get chat_notifications_disabled =>
-      'Você desativou as notificações para chat';
+  String get chat_notifications_disabled => 'Você desativou as notificações para chat';
 
   @override
   String get chat_archive => 'Arquivar';
@@ -1341,8 +1276,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_message_deleted => 'Esta mensagem foi excluída';
 
   @override
-  String get chat_message_no_preview =>
-      'Sem visualização disponível para este tipo de mensagem';
+  String get chat_message_no_preview => 'Sem visualização disponível para este tipo de mensagem';
 
   @override
   String get chat_no_message_yet => 'Ainda sem mensagens';
@@ -1363,19 +1297,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get toast_chat_unarchived => 'Chat desarquivado.';
 
   @override
-  String get toast_chat_archive_error =>
-      'Falha ao arquivar o chat. Por favor, tente novamente';
+  String get toast_chat_archive_error => 'Falha ao arquivar o chat. Por favor, tente novamente';
 
   @override
-  String get toast_chat_unarchive_error =>
-      'Falha ao desarquivar o chat. Por favor, tente novamente';
+  String get toast_chat_unarchive_error => 'Falha ao desarquivar o chat. Por favor, tente novamente';
 
   @override
   String get chat_archive_limit_title => 'Muitos chats arquivados';
 
   @override
-  String get chat_archive_limit_message =>
-      'Você pode arquivar no máximo 100 listas de chat.';
+  String get chat_archive_limit_message => 'Você pode arquivar no máximo 100 listas de chat.';
 
   @override
   String get chat_empty_title => 'Ainda sem conversas';
@@ -1405,12 +1336,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_member_label => 'Membro';
 
   @override
-  String get chat_select_member_error =>
-      'Por favor, selecione pelo menos um usuário';
+  String get chat_select_member_error => 'Por favor, selecione pelo menos um usuário';
 
   @override
-  String get message_report_details_hint =>
-      'Compartilhe mais detalhes sobre este problema';
+  String get message_report_details_hint => 'Compartilhe mais detalhes sobre este problema';
 
   @override
   String get chat_search_tab_chats => 'Chats';
@@ -1419,22 +1348,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_search_tab_messages => 'Mensagens';
 
   @override
-  String get search_minimum_chars =>
-      'Comece sua pesquisa digitando\npelo menos 3 letras';
+  String get search_minimum_chars => 'Comece sua pesquisa digitando\npelo menos 3 letras';
 
   @override
   String get permission_camera_title => 'Permitir acesso à sua câmera';
 
   @override
-  String get permission_camera_detail =>
-      'Isso permite que o aplicativo tire fotos e grave vídeos da câmera do seu dispositivo.';
+  String get permission_camera_detail => 'Isso permite que o aplicativo tire fotos e grave vídeos da câmera do seu dispositivo.';
 
   @override
   String get permission_microphone_title => 'Permitir acesso ao seu microfone';
 
   @override
-  String get permission_microphone_detail =>
-      'Isso permite que o aplicativo grave áudio para vídeos do microfone do seu dispositivo.';
+  String get permission_microphone_detail => 'Isso permite que o aplicativo grave áudio para vídeos do microfone do seu dispositivo.';
 
   @override
   String get permission_open_settings => 'Abrir configurações';
@@ -1458,12 +1384,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get toast_message_unreported => 'Denúncia de mensagem retirada.';
 
   @override
-  String get toast_message_report_error =>
-      'Falha ao denunciar a mensagem. Por favor, tente novamente.';
+  String get toast_message_report_error => 'Falha ao denunciar a mensagem. Por favor, tente novamente.';
 
   @override
-  String get toast_message_unreport_error =>
-      'Falha ao retirar a denúncia da mensagem. Por favor, tente novamente.';
+  String get toast_message_unreport_error => 'Falha ao retirar a denúncia da mensagem. Por favor, tente novamente.';
 
   @override
   String get toast_message_delete_error => 'Falha ao excluir a mensagem.';
@@ -1487,8 +1411,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get message_delete_title => 'Excluir esta mensagem?';
 
   @override
-  String get message_delete_description =>
-      'Esta mensagem também será removida dos dispositivos dos seus amigos.';
+  String get message_delete_description => 'Esta mensagem também será removida dos dispositivos dos seus amigos.';
 
   @override
   String get chat_create_success => 'Grupo de chat criado.';
@@ -1497,8 +1420,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_create_error => 'Falha ao criar grupo';
 
   @override
-  String get chat_create_error_retry =>
-      'Falha ao criar grupo de chat. Por favor, tente novamente.';
+  String get chat_create_error_retry => 'Falha ao criar grupo de chat. Por favor, tente novamente.';
 
   @override
   String get chat_create_title => 'Novo Grupo';
@@ -1519,15 +1441,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_privacy_public => 'Público';
 
   @override
-  String get chat_privacy_public_desc =>
-      'Qualquer pessoa pode encontrar o grupo através da pesquisa e participar da conversa.';
+  String get chat_privacy_public_desc => 'Qualquer pessoa pode encontrar o grupo através da pesquisa e participar da conversa.';
 
   @override
   String get chat_privacy_private => 'Privado';
 
   @override
-  String get chat_privacy_private_desc =>
-      'O grupo está oculto nas pesquisas e só é acessível por convite dos moderadores.';
+  String get chat_privacy_private_desc => 'O grupo está oculto nas pesquisas e só é acessível por convite dos moderadores.';
 
   @override
   String get chat_privacy_warning =>
@@ -1577,8 +1497,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get toast_user_unbanned => 'Usuário desbanido.';
 
   @override
-  String get toast_user_unban_error =>
-      'Falha ao desbanir o usuário. Por favor, tente novamente.';
+  String get toast_user_unban_error => 'Falha ao desbanir o usuário. Por favor, tente novamente.';
 
   @override
   String get settings_your_preferences => 'Suas preferências';
@@ -1593,15 +1512,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_leave_group_title => 'Sair do grupo';
 
   @override
-  String get chat_leave_group_confirm =>
-      'Se você sair deste grupo, não verá mais novas atividades nem poderá participar neste grupo.';
+  String get chat_leave_group_confirm => 'Se você sair deste grupo, não verá mais novas atividades nem poderá participar neste grupo.';
 
   @override
   String get chat_leave_group_last_mod_title => 'Você é o último moderador';
 
   @override
-  String get chat_leave_group_last_mod_message =>
-      'Você deve promover outro membro a moderador antes de sair.';
+  String get chat_leave_group_last_mod_message => 'Você deve promover outro membro a moderador antes de sair.';
 
   @override
   String get chat_promote_member => 'Promover membro';
@@ -1617,8 +1534,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notification_silent_mode => 'Modo silencioso';
 
   @override
-  String get notification_silent_mode_desc =>
-      'Sem notificações para todos neste canal. Os membros não podem ativar notificações no canal.';
+  String get notification_silent_mode_desc => 'Sem notificações para todos neste canal. Os membros não podem ativar notificações no canal.';
 
   @override
   String get notification_subscribe_mode => 'Modo assinatura';
@@ -1634,12 +1550,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notification_allow_notifications => 'Permitir notificações';
 
   @override
-  String get notification_allow_notifications_desc =>
-      'Ative para receber notificações push deste grupo.';
+  String get notification_allow_notifications_desc => 'Ative para receber notificações push deste grupo.';
 
   @override
-  String get notification_disabled_by_moderator =>
-      'As notificações do grupo foram desativadas pelo moderador.';
+  String get notification_disabled_by_moderator => 'As notificações do grupo foram desativadas pelo moderador.';
 
   @override
   String get notification_enabled_toast => 'Notificações ativadas';
@@ -1651,56 +1565,46 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_messaging => 'Mensagens';
 
   @override
-  String get settings_everyone_desc =>
-      'Todos podem enviar uma mensagem no grupo.';
+  String get settings_everyone_desc => 'Todos podem enviar uma mensagem no grupo.';
 
   @override
-  String get settings_only_moderators_desc =>
-      'Membros que não são moderadores podem ler mensagens, mas não podem enviar nenhuma mensagem.';
+  String get settings_only_moderators_desc => 'Membros que não são moderadores podem ler mensagens, mas não podem enviar nenhuma mensagem.';
 
   @override
   String get toast_group_chat_left => 'Você saiu do grupo.';
 
   @override
-  String get toast_group_chat_left_error =>
-      'Falha ao sair do grupo. Por favor, tente novamente.';
+  String get toast_group_chat_left_error => 'Falha ao sair do grupo. Por favor, tente novamente.';
 
   @override
   String get toast_group_profile_updated => 'Perfil do grupo atualizado.';
 
   @override
-  String get toast_group_profile_error =>
-      'Falha ao atualizar o perfil do grupo. Por favor, tente novamente.';
+  String get toast_group_profile_error => 'Falha ao atualizar o perfil do grupo. Por favor, tente novamente.';
 
   @override
-  String get toast_group_notification_updated =>
-      'Notificações do grupo atualizadas.';
+  String get toast_group_notification_updated => 'Notificações do grupo atualizadas.';
 
   @override
-  String get toast_group_notification_error =>
-      'Falha ao atualizar as notificações do grupo. Por favor, tente novamente.';
+  String get toast_group_notification_error => 'Falha ao atualizar as notificações do grupo. Por favor, tente novamente.';
 
   @override
-  String get toast_member_permissions_updated =>
-      'Permissões de membros atualizadas.';
+  String get toast_member_permissions_updated => 'Permissões de membros atualizadas.';
 
   @override
-  String get toast_member_permissions_error =>
-      'Falha ao atualizar as permissões de membros. Por favor, tente novamente.';
+  String get toast_member_permissions_error => 'Falha ao atualizar as permissões de membros. Por favor, tente novamente.';
 
   @override
   String get toast_member_list_updated => 'Lista de membros atualizada.';
 
   @override
-  String get toast_member_list_error =>
-      'Falha ao atualizar a lista de membros. Por favor, tente novamente.';
+  String get toast_member_list_error => 'Falha ao atualizar a lista de membros. Por favor, tente novamente.';
 
   @override
   String get toast_banned_users_updated => 'Usuários banidos atualizados.';
 
   @override
-  String get toast_banned_users_error =>
-      'Falha ao atualizar usuários banidos. Por favor, tente novamente.';
+  String get toast_banned_users_error => 'Falha ao atualizar usuários banidos. Por favor, tente novamente.';
 
   @override
   String get toast_members_added => 'Membros adicionados';
@@ -1709,40 +1613,34 @@ class AppLocalizationsPt extends AppLocalizations {
   String get toast_member_added => 'Membro adicionado.';
 
   @override
-  String get toast_members_add_error =>
-      'Falha ao adicionar membros. Por favor, tente novamente.';
+  String get toast_members_add_error => 'Falha ao adicionar membros. Por favor, tente novamente.';
 
   @override
-  String get toast_member_add_error =>
-      'Falha ao adicionar membro. Por favor, tente novamente.';
+  String get toast_member_add_error => 'Falha ao adicionar membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_removed => 'Membro removido.';
 
   @override
-  String get toast_member_remove_error =>
-      'Falha ao remover membro. Por favor, tente novamente.';
+  String get toast_member_remove_error => 'Falha ao remover membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_promoted => 'Membro promovido.';
 
   @override
-  String get toast_member_promote_error =>
-      'Falha ao promover membro. Por favor, tente novamente.';
+  String get toast_member_promote_error => 'Falha ao promover membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_demoted => 'Membro rebaixado.';
 
   @override
-  String get toast_member_demote_error =>
-      'Falha ao rebaixar membro. Por favor, tente novamente.';
+  String get toast_member_demote_error => 'Falha ao rebaixar membro. Por favor, tente novamente.';
 
   @override
   String get toast_user_banned => 'Usuário banido.';
 
   @override
-  String get toast_user_ban_error =>
-      'Falha ao banir usuário. Por favor, tente novamente.';
+  String get toast_user_ban_error => 'Falha ao banir usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_reported => 'Usuário reportado.';
@@ -1751,22 +1649,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get toast_user_unreported => 'Reporte de usuário removido.';
 
   @override
-  String get toast_user_report_error =>
-      'Falha ao reportar/desreportar usuário. Por favor, tente novamente.';
+  String get toast_user_report_error => 'Falha ao reportar/desreportar usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_muted => 'Usuário silenciado.';
 
   @override
-  String get toast_user_mute_error =>
-      'Falha ao silenciar usuário. Por favor, tente novamente.';
+  String get toast_user_mute_error => 'Falha ao silenciar usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_unmuted => 'Usuário dessilenciado.';
 
   @override
-  String get toast_user_unmute_error =>
-      'Falha ao dessilenciar usuário. Por favor, tente novamente.';
+  String get toast_user_unmute_error => 'Falha ao dessilenciar usuário. Por favor, tente novamente.';
 
   @override
   String get user_list_add => 'Adicionar';
@@ -1781,8 +1676,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chat_new_conversation => 'Nova conversa';
 
   @override
-  String get search_minimum_characters =>
-      'Comece sua pesquisa digitando\n pelo menos 3 letras';
+  String get search_minimum_characters => 'Comece sua pesquisa digitando\n pelo menos 3 letras';
 
   @override
   String get message_sending => 'Enviando...';
@@ -1839,8 +1733,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reaction_tap_to_remove => 'Toque para remover reação';
 
   @override
-  String get image_load_error =>
-      'Não foi possível carregar a imagem. Por favor, tente novamente.';
+  String get image_load_error => 'Não foi possível carregar a imagem. Por favor, tente novamente.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -1908,15 +1801,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get post_delete => 'Excluir Publicação';
 
   @override
-  String get post_delete_description =>
-      'Esta publicação será excluída permanentemente.';
+  String get post_delete_description => 'Esta publicação será excluída permanentemente.';
 
   @override
   String get post_delete_confirmation => 'Excluir Publicação?';
 
   @override
-  String get post_delete_confirmation_description =>
-      'Você quer excluir sua publicação?';
+  String get post_delete_confirmation_description => 'Você quer excluir sua publicação?';
 
   @override
   String get post_report => 'Denunciar publicação';
@@ -1937,8 +1828,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get post_discard => 'Descartar esta publicação?';
 
   @override
-  String get post_discard_description =>
-      'A publicação será excluída permanentemente. Não pode ser desfeito.';
+  String get post_discard_description => 'A publicação será excluída permanentemente. Não pode ser desfeito.';
 
   @override
   String get post_write_comment => 'Escreva um comentário...';
@@ -1947,8 +1837,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get poll_duration => 'Duração da enquete';
 
   @override
-  String get poll_duration_hint =>
-      'Você sempre pode fechar a enquete antes do tempo definido.';
+  String get poll_duration_hint => 'Você sempre pode fechar a enquete antes do tempo definido.';
 
   @override
   String get poll_custom_edn_date => 'Data de término personalizada';
@@ -1957,8 +1846,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get poll_close => 'Fechar enquete';
 
   @override
-  String get poll_close_description =>
-      'Esta enquete está fechada. Você não pode mais votar.';
+  String get poll_close_description => 'Esta enquete está fechada. Você não pode mais votar.';
 
   @override
   String get poll_vote => 'Votar';
@@ -2016,8 +1904,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get poll_remaining_time => 'restante';
 
   @override
-  String get poll_vote_error =>
-      'Falha ao votar na enquete. Por favor, tente novamente.';
+  String get poll_vote_error => 'Falha ao votar na enquete. Por favor, tente novamente.';
 
   @override
   String get poll_ended => 'Encerrada';
@@ -2089,39 +1976,31 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String get comment_create_error_ban_word =>
-      'Seu comentário contém uma palavra inadequada. Por favor, revise e exclua.';
+  String get comment_create_error_ban_word => 'Seu comentário contém uma palavra inadequada. Por favor, revise e exclua.';
 
   @override
-  String get comment_create_error_story_deleted =>
-      'Esta história não está mais disponível';
+  String get comment_create_error_story_deleted => 'Esta história não está mais disponível';
 
   @override
-  String get community_create_success_message =>
-      'Comunidade criada com sucesso.';
+  String get community_create_success_message => 'Comunidade criada com sucesso.';
 
   @override
-  String get community_create_error_message =>
-      'Falha ao criar comunidade. Por favor, tente novamente.';
+  String get community_create_error_message => 'Falha ao criar comunidade. Por favor, tente novamente.';
 
   @override
-  String get community_update_success_message =>
-      'Comunidade atualizada com sucesso.';
+  String get community_update_success_message => 'Comunidade atualizada com sucesso.';
 
   @override
-  String get community_update_error_message =>
-      'Falha ao salvar o perfil da comunidade. Por favor, tente novamente.';
+  String get community_update_error_message => 'Falha ao salvar o perfil da comunidade. Por favor, tente novamente.';
 
   @override
-  String get community_leave_success_message =>
-      'Você saiu da comunidade com sucesso.';
+  String get community_leave_success_message => 'Você saiu da comunidade com sucesso.';
 
   @override
   String get community_leave_error_message => 'Falha ao sair da comunidade.';
 
   @override
-  String get community_close_success_message =>
-      'Comunidade fechada com sucesso.';
+  String get community_close_success_message => 'Comunidade fechada com sucesso.';
 
   @override
   String get community_close_error_message => 'Falha ao fechar a comunidade.';
@@ -2152,8 +2031,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_leave => 'Sair da comunidade';
 
   @override
-  String get community_leave_description =>
-      'Sair da comunidade. Você não poderá mais publicar e interagir nesta comunidade.';
+  String get community_leave_description => 'Sair da comunidade. Você não poderá mais publicar e interagir nesta comunidade.';
 
   @override
   String get community_create => 'Criar Comunidade';
@@ -2180,8 +2058,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_public => 'Pública';
 
   @override
-  String get community_public_description =>
-      'Qualquer pessoa pode entrar, visualizar e pesquisar as publicações nesta comunidade.';
+  String get community_public_description => 'Qualquer pessoa pode entrar, visualizar e pesquisar as publicações nesta comunidade.';
 
   @override
   String get community_private_description =>
@@ -2206,8 +2083,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_pending_posts => 'Publicações Pendentes';
 
   @override
-  String get commnuity_pending_post_reviewing =>
-      'Suas publicações estão pendentes de revisão';
+  String get commnuity_pending_post_reviewing => 'Suas publicações estão pendentes de revisão';
 
   @override
   String commnuity_pending_post_count(int count) {
@@ -2249,8 +2125,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_discard_confirmation => 'Sair sem terminar?';
 
   @override
-  String get community_discard_description =>
-      'Seu progresso não será salvo e sua comunidade não será criada.';
+  String get community_discard_description => 'Seu progresso não será salvo e sua comunidade não será criada.';
 
   @override
   String get message_send => 'Enviar';
@@ -2280,8 +2155,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get message_reply_to_themself => 'Respondeu a si mesmo';
 
   @override
-  String get message_reply_you_to_deleted =>
-      'Você respondeu a uma mensagem excluída';
+  String get message_reply_you_to_deleted => 'Você respondeu a uma mensagem excluída';
 
   @override
   String get message_reply_to_deleted => 'Respondeu a uma mensagem excluída';
@@ -2299,65 +2173,55 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get settings_new_posts => 'Novas publicações';
 
   @override
-  String get settings_new_posts_description =>
-      'Receba notificações quando alguém criar novas publicações nesta comunidade.';
+  String get settings_new_posts_description => 'Receba notificações quando alguém criar novas publicações nesta comunidade.';
 
   @override
   String get settings_react_posts => 'Reações às publicações';
 
   @override
-  String get settings_react_posts_description =>
-      'Receba notificações quando alguém reagir às suas publicações nesta comunidade.';
+  String get settings_react_posts_description => 'Receba notificações quando alguém reagir às suas publicações nesta comunidade.';
 
   @override
   String get settings_react_comments => 'Reações aos comentários';
 
   @override
-  String get settings_react_comments_description =>
-      'Receba notificações quando alguém curtir seu comentário nesta comunidade.';
+  String get settings_react_comments_description => 'Receba notificações quando alguém curtir seu comentário nesta comunidade.';
 
   @override
   String get settings_new_comments => 'Novos comentários';
 
   @override
-  String get settings_new_comments_description =>
-      'Receba notificações quando alguém comentar em sua publicação nesta comunidade.';
+  String get settings_new_comments_description => 'Receba notificações quando alguém comentar em sua publicação nesta comunidade.';
 
   @override
   String get settings_new_replies => 'Respostas';
 
   @override
-  String get settings_new_replies_description =>
-      'Receba notificações quando alguém comentar em seus comentários nesta comunidade.';
+  String get settings_new_replies_description => 'Receba notificações quando alguém comentar em seus comentários nesta comunidade.';
 
   @override
-  String get settings_allow_stories_comments =>
-      'Permitir comentários nas histórias da comunidade';
+  String get settings_allow_stories_comments => 'Permitir comentários nas histórias da comunidade';
 
   @override
-  String get settings_allow_stories_comments_description =>
-      'Ative para receber comentários nas histórias desta comunidade.';
+  String get settings_allow_stories_comments_description => 'Ative para receber comentários nas histórias desta comunidade.';
 
   @override
   String get settings_new_stories => 'Novas histórias';
 
   @override
-  String get settings_new_stories_description =>
-      'Receba notificações quando alguém criar uma nova história nesta comunidade.';
+  String get settings_new_stories_description => 'Receba notificações quando alguém criar uma nova história nesta comunidade.';
 
   @override
   String get settings_story_reactions => 'Reações às histórias';
 
   @override
-  String get settings_story_reactions_description =>
-      'Receba notificações quando alguém reagir à sua história nesta comunidade.';
+  String get settings_story_reactions_description => 'Receba notificações quando alguém reagir à sua história nesta comunidade.';
 
   @override
   String get settings_story_comments => 'Comentários nas histórias';
 
   @override
-  String get settings_story_comments_description =>
-      'Receba notificações quando alguém comentar em sua história nesta comunidade.';
+  String get settings_story_comments_description => 'Receba notificações quando alguém comentar em sua história nesta comunidade.';
 
   @override
   String get settings_everyone => 'Todos';
@@ -2381,12 +2245,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get settings_leave_confirmation => 'Sair sem terminar?';
 
   @override
-  String get settings_leave_description =>
-      'As alterações que você fez podem não ser salvas.';
+  String get settings_leave_description => 'As alterações que você fez podem não ser salvas.';
 
   @override
-  String get settings_privacy_confirmation =>
-      'Alterar as configurações de privacidade da comunidade?';
+  String get settings_privacy_confirmation => 'Alterar as configurações de privacidade da comunidade?';
 
   @override
   String get settings_privacy_description =>
@@ -2462,8 +2324,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get settings_allow_notification => 'Permitir Notificação';
 
   @override
-  String get settings_allow_notification_description =>
-      'Ative para receber notificações push desta comunidade.';
+  String get settings_allow_notification_description => 'Ative para receber notificações push desta comunidade.';
 
   @override
   String get general_reported => 'denunciado';
@@ -2499,8 +2360,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get post_unavailable_title => 'Algo deu errado';
 
   @override
-  String get post_unavailable_description =>
-      'O conteúdo que você está procurando não está disponível.';
+  String get post_unavailable_description => 'O conteúdo que você está procurando não está disponível.';
 
   @override
   String get comment_deleted_message => 'Este comentário foi excluído';
@@ -2509,8 +2369,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get comment_reply_deleted_message => 'Esta resposta foi excluída';
 
   @override
-  String get post_edit_globally_featured =>
-      'Editar publicação destacada globalmente?';
+  String get post_edit_globally_featured => 'Editar publicação destacada globalmente?';
 
   @override
   String get post_edit_globally_featured_description =>
@@ -2597,8 +2456,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get user_unblock => 'Desbloquear usuário';
 
   @override
-  String get error_delete_post =>
-      'Falha ao excluir a publicação. Por favor, tente novamente.';
+  String get error_delete_post => 'Falha ao excluir a publicação. Por favor, tente novamente.';
 
   @override
   String get error_leave_community => 'Não foi possível sair da comunidade';
@@ -2611,8 +2469,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get error_close_community => 'Não foi possível fechar a comunidade';
 
   @override
-  String get error_close_community_description =>
-      'Algo deu errado. Por favor, tente novamente mais tarde.';
+  String get error_close_community_description => 'Algo deu errado. Por favor, tente novamente mais tarde.';
 
   @override
   String get error_max_upload_reached => 'Limite máximo de upload atingido';
@@ -2628,12 +2485,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String get error_edit_post =>
-      'Falha ao editar a publicação. Por favor, tente novamente.';
+  String get error_edit_post => 'Falha ao editar a publicação. Por favor, tente novamente.';
 
   @override
-  String get error_create_post =>
-      'Falha ao criar a publicação. Por favor, tente novamente.';
+  String get error_create_post => 'Falha ao criar a publicação. Por favor, tente novamente.';
 
   @override
   String error_max_poll_characters(int maxQuestionLength) {
@@ -2646,8 +2501,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String get error_create_poll =>
-      'Falha ao criar a enquete. Por favor, tente novamente.';
+  String get error_create_poll => 'Falha ao criar a enquete. Por favor, tente novamente.';
 
   @override
   String get error_poll_end_time_must_be_future =>
@@ -2657,8 +2511,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get error_message_too_long_title => 'Não é possível enviar a mensagem';
 
   @override
-  String get error_message_too_long_description =>
-      'Sua mensagem é muito longa. Por favor, encurte sua mensagem e tente novamente.';
+  String get error_message_too_long_description => 'Sua mensagem é muito longa. Por favor, encurte sua mensagem e tente novamente.';
 
   @override
   String get user_profile_unknown_name => 'Desconhecido';
@@ -2715,8 +2568,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get profile_update_success => 'Perfil atualizado com sucesso!';
 
   @override
-  String get profile_update_failed =>
-      'Falha ao salvar seu perfil. Por favor, tente novamente.';
+  String get profile_update_failed => 'Falha ao salvar seu perfil. Por favor, tente novamente.';
 
   @override
   String get community_post_permission => 'Permissão de publicação';
@@ -2732,58 +2584,49 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       'Fechar esta comunidade removerá a página da comunidade e todo o seu conteúdo e comentários.';
 
   @override
-  String get community_post_permission_title_label =>
-      'Quem pode publicar nesta comunidade';
+  String get community_post_permission_title_label => 'Quem pode publicar nesta comunidade';
 
   @override
-  String get community_post_permission_description_label =>
-      'Você pode controlar quem pode criar publicações em sua comunidade.';
+  String get community_post_permission_description_label => 'Você pode controlar quem pode criar publicações em sua comunidade.';
 
   @override
-  String get post_item_bottom_nonmember_label =>
-      'Entre na comunidade para interagir com todas as publicações';
+  String get post_item_bottom_nonmember_label => 'Entre na comunidade para interagir com todas as publicações';
 
   @override
   String get notification_turn_on_success => 'Notificação ativada';
 
   @override
-  String get notification_turn_on_error =>
-      'Falha ao ativar notificação. Por favor, tente novamente.';
+  String get notification_turn_on_error => 'Falha ao ativar notificação. Por favor, tente novamente.';
 
   @override
   String get notification_turn_off_success => 'Notificação desativada';
 
   @override
-  String get notification_turn_off_error =>
-      'Falha ao desativar notificação. Por favor, tente novamente.';
+  String get notification_turn_off_error => 'Falha ao desativar notificação. Por favor, tente novamente.';
 
   @override
   String get user_report_success => 'Usuário denunciado.';
 
   @override
-  String get user_report_error =>
-      'Falha ao denunciar usuário. Por favor, tente novamente.';
+  String get user_report_error => 'Falha ao denunciar usuário. Por favor, tente novamente.';
 
   @override
   String get user_unreport_success => 'Denúncia de usuário removida.';
 
   @override
-  String get user_unreport_error =>
-      'Falha ao remover denúncia de usuário. Por favor, tente novamente.';
+  String get user_unreport_error => 'Falha ao remover denúncia de usuário. Por favor, tente novamente.';
 
   @override
   String get user_block_success => 'Usuário bloqueado.';
 
   @override
-  String get user_block_error =>
-      'Falha ao bloquear usuário. Por favor, tente novamente.';
+  String get user_block_error => 'Falha ao bloquear usuário. Por favor, tente novamente.';
 
   @override
   String get user_unblock_success => 'Usuário desbloqueado.';
 
   @override
-  String get user_unblock_error =>
-      'Falha ao desbloquear usuário. Por favor, tente novamente.';
+  String get user_unblock_error => 'Falha ao desbloquear usuário. Por favor, tente novamente.';
 
   @override
   String get search_no_members_found => 'Nenhum membro encontrado';
@@ -2829,33 +2672,28 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get user_ban_button => 'Banir';
 
   @override
-  String get member_add_success =>
-      'Membro adicionado com sucesso a esta comunidade.';
+  String get member_add_success => 'Membro adicionado com sucesso a esta comunidade.';
 
   @override
-  String get member_add_error =>
-      'Falha ao adicionar membro. Por favor, tente novamente.';
+  String get member_add_error => 'Falha ao adicionar membro. Por favor, tente novamente.';
 
   @override
   String get moderator_promote_success => 'Promovido a moderador com sucesso.';
 
   @override
-  String get moderator_promote_error =>
-      'Falha ao promover membro. Por favor, tente novamente.';
+  String get moderator_promote_error => 'Falha ao promover membro. Por favor, tente novamente.';
 
   @override
   String get moderator_demote_success => 'Rebaixado para membro com sucesso.';
 
   @override
-  String get moderator_demote_error =>
-      'Falha ao rebaixar membro. Por favor, tente novamente.';
+  String get moderator_demote_error => 'Falha ao rebaixar membro. Por favor, tente novamente.';
 
   @override
   String get member_remove_success => 'Membro removido desta comunidade.';
 
   @override
-  String get member_remove_error =>
-      'Falha ao remover membro. Por favor, tente novamente.';
+  String get member_remove_error => 'Falha ao remover membro. Por favor, tente novamente.';
 
   @override
   String get user_follow_success => 'Usuário seguido.';
@@ -2876,15 +2714,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get user_feed_blocked_title => 'Você bloqueou este usuário';
 
   @override
-  String get user_feed_blocked_description =>
-      'Desbloquear para ver suas publicações.';
+  String get user_feed_blocked_description => 'Desbloquear para ver suas publicações.';
 
   @override
   String get user_feed_private_title => 'Esta conta é privada';
 
   @override
-  String get user_feed_private_description =>
-      'Siga este usuário para ver suas publicações.';
+  String get user_feed_private_description => 'Siga este usuário para ver suas publicações.';
 
   @override
   String get timestamp_just_now => 'Agora mesmo';
@@ -2935,8 +2771,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get user_follow_unable_title => 'Não foi possível seguir este usuário';
 
   @override
-  String get user_follow_unable_description =>
-      'Ops! algo deu errado. Por favor, tente novamente mais tarde.';
+  String get user_follow_unable_description => 'Ops! algo deu errado. Por favor, tente novamente mais tarde.';
 
   @override
   String get user_follow => 'Seguir';
@@ -2973,8 +2808,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get user_unfollow_confirm_title => 'Deixar de seguir este usuário?';
 
   @override
-  String get user_unfollow_confirm_description =>
-      'Se você mudar de ideia, terá que solicitar para segui-los novamente.';
+  String get user_unfollow_confirm_description => 'Se você mudar de ideia, terá que solicitar para segui-los novamente.';
 
   @override
   String get user_unfollow_confirm_button => 'Deixar de seguir';
@@ -2989,16 +2823,14 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_pending_requests_title => 'Solicitações Pendentes';
 
   @override
-  String get community_pending_requests_empty_title =>
-      'Sem solicitações pendentes disponíveis';
+  String get community_pending_requests_empty_title => 'Sem solicitações pendentes disponíveis';
 
   @override
   String get community_pending_requests_empty_description =>
       'Ative a revisão de publicações ou aprovação de entrada nas configurações da comunidade para gerenciar solicitações.';
 
   @override
-  String get community_join_requests_coming_soon =>
-      'Funcionalidade de solicitações de entrada em breve';
+  String get community_join_requests_coming_soon => 'Funcionalidade de solicitações de entrada em breve';
 
   @override
   String get community_pending_posts_warning =>
@@ -3017,22 +2849,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get community_pending_post_delete_success => 'Publicação excluída.';
 
   @override
-  String get community_pending_post_delete_error =>
-      'Falha ao excluir publicação. Por favor, tente novamente.';
+  String get community_pending_post_delete_error => 'Falha ao excluir publicação. Por favor, tente novamente.';
 
   @override
   String get community_pending_post_approve_success => 'Publicação aceita.';
 
   @override
-  String get community_pending_post_approve_error =>
-      'Falha ao aceitar publicação. Esta publicação foi revisada por outro moderador.';
+  String get community_pending_post_approve_error => 'Falha ao aceitar publicação. Esta publicação foi revisada por outro moderador.';
 
   @override
   String get community_pending_post_decline_success => 'Publicação recusada.';
 
   @override
-  String get community_pending_post_decline_error =>
-      'Falha ao recusar publicação. Esta publicação foi revisada por outro moderador.';
+  String get community_pending_post_decline_error => 'Falha ao recusar publicação. Esta publicação foi revisada por outro moderador.';
 
   @override
   String poll_option_hint(int optionNumber) {
@@ -3046,8 +2875,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get poll_multiple_selection_title => 'Seleção múltipla';
 
   @override
-  String get poll_multiple_selection_description =>
-      'Permitir que os participantes votem em mais de uma opção.';
+  String get poll_multiple_selection_description => 'Permitir que os participantes votem em mais de uma opção.';
 
   @override
   String poll_ends_on(String endDate) {
@@ -3087,19 +2915,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get profile_edit_about => 'Sobre';
 
   @override
-  String get profile_edit_unsupported_image_title =>
-      'Tipo de imagem não suportado';
+  String get profile_edit_unsupported_image_title => 'Tipo de imagem não suportado';
 
   @override
-  String get profile_edit_unsupported_image_description =>
-      'Por favor, envie uma imagem PNG ou JPG.';
+  String get profile_edit_unsupported_image_description => 'Por favor, envie uma imagem PNG ou JPG.';
 
   @override
   String get profile_edit_inappropriate_image_title => 'Imagem inapropriada';
 
   @override
-  String get profile_edit_inappropriate_image_description =>
-      'Por favor, escolha uma imagem diferente para enviar.';
+  String get profile_edit_inappropriate_image_description => 'Por favor, escolha uma imagem diferente para enviar.';
 
   @override
   String get profile_edit_unsaved_changes_title => 'Alterações não salvas';
@@ -3153,12 +2978,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_loading => 'Carregando chat...';
 
   @override
-  String get chat_blocked_message =>
-      'Você não pode enviar mensagens para esta pessoa.';
+  String get chat_blocked_message => 'Você não pode enviar mensagens para esta pessoa.';
 
   @override
-  String get chat_notifications_disabled =>
-      'Você desativou as notificações para chat';
+  String get chat_notifications_disabled => 'Você desativou as notificações para chat';
 
   @override
   String get chat_archive => 'Arquivar';
@@ -3170,8 +2993,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_message_deleted => 'Esta mensagem foi excluída';
 
   @override
-  String get chat_message_no_preview =>
-      'Sem visualização disponível para este tipo de mensagem';
+  String get chat_message_no_preview => 'Sem visualização disponível para este tipo de mensagem';
 
   @override
   String get chat_no_message_yet => 'Ainda sem mensagens';
@@ -3192,19 +3014,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get toast_chat_unarchived => 'Chat desarquivado.';
 
   @override
-  String get toast_chat_archive_error =>
-      'Falha ao arquivar o chat. Por favor, tente novamente';
+  String get toast_chat_archive_error => 'Falha ao arquivar o chat. Por favor, tente novamente';
 
   @override
-  String get toast_chat_unarchive_error =>
-      'Falha ao desarquivar o chat. Por favor, tente novamente';
+  String get toast_chat_unarchive_error => 'Falha ao desarquivar o chat. Por favor, tente novamente';
 
   @override
   String get chat_archive_limit_title => 'Muitos chats arquivados';
 
   @override
-  String get chat_archive_limit_message =>
-      'Você pode arquivar no máximo 100 listas de chat.';
+  String get chat_archive_limit_message => 'Você pode arquivar no máximo 100 listas de chat.';
 
   @override
   String get chat_empty_title => 'Ainda sem conversas';
@@ -3234,12 +3053,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_member_label => 'Membro';
 
   @override
-  String get chat_select_member_error =>
-      'Por favor, selecione pelo menos um usuário';
+  String get chat_select_member_error => 'Por favor, selecione pelo menos um usuário';
 
   @override
-  String get message_report_details_hint =>
-      'Compartilhe mais detalhes sobre este problema';
+  String get message_report_details_hint => 'Compartilhe mais detalhes sobre este problema';
 
   @override
   String get chat_search_tab_chats => 'Chats';
@@ -3248,22 +3065,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_search_tab_messages => 'Mensagens';
 
   @override
-  String get search_minimum_chars =>
-      'Comece sua pesquisa digitando\npelo menos 3 letras';
+  String get search_minimum_chars => 'Comece sua pesquisa digitando\npelo menos 3 letras';
 
   @override
   String get permission_camera_title => 'Permitir acesso à sua câmera';
 
   @override
-  String get permission_camera_detail =>
-      'Isso permite que o aplicativo tire fotos e grave vídeos da câmera do seu dispositivo.';
+  String get permission_camera_detail => 'Isso permite que o aplicativo tire fotos e grave vídeos da câmera do seu dispositivo.';
 
   @override
   String get permission_microphone_title => 'Permitir acesso ao seu microfone';
 
   @override
-  String get permission_microphone_detail =>
-      'Isso permite que o aplicativo grave áudio para vídeos do microfone do seu dispositivo.';
+  String get permission_microphone_detail => 'Isso permite que o aplicativo grave áudio para vídeos do microfone do seu dispositivo.';
 
   @override
   String get permission_open_settings => 'Abrir configurações';
@@ -3287,12 +3101,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get toast_message_unreported => 'Denúncia de mensagem retirada.';
 
   @override
-  String get toast_message_report_error =>
-      'Falha ao denunciar a mensagem. Por favor, tente novamente.';
+  String get toast_message_report_error => 'Falha ao denunciar a mensagem. Por favor, tente novamente.';
 
   @override
-  String get toast_message_unreport_error =>
-      'Falha ao retirar a denúncia da mensagem. Por favor, tente novamente.';
+  String get toast_message_unreport_error => 'Falha ao retirar a denúncia da mensagem. Por favor, tente novamente.';
 
   @override
   String get toast_message_delete_error => 'Falha ao excluir a mensagem.';
@@ -3316,8 +3128,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get message_delete_title => 'Excluir esta mensagem?';
 
   @override
-  String get message_delete_description =>
-      'Esta mensagem também será removida dos dispositivos dos seus amigos.';
+  String get message_delete_description => 'Esta mensagem também será removida dos dispositivos dos seus amigos.';
 
   @override
   String get chat_create_success => 'Grupo de chat criado.';
@@ -3326,8 +3137,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_create_error => 'Falha ao criar grupo';
 
   @override
-  String get chat_create_error_retry =>
-      'Falha ao criar grupo de chat. Por favor, tente novamente.';
+  String get chat_create_error_retry => 'Falha ao criar grupo de chat. Por favor, tente novamente.';
 
   @override
   String get chat_create_title => 'Novo Grupo';
@@ -3348,15 +3158,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_privacy_public => 'Público';
 
   @override
-  String get chat_privacy_public_desc =>
-      'Qualquer pessoa pode encontrar o grupo através da pesquisa e participar da conversa.';
+  String get chat_privacy_public_desc => 'Qualquer pessoa pode encontrar o grupo através da pesquisa e participar da conversa.';
 
   @override
   String get chat_privacy_private => 'Privado';
 
   @override
-  String get chat_privacy_private_desc =>
-      'O grupo está oculto nas pesquisas e só é acessível por convite dos moderadores.';
+  String get chat_privacy_private_desc => 'O grupo está oculto nas pesquisas e só é acessível por convite dos moderadores.';
 
   @override
   String get chat_privacy_warning =>
@@ -3406,8 +3214,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get toast_user_unbanned => 'Usuário desbanido.';
 
   @override
-  String get toast_user_unban_error =>
-      'Falha ao desbanir o usuário. Por favor, tente novamente.';
+  String get toast_user_unban_error => 'Falha ao desbanir o usuário. Por favor, tente novamente.';
 
   @override
   String get settings_your_preferences => 'Suas preferências';
@@ -3422,15 +3229,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_leave_group_title => 'Sair do grupo';
 
   @override
-  String get chat_leave_group_confirm =>
-      'Se você sair deste grupo, não verá mais novas atividades nem poderá participar neste grupo.';
+  String get chat_leave_group_confirm => 'Se você sair deste grupo, não verá mais novas atividades nem poderá participar neste grupo.';
 
   @override
   String get chat_leave_group_last_mod_title => 'Você é o último moderador';
 
   @override
-  String get chat_leave_group_last_mod_message =>
-      'Você deve promover outro membro a moderador antes de sair.';
+  String get chat_leave_group_last_mod_message => 'Você deve promover outro membro a moderador antes de sair.';
 
   @override
   String get chat_promote_member => 'Promover membro';
@@ -3446,8 +3251,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get notification_silent_mode => 'Modo silencioso';
 
   @override
-  String get notification_silent_mode_desc =>
-      'Sem notificações para todos neste canal. Os membros não podem ativar notificações no canal.';
+  String get notification_silent_mode_desc => 'Sem notificações para todos neste canal. Os membros não podem ativar notificações no canal.';
 
   @override
   String get notification_subscribe_mode => 'Modo assinatura';
@@ -3463,12 +3267,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get notification_allow_notifications => 'Permitir notificações';
 
   @override
-  String get notification_allow_notifications_desc =>
-      'Ative para receber notificações push deste grupo.';
+  String get notification_allow_notifications_desc => 'Ative para receber notificações push deste grupo.';
 
   @override
-  String get notification_disabled_by_moderator =>
-      'As notificações do grupo foram desativadas pelo moderador.';
+  String get notification_disabled_by_moderator => 'As notificações do grupo foram desativadas pelo moderador.';
 
   @override
   String get notification_enabled_toast => 'Notificações ativadas';
@@ -3480,56 +3282,46 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get settings_messaging => 'Mensagens';
 
   @override
-  String get settings_everyone_desc =>
-      'Todos podem enviar uma mensagem no grupo.';
+  String get settings_everyone_desc => 'Todos podem enviar uma mensagem no grupo.';
 
   @override
-  String get settings_only_moderators_desc =>
-      'Membros que não são moderadores podem ler mensagens, mas não podem enviar nenhuma mensagem.';
+  String get settings_only_moderators_desc => 'Membros que não são moderadores podem ler mensagens, mas não podem enviar nenhuma mensagem.';
 
   @override
   String get toast_group_chat_left => 'Você saiu do grupo.';
 
   @override
-  String get toast_group_chat_left_error =>
-      'Falha ao sair do grupo. Por favor, tente novamente.';
+  String get toast_group_chat_left_error => 'Falha ao sair do grupo. Por favor, tente novamente.';
 
   @override
   String get toast_group_profile_updated => 'Perfil do grupo atualizado.';
 
   @override
-  String get toast_group_profile_error =>
-      'Falha ao atualizar o perfil do grupo. Por favor, tente novamente.';
+  String get toast_group_profile_error => 'Falha ao atualizar o perfil do grupo. Por favor, tente novamente.';
 
   @override
-  String get toast_group_notification_updated =>
-      'Notificações do grupo atualizadas.';
+  String get toast_group_notification_updated => 'Notificações do grupo atualizadas.';
 
   @override
-  String get toast_group_notification_error =>
-      'Falha ao atualizar as notificações do grupo. Por favor, tente novamente.';
+  String get toast_group_notification_error => 'Falha ao atualizar as notificações do grupo. Por favor, tente novamente.';
 
   @override
-  String get toast_member_permissions_updated =>
-      'Permissões de membros atualizadas.';
+  String get toast_member_permissions_updated => 'Permissões de membros atualizadas.';
 
   @override
-  String get toast_member_permissions_error =>
-      'Falha ao atualizar as permissões de membros. Por favor, tente novamente.';
+  String get toast_member_permissions_error => 'Falha ao atualizar as permissões de membros. Por favor, tente novamente.';
 
   @override
   String get toast_member_list_updated => 'Lista de membros atualizada.';
 
   @override
-  String get toast_member_list_error =>
-      'Falha ao atualizar a lista de membros. Por favor, tente novamente.';
+  String get toast_member_list_error => 'Falha ao atualizar a lista de membros. Por favor, tente novamente.';
 
   @override
   String get toast_banned_users_updated => 'Usuários banidos atualizados.';
 
   @override
-  String get toast_banned_users_error =>
-      'Falha ao atualizar usuários banidos. Por favor, tente novamente.';
+  String get toast_banned_users_error => 'Falha ao atualizar usuários banidos. Por favor, tente novamente.';
 
   @override
   String get toast_members_added => 'Membros adicionados';
@@ -3538,40 +3330,34 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get toast_member_added => 'Membro adicionado.';
 
   @override
-  String get toast_members_add_error =>
-      'Falha ao adicionar membros. Por favor, tente novamente.';
+  String get toast_members_add_error => 'Falha ao adicionar membros. Por favor, tente novamente.';
 
   @override
-  String get toast_member_add_error =>
-      'Falha ao adicionar membro. Por favor, tente novamente.';
+  String get toast_member_add_error => 'Falha ao adicionar membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_removed => 'Membro removido.';
 
   @override
-  String get toast_member_remove_error =>
-      'Falha ao remover membro. Por favor, tente novamente.';
+  String get toast_member_remove_error => 'Falha ao remover membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_promoted => 'Membro promovido.';
 
   @override
-  String get toast_member_promote_error =>
-      'Falha ao promover membro. Por favor, tente novamente.';
+  String get toast_member_promote_error => 'Falha ao promover membro. Por favor, tente novamente.';
 
   @override
   String get toast_member_demoted => 'Membro rebaixado.';
 
   @override
-  String get toast_member_demote_error =>
-      'Falha ao rebaixar membro. Por favor, tente novamente.';
+  String get toast_member_demote_error => 'Falha ao rebaixar membro. Por favor, tente novamente.';
 
   @override
   String get toast_user_banned => 'Usuário banido.';
 
   @override
-  String get toast_user_ban_error =>
-      'Falha ao banir usuário. Por favor, tente novamente.';
+  String get toast_user_ban_error => 'Falha ao banir usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_reported => 'Usuário reportado.';
@@ -3580,22 +3366,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get toast_user_unreported => 'Reporte de usuário removido.';
 
   @override
-  String get toast_user_report_error =>
-      'Falha ao reportar/desreportar usuário. Por favor, tente novamente.';
+  String get toast_user_report_error => 'Falha ao reportar/desreportar usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_muted => 'Usuário silenciado.';
 
   @override
-  String get toast_user_mute_error =>
-      'Falha ao silenciar usuário. Por favor, tente novamente.';
+  String get toast_user_mute_error => 'Falha ao silenciar usuário. Por favor, tente novamente.';
 
   @override
   String get toast_user_unmuted => 'Usuário dessilenciado.';
 
   @override
-  String get toast_user_unmute_error =>
-      'Falha ao dessilenciar usuário. Por favor, tente novamente.';
+  String get toast_user_unmute_error => 'Falha ao dessilenciar usuário. Por favor, tente novamente.';
 
   @override
   String get user_list_add => 'Adicionar';
@@ -3610,8 +3393,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get chat_new_conversation => 'Nova conversa';
 
   @override
-  String get search_minimum_characters =>
-      'Comece sua pesquisa digitando\n pelo menos 3 letras';
+  String get search_minimum_characters => 'Comece sua pesquisa digitando\n pelo menos 3 letras';
 
   @override
   String get message_sending => 'Enviando...';
@@ -3668,6 +3450,5 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get reaction_tap_to_remove => 'Toque para remover reação';
 
   @override
-  String get image_load_error =>
-      'Não foi possível carregar a imagem. Por favor, tente novamente.';
+  String get image_load_error => 'Não foi possível carregar a imagem. Por favor, tente novamente.';
 }
