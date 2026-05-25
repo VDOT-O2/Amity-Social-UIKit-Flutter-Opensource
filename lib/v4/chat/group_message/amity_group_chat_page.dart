@@ -12,6 +12,7 @@ import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/ui/amity_debug_log_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/bounce_animator.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/simple_ticker_provider.dart';
 import 'package:amity_uikit_beta_service/v4/core/user_avatar.dart';
@@ -73,6 +74,7 @@ class AmityGroupChatPage extends NewBasePage {
               child: BlocBuilder<AmityGroupChatPageBloc, GroupChatPageState>(
                 key: Key("$channelId"),
                 builder: (context, state) {
+                  final groupChatBloc = context.read<AmityGroupChatPageBloc>();
                   if (state is GroupChatPageStateInitial && !isJustCreated) {
                     context.read<AmityToastBloc>().add(AmityToastLoading(
                         message: context.l10n.chat_loading,
@@ -182,10 +184,12 @@ class AmityGroupChatPage extends NewBasePage {
                         ),
                       ),
                     ),
-                    body: Container(
-                      color: theme.backgroundColor,
-                      child: Column(
-                        children: [
+                    body: Stack(
+                      children: [
+                        Container(
+                          color: theme.backgroundColor,
+                          child: Column(
+                            children: [
                           Visibility(
                             visible: state.isLoadingMore &&
                                 state.messages.isNotEmpty && state.useReverseUI,
@@ -340,8 +344,24 @@ class AmityGroupChatPage extends NewBasePage {
                             ),
                           ),
                           _buildMessageComposer(context, state),
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                        if (state.messages.isNotEmpty)
+                          Positioned(
+                            left: 12,
+                            right: 12,
+                            bottom: 90,
+                            child: AmityDebugLogComponent(
+                              theme: theme,
+                              title: '',
+                              previewCount: 3,
+                              initialLogs: groupChatBloc.debugLogHistory,
+                              logStream: groupChatBloc.debugLogHistoryStream,
+                              onClearHistory: groupChatBloc.clearDebugLogHistory,
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 },

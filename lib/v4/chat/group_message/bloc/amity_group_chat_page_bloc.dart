@@ -5,8 +5,11 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/bloc/chat_page_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/replying_message.dart';
+import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_controller.dart';
+import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_entry.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
@@ -21,6 +24,7 @@ part 'amity_group_chat_page_state.dart';
 
 class AmityGroupChatPageBloc
     extends Bloc<GroupChatPageEvent, GroupChatPageState> {
+  final AmityDebugLogController debugLogController = AmityDebugLogController(maxHistory: 100);
   var messagesCount = 0;
   MessageLiveCollection? liveCollection;
 
@@ -32,10 +36,19 @@ class AmityGroupChatPageBloc
 
   final AmityToastBloc toastBloc;
 
+  List<AmityDebugLogEntry> get debugLogHistory => debugLogController.history;
+  Stream<List<AmityDebugLogEntry>> get debugLogHistoryStream => debugLogController.historyStream;
+
   AmityGroupChatPageBloc(String? channelId, this.toastBloc,
       {String? jumpToMessageId})
       : super(GroupChatPageStateInitial(
             channelId: channelId ?? "", scrollController: ScrollController())) {
+    _log(
+      action: 'init',
+      message: 'GroupChatPageBloc initialized for channelId=${channelId ?? ''}',
+      snapshot: state.toString(),
+    );
+
     _scrollController = state.scrollController;
     _setupScrollListener();
 
@@ -47,6 +60,7 @@ class AmityGroupChatPageBloc
     });
 
     on<GroupChatPageEventRefresh>((event, emit) async {
+      _log(action: 'GroupChatPageEventRefresh', message: 'Refreshing group chat page');
       emit(state.copyWith(
           messages: const [],
           isFetching: true,
@@ -122,6 +136,10 @@ class AmityGroupChatPageBloc
     });
 
     on<GroupChatPageEventChanged>((event, emit) async {
+      _log(
+        action: 'GroupChatPageEventChanged',
+        message: 'Messages updated: incoming=${event.messages.length}, current=${state.messages.length}',
+      );
       AmityMessage? newMessage;
       if (event.messages.isNotEmpty && state.messages.isNotEmpty) {
         final firstEventMessage = event.messages.first;
@@ -147,34 +165,29 @@ class AmityGroupChatPageBloc
         var message = event.messages[i];
         ParentMessageCache().updateMessageIfExists(message.messageId!, message);
 
-        if (message.createdAt != null) {
+        final createdAtLocal = message.createdAt?.toLocal();
+
+        if (createdAtLocal != null) {
           if (lastCreatedDate == null) {
-            lastCreatedDate = message.createdAt!.toLocal();
-          } else {
-            if (lastCreatedDate
-                    .difference(message.createdAt!.toLocal())
-                    .inDays >
-                0) {
-              String dateString =
-                  DateFormat('EEE, d MMM').format(lastCreatedDate);
-              groupedMessages.add(ChatItem.date(dateString));
-              lastCreatedDate = message.createdAt!.toLocal();
-            }
-          }
-
-          groupedMessages.add(ChatItem.message(message));
-
-          if (message == event.messages.last) {
-            int currentYear = DateTime.now().year;
-            int messageYear = lastCreatedDate.year;
-
-            String dateString = (messageYear == currentYear)
-                ? DateFormat('EEE, d MMM').format(lastCreatedDate)
-                : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
-
+            lastCreatedDate = createdAtLocal;
+          } else if (lastCreatedDate.difference(createdAtLocal).inDays > 0) {
+            final dateString = DateFormat('EEE, d MMM').format(lastCreatedDate);
             groupedMessages.add(ChatItem.date(dateString));
-            lastCreatedDate = message.createdAt!.toLocal();
+            lastCreatedDate = createdAtLocal;
           }
+        }
+
+        groupedMessages.add(ChatItem.message(message));
+
+        if (message == event.messages.last && lastCreatedDate != null) {
+          final currentYear = DateTime.now().year;
+          final messageYear = lastCreatedDate.year;
+
+          final dateString = (messageYear == currentYear)
+              ? DateFormat('EEE, d MMM').format(lastCreatedDate)
+              : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
+
+          groupedMessages.add(ChatItem.date(dateString));
         }
       }
 
@@ -450,6 +463,7 @@ class AmityGroupChatPageBloc
     });
 
     if (channelId.isNotEmpty) {
+      _log(action: 'bootstrap', message: 'Bootstrapping group chat for channelId=$channelId');
       addEvent(GroupChatPageSetAroundMessage(aroundMessageId: jumpToMessageId));
 
       initLiveCollection(channelId, aroundMessageId: jumpToMessageId);
@@ -511,15 +525,21 @@ class AmityGroupChatPageBloc
 
   @override
   Future<void> close() {
+    _log(action: 'close', message: 'Disposing GroupChatPageBloc resources');
     _scrollController.dispose();
     subscription?.cancel();
     _jumpToMessageTimeoutTimer?.cancel();
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
+    debugLogController.dispose();
     return super.close();
   }
 
   void initLiveCollection(String channelId, {String? aroundMessageId}) async {
+    _log(
+      action: 'initLiveCollection',
+      message: 'Initialize live collection for channelId=$channelId aroundMessageId=${aroundMessageId ?? ''}',
+    );
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
     liveCollection = null;
@@ -566,6 +586,26 @@ class AmityGroupChatPageBloc
             const GroupChatPageNetworkConnectivityChanged(isConnected: true));
       }
     });
+  }
+
+  void clearDebugLogHistory() {
+    debugLogController.clear();
+  }
+
+  void _log({
+    required String action,
+    required String message,
+    AmityLogLevel level = AmityLogLevel.debug,
+    String? snapshot,
+  }) {
+    addDebugLog(
+      controller: debugLogController,
+      scope: 'GroupChatPageBloc',
+      action: action,
+      message: message,
+      level: level,
+      snapshot: snapshot,
+    );
   }
 
   // Helper method to load member roles and muted status

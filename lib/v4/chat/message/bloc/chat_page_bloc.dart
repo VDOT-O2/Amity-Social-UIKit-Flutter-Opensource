@@ -142,6 +142,16 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         message: 'Messages updated: incoming=${event.messages.length}, current=${state.messages.length}',
       );
 
+      if (event.messages.length == 1 && state.messages.isEmpty) {
+        final first = event.messages.first;
+        _log(
+          action: 'firstMessageProbe',
+          message:
+              'First message probe: messageId=${first.messageId ?? ''}, uniqueId=${first.uniqueId ?? ''}, createdAt=${first.createdAt?.toIso8601String() ?? 'null'}, syncState=${first.syncState?.name ?? 'null'}',
+          snapshot: state.toString(),
+        );
+      }
+
       AmityMessage? newMessage;
       if (event.messages.isNotEmpty && state.messages.isNotEmpty) {
         final firstEventMessage = event.messages.first;
@@ -161,30 +171,35 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       DateTime? lastCreatedDate;
       for (var message in event.messages) {
         ParentMessageCache().updateMessageIfExists(message.messageId!, message);
-        if (message.createdAt != null) {
+        final createdAtLocal = message.createdAt?.toLocal();
+
+        if (createdAtLocal != null) {
           if (lastCreatedDate == null) {
-            lastCreatedDate = message.createdAt!.toLocal();
-          } else {
-            if (lastCreatedDate.difference(message.createdAt!.toLocal()).inDays > 0) {
-              String dateString = DateFormat('EEE, d MMM').format(lastCreatedDate);
-              groupedMessages.add(ChatItem.date(dateString));
-              lastCreatedDate = message.createdAt!.toLocal();
-            }
-          }
-
-          groupedMessages.add(ChatItem.message(message));
-
-          if (message == event.messages.last) {
-            int currentYear = DateTime.now().year;
-            int messageYear = lastCreatedDate.year;
-
-            String dateString = (messageYear == currentYear)
-                ? DateFormat('EEE, d MMM').format(lastCreatedDate)
-                : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
-
+            lastCreatedDate = createdAtLocal;
+          } else if (lastCreatedDate.difference(createdAtLocal).inDays > 0) {
+            final dateString = DateFormat('EEE, d MMM').format(lastCreatedDate);
             groupedMessages.add(ChatItem.date(dateString));
-            lastCreatedDate = message.createdAt!.toLocal();
+            lastCreatedDate = createdAtLocal;
           }
+        } else {
+          _log(
+            action: 'messageWithoutCreatedAt',
+            message:
+                'Showing pending message without createdAt: messageId=${message.messageId ?? ''}, uniqueId=${message.uniqueId ?? ''}, syncState=${message.syncState?.name ?? 'null'}',
+          );
+        }
+
+        groupedMessages.add(ChatItem.message(message));
+
+        if (message == event.messages.last && lastCreatedDate != null) {
+          final currentYear = DateTime.now().year;
+          final messageYear = lastCreatedDate.year;
+
+          final dateString = (messageYear == currentYear)
+              ? DateFormat('EEE, d MMM').format(lastCreatedDate)
+              : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
+
+          groupedMessages.add(ChatItem.date(dateString));
         }
       }
 
