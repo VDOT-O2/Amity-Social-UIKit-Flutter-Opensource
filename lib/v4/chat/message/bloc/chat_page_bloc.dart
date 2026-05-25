@@ -5,12 +5,9 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/replying_message.dart';
-import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_controller.dart';
-import 'package:amity_uikit_beta_service/v4/core/shared/debug/amity_debug_log_entry.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
-import 'package:amity_uikit_beta_service/v4/core/utils/log_level.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
@@ -23,7 +20,6 @@ part 'chat_page_events.dart';
 part 'chat_page_state.dart';
 
 class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
-  final AmityDebugLogController debugLogController = AmityDebugLogController(maxHistory: 100);
   var messagesCount = 0;
   MessageLiveCollection? liveCollection;
 
@@ -35,15 +31,11 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   bool _isJumpScrollInProgress = false; // Flag to track jump scroll state
   bool _isFetchingMessages = false;
   String? _lastMessagesFingerprint;
-  int _suppressedMessageChangedEvents = 0;
 
   Timer? _jumpToMessageTimeoutTimer;
 
   final AmityToastBloc toastBloc;
   final BuildContext _context;
-
-  List<AmityDebugLogEntry> get debugLogHistory => debugLogController.history;
-  Stream<List<AmityDebugLogEntry>> get debugLogHistoryStream => debugLogController.historyStream;
 
   ChatPageBloc(
       String? channelId, String? userId, String? userDisplayName, String? avatarUrl, this.toastBloc, this._context,
@@ -53,30 +45,17 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             userDisplayName: userDisplayName,
             avatarUrl: avatarUrl,
             scrollController: ScrollController())) {
-    _log(
-      action: 'init',
-      message: 'ChatPageBloc initialized for channel=${channelId ?? ''}, user=${userId ?? ''}',
-      snapshot: state.toString(),
-    );
-
     _scrollController = state.scrollController;
     _setupScrollListener();
 
     on<ChatPageEventRefresh>((event, emit) async {
       AmityLog.debug("ChatPageEventRefresh triggered");
-      _log(action: 'ChatPageEventRefresh', message: 'Refreshing chat page');
       emit(state
           .copyWith(messages: const [], isFetching: true, isLoadingMore: false, hasNextPage: true, hasPrevious: false));
       try {
         liveCollection?.reset();
       } catch (e) {
         AmityLog.error("Error refreshing chat page", e);
-        _log(
-          action: 'ChatPageEventRefresh',
-          message: 'Error refreshing chat page: $e',
-          level: AmityLogLevel.error,
-          snapshot: state.toString(),
-        );
         emit(state.copyWith(
             messages: const [], isFetching: false, isLoadingMore: false, hasNextPage: false, hasPrevious: false));
       }
@@ -139,20 +118,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     on<ChatPageEventChanged>((event, emit) async {
       AmityLog.debug(
           "ChatPageEventChanged: ${event.messages.length} messages, stateMessages: ${state.messages.length}");
-      _log(
-        action: 'ChatPageEventChanged',
-        message: 'Messages updated: incoming=${event.messages.length}, current=${state.messages.length}',
-      );
-
-      if (event.messages.length == 1 && state.messages.isEmpty) {
-        final first = event.messages.first;
-        _log(
-          action: 'firstMessageProbe',
-          message:
-              'First message probe: messageId=${first.messageId ?? ''}, uniqueId=${first.uniqueId ?? ''}, createdAt=${first.createdAt?.toIso8601String() ?? 'null'}, syncState=${first.syncState?.name ?? 'null'}',
-          snapshot: state.toString(),
-        );
-      }
 
       AmityMessage? newMessage;
       if (event.messages.isNotEmpty && state.messages.isNotEmpty) {
@@ -183,12 +148,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             groupedMessages.add(ChatItem.date(dateString));
             lastCreatedDate = createdAtLocal;
           }
-        } else {
-          _log(
-            action: 'messageWithoutCreatedAt',
-            message:
-                'Showing pending message without createdAt: messageId=${message.messageId ?? ''}, uniqueId=${message.uniqueId ?? ''}, syncState=${message.syncState?.name ?? 'null'}',
-          );
         }
 
         groupedMessages.add(ChatItem.message(message));
@@ -338,12 +297,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         }
       } catch (e) {
         AmityLog.error("Error resending message", e);
-        _log(
-          action: 'ChatPageEventResendMessage',
-          message: 'Error resending message: $e',
-          level: AmityLogLevel.error,
-          snapshot: state.toString(),
-        );
       }
     });
 
@@ -554,7 +507,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     if (channelId != null && channelId.isNotEmpty) {
-      _log(action: 'bootstrap', message: 'Bootstrapping with channelId=$channelId');
       addEvent(ChatPageSetAroundMessage(aroundMessageId: jumpToMessageId));
 
       initLiveCollection(channelId, aroundMessageId: jumpToMessageId);
@@ -562,7 +514,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       addEvent(ChatPageEventRefresh());
       addEvent(const ChatPageEventFetchMuteState());
     } else if (userId != null && userId.isNotEmpty) {
-      _log(action: 'bootstrap', message: 'Creating new channel for userId=$userId');
       addEvent(ChatPageEventCreateNewChannel(userId: userId));
     }
     if (userId != null && userId.isNotEmpty) {
@@ -625,7 +576,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
   @override
   Future<void> close() {
-    _log(action: 'close', message: 'Disposing ChatPageBloc resources');
     _scrollController.dispose();
     _messagesSubscription.cancel();
     _connectivitySubscription.cancel();
@@ -633,16 +583,11 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     _jumpToMessageTimeoutTimer?.cancel();
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
-    debugLogController.dispose();
     return super.close();
   }
 
   Future initLiveCollection(String channelId, {String? aroundMessageId}) async {
     AmityLog.debug("[ChatPage] Initializing live collection for channelId=$channelId, aroundMessageId=$aroundMessageId");
-    _log(
-      action: 'initLiveCollection',
-      message: 'Initialize live collection for channelId=$channelId aroundMessageId=${aroundMessageId ?? ''}',
-    );
 
     if (liveCollection != null) {
       liveCollection?.getStreamController().close();
@@ -691,17 +636,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
       final fingerprint = _createMessagesFingerprint(messages, result.isFetching);
       if (fingerprint == _lastMessagesFingerprint) {
-        _suppressedMessageChangedEvents++;
-        if (_suppressedMessageChangedEvents == 1 || _suppressedMessageChangedEvents % 20 == 0) {
-          _log(
-            action: 'ChatPageEventChanged.suppressed',
-            message: 'Suppressed duplicate ChatPageEventChanged count=$_suppressedMessageChangedEvents',
-          );
-        }
         return;
       }
 
-      _suppressedMessageChangedEvents = 0;
       _lastMessagesFingerprint = fingerprint;
 
       addEvent(ChatPageEventChanged(messages: messages, isFetching: result.isFetching));
@@ -760,26 +697,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       _isJumpScrollInProgress = false;
       add(const ChatPageSetAroundMessage(aroundMessageId: null));
     }
-  }
-
-  void clearDebugLogHistory() {
-    debugLogController.clear();
-  }
-
-  void _log({
-    required String action,
-    required String message,
-    AmityLogLevel level = AmityLogLevel.debug,
-    String? snapshot,
-  }) {
-    addDebugLog(
-      controller: debugLogController,
-      scope: 'ChatPageBloc',
-      action: action,
-      message: message,
-      level: level,
-      snapshot: snapshot,
-    );
   }
 
   String _createMessagesFingerprint(List<AmityMessage> messages, bool isFetching) {

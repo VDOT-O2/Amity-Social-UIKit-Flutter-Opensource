@@ -13,7 +13,6 @@ import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
-import 'package:amity_uikit_beta_service/v4/core/ui/amity_debug_log_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/bounce_animator.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/simple_ticker_provider.dart';
 import 'package:amity_uikit_beta_service/v4/core/user_avatar.dart';
@@ -91,7 +90,6 @@ class AmityChatPage extends NewBasePage {
               child: BlocBuilder<ChatPageBloc, ChatPageState>(
                 key: Key("${channelId ?? ""}_${userId ?? ""}"),
                 builder: (context, state) {
-                final chatBloc = context.read<ChatPageBloc>();
                 if (state is ChatPageStateInitial && !isJustCreated) {
                   context.read<AmityToastBloc>().add(AmityToastLoading(
                       message: context.l10n.chat_loading,
@@ -532,19 +530,6 @@ class AmityChatPage extends NewBasePage {
                           ],
                         ),
                       ),
-                      if (state.messages.isNotEmpty)
-                        Positioned(
-                          left: 12,
-                          right: 12,
-                          bottom: 90,
-                          child: AmityDebugLogComponent(
-                            theme: theme,
-                            previewCount: 3,
-                            initialLogs: chatBloc.debugLogHistory,
-                            logStream: chatBloc.debugLogHistoryStream,
-                            onClearHistory: chatBloc.clearDebugLogHistory,
-                          ),
-                        ),
                     ],
                   ),
                 );
