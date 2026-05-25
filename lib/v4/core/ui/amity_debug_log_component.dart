@@ -7,7 +7,7 @@ class AmityDebugLogComponent extends StatelessWidget {
   const AmityDebugLogComponent({
     super.key,
     required this.theme,
-    this.title = 'Debug Logs',
+    this.title = '',
     this.previewCount = 3,
     this.initialLogs = const <AmityDebugLogEntry>[],
     this.logStream,
@@ -23,6 +23,8 @@ class AmityDebugLogComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasTitle = title.trim().isNotEmpty;
+
     return StreamBuilder<List<AmityDebugLogEntry>>(
       stream: logStream,
       initialData: initialLogs,
@@ -57,11 +59,12 @@ class AmityDebugLogComponent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$title (${logs.length})',
-                    style: AmityTextStyle.captionBold(theme.baseColor),
-                  ),
-                  const SizedBox(height: 6),
+                  if (hasTitle)
+                    Text(
+                      '$title (${logs.length})',
+                      style: AmityTextStyle.captionBold(theme.baseColor),
+                    ),
+                  if (hasTitle) const SizedBox(height: 6),
                   ...preview.map((entry) => _buildPreviewRow(entry)).toList(),
                 ],
               ),
@@ -85,6 +88,8 @@ class AmityDebugLogComponent extends StatelessWidget {
   }
 
   void _showFullHistory(BuildContext context, List<AmityDebugLogEntry> logs) {
+    final hasTitle = title.trim().isNotEmpty;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.backgroundColor,
@@ -133,12 +138,14 @@ class AmityDebugLogComponent extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: Text(
-                            '$title (${orderedLogs.length})',
-                            style: AmityTextStyle.titleBold(theme.baseColor),
+                        if (hasTitle)
+                          Expanded(
+                            child: Text(
+                              '$title (${orderedLogs.length})',
+                              style: AmityTextStyle.titleBold(theme.baseColor),
+                            ),
                           ),
-                        ),
+                        if (!hasTitle) const Spacer(),
                         if (onClearHistory != null && orderedLogs.isNotEmpty)
                           TextButton(
                             onPressed: onClearHistory,

@@ -45,38 +45,18 @@ class AmityCommunityProfilePage extends NewBasePage {
         child: Builder(builder: (context) {
           return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
-            final bloc = context.read<CommunityProfileBloc>();
 
             return Scaffold(
               backgroundColor: theme.baseColorShade4,
-              body: Stack(
-                children: [
-                  CustomScrollView(controller: state.scrollController, slivers: <Widget>[
-                    _buildAppBar(context, state),
-                    _buildHeader(context, state),
-                    _buildJoinButton(context, state, theme),
-                    _buildStoryTab(context, state, featureConfig),
-                    _buildPendingPost(context, state),
-                    _buildFeedTabSelector(context, state),
-                    _buildFeed(context, state),
-                  ]),
-                  if (kDebugMode) ...[
-                    Positioned(
-                      left: 12,
-                      right: 12,
-                      bottom: 90,
-                      child: AmityDebugLogComponent(
-                        theme: theme,
-                        title: 'Community Debug Logs',
-                        previewCount: 3,
-                        initialLogs: bloc.debugLogHistory,
-                        logStream: bloc.debugLogHistoryStream,
-                        onClearHistory: bloc.clearDebugLogHistory,
-                      ),
-                    ),
-                  ]
-                ],
-              ),
+              body: CustomScrollView(controller: state.scrollController, slivers: <Widget>[
+                _buildAppBar(context, state),
+                _buildHeader(context, state),
+                _buildJoinButton(context, state, theme),
+                _buildStoryTab(context, state, featureConfig),
+                _buildPendingPost(context, state),
+                _buildFeedTabSelector(context, state),
+                _buildFeed(context, state),
+              ]),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
               floatingActionButton: (state.isJoined)
                   ? GestureDetector(

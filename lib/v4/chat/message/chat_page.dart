@@ -13,10 +13,10 @@ import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/ui/amity_debug_log_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/bounce_animator.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/simple_ticker_provider.dart';
 import 'package:amity_uikit_beta_service/v4/core/user_avatar.dart';
-import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
@@ -91,6 +91,7 @@ class AmityChatPage extends NewBasePage {
               child: BlocBuilder<ChatPageBloc, ChatPageState>(
                 key: Key("${channelId ?? ""}_${userId ?? ""}"),
                 builder: (context, state) {
+                final chatBloc = context.read<ChatPageBloc>();
                 if (state is ChatPageStateInitial && !isJustCreated) {
                   context.read<AmityToastBloc>().add(AmityToastLoading(
                       message: context.l10n.chat_loading,
@@ -214,10 +215,12 @@ class AmityChatPage extends NewBasePage {
                       ),
                     ),
                   ),
-                  body: Container(
-                    color: theme.backgroundColor,
-                    child: Column(
-                      children: [
+                  body: Stack(
+                    children: [
+                      Container(
+                        color: theme.backgroundColor,
+                        child: Column(
+                          children: [
                         Visibility(
                           visible: state.isLoadingMore &&
                               state.messages.isNotEmpty && state.useReverseUI,
@@ -526,8 +529,23 @@ class AmityChatPage extends NewBasePage {
                             ),
                             enableMention: false,
                           ),
-                      ],
-                    ),
+                          ],
+                        ),
+                      ),
+                      if (state.messages.isNotEmpty)
+                        Positioned(
+                          left: 12,
+                          right: 12,
+                          bottom: 90,
+                          child: AmityDebugLogComponent(
+                            theme: theme,
+                            previewCount: 3,
+                            initialLogs: chatBloc.debugLogHistory,
+                            logStream: chatBloc.debugLogHistoryStream,
+                            onClearHistory: chatBloc.clearDebugLogHistory,
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },
