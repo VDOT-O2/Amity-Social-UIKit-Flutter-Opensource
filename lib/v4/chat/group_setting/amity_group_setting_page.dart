@@ -1,6 +1,4 @@
-import 'package:amity_uikit_beta_service/v4/chat/banned_group_member_list/amity_banned_group_member_list_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/edit_group_profile/amity_edit_group_profile_page.dart';
-import 'package:amity_uikit_beta_service/v4/chat/edit_group_notification/amity_edit_group_notification_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/edit_group_member_permission/amity_edit_group_member_permissions_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/group_member_list/amity_group_member_list_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/group_message/widgets/group_settings_tile.dart';
@@ -9,7 +7,6 @@ import 'package:amity_uikit_beta_service/v4/core/channel_avatar.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
-import 'package:amity_uikit_beta_service/v4/chat/notification_preference/notification_preference_page.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_sdk/amity_sdk.dart';
@@ -110,35 +107,36 @@ class AmityGroupSettingPage extends NewBasePage {
                             );
                           },
                         ),
-                      if (state.isModerator)
-                        GroupSettingsTile(
-                          title: context.l10n.settings_group_notifications,
-                          iconAsset:
-                              'assets/Icons/amity_ic_edit_group_notification_button.svg',
-                          theme: theme,
-                          trailingText: _getLocalizedNotificationMode(
-                              context, state.channel.notificationMode),
-                          onTap: () async {
-                            final result =
-                                await Navigator.push<Map<String, dynamic>>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AmityEditGroupNotificationPage(
-                                        channel: state.channel),
-                              ),
-                            );
-
-                            handleNavigationResult(
-                              context,
-                              result,
-                              successMessage:
-                                  context.l10n.toast_group_notification_updated,
-                              errorMessage:
-                                  context.l10n.toast_group_notification_error,
-                            );
-                          },
-                        ),
+                      // Preserved third-party block: intentionally disabled in VDOT app.
+                      // if (state.isModerator)
+                      //   GroupSettingsTile(
+                      //     title: context.l10n.settings_group_notifications,
+                      //     iconAsset:
+                      //         'assets/Icons/amity_ic_edit_group_notification_button.svg',
+                      //     theme: theme,
+                      //     trailingText: _getLocalizedNotificationMode(
+                      //         context, state.channel.notificationMode),
+                      //     onTap: () async {
+                      //       final result =
+                      //           await Navigator.push<Map<String, dynamic>>(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               AmityEditGroupNotificationPage(
+                      //                   channel: state.channel),
+                      //         ),
+                      //       );
+                      //
+                      //       handleNavigationResult(
+                      //         context,
+                      //         result,
+                      //         successMessage:
+                      //             context.l10n.toast_group_notification_updated,
+                      //         errorMessage:
+                      //             context.l10n.toast_group_notification_error,
+                      //       );
+                      //     },
+                      //   ),
                       // Only show member permissions for moderators
                       if (state.isModerator)
                         GroupSettingsTile(
@@ -202,37 +200,38 @@ class AmityGroupSettingPage extends NewBasePage {
                           }
                         },
                       ),
-                      // Only show banned users for moderators
-                      if (state.isModerator)
-                        GroupSettingsTile(
-                          title: context.l10n.settings_banned_users,
-                          iconAsset:
-                              'assets/Icons/amity_ic_ban_group_member_button.svg',
-                          theme: theme,
-                          onTap: () async {
-                            final result =
-                                await Navigator.push<Map<String, dynamic>>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AmityBannedGroupMemberListPage(
-                                        channel: state.channel),
-                              ),
-                            );
+                      // Preserved third-party block: intentionally disabled in VDOT app.
+                      // // Only show banned users for moderators
+                      // if (state.isModerator)
+                      //   GroupSettingsTile(
+                      //     title: context.l10n.settings_banned_users,
+                      //     iconAsset:
+                      //         'assets/Icons/amity_ic_ban_group_member_button.svg',
+                      //     theme: theme,
+                      //     onTap: () async {
+                      //       final result =
+                      //           await Navigator.push<Map<String, dynamic>>(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               AmityBannedGroupMemberListPage(
+                      //                   channel: state.channel),
+                      //         ),
+                      //       );
 
-                            // Handle navigation result if page returns data
-                            if (result != null) {
-                              handleNavigationResult(
-                                context,
-                                result,
-                                successMessage:
-                                    context.l10n.toast_banned_users_updated,
-                                errorMessage:
-                                    context.l10n.toast_banned_users_error,
-                              );
-                            }
-                          },
-                        ),
+                      //       // Handle navigation result if page returns data
+                      //       if (result != null) {
+                      //         handleNavigationResult(
+                      //           context,
+                      //           result,
+                      //           successMessage:
+                      //               context.l10n.toast_banned_users_updated,
+                      //           errorMessage:
+                      //               context.l10n.toast_banned_users_error,
+                      //         );
+                      //       }
+                      //     },
+                      //   ),
 
                       // Personal notification preferences for all users
                       Container(height: 1, color: theme.baseColorShade4),
@@ -433,17 +432,4 @@ class AmityGroupSettingPage extends NewBasePage {
     }
   }
 
-  String _getLocalizedNotificationMode(
-      BuildContext context, NotificationMode? mode) {
-    switch (mode) {
-      case NotificationMode.defaultMode:
-        return context.l10n.notification_default_mode;
-      case NotificationMode.silent:
-        return context.l10n.notification_silent_mode;
-      case NotificationMode.subscribe:
-        return context.l10n.notification_subscribe_mode;
-      default:
-        return context.l10n.notification_default_mode;
-    }
-  }
 }

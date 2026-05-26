@@ -239,44 +239,45 @@ class AmityGroupMemberActionComponent extends NewBaseComponent {
 
             // Moderator-only actions
             if (isCurrentUserModerator) ...[
-              // Ban user option
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  Navigator.pop(context);
-                  if (onBanUserTap != null) {
-                    onBanUserTap!();
-                  }
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 2, bottom: 2),
-                        child: SvgPicture.asset(
-                          'assets/Icons/amity_ic_ban_group_member_button.svg',
-                          package: 'amity_uikit_beta_service',
-                          width: 24,
-                          height: 24,
-                          colorFilter: ColorFilter.mode(
-                              theme.baseColor, BlendMode.srcIn),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        context.l10n.chat_ban_user,
-                        style: AmityTextStyle.bodyBold(theme.baseColor),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Preserved third-party block: intentionally disabled in VDOT app.
+              // // Ban user option
+              // GestureDetector(
+              //   behavior: HitTestBehavior.translucent,
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //     if (onBanUserTap != null) {
+              //       onBanUserTap!();
+              //     }
+              //   },
+              //   child: Container(
+              //     width: double.infinity,
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              //     child: Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Container(
+              //           padding: const EdgeInsets.only(top: 2, bottom: 2),
+              //           child: SvgPicture.asset(
+              //             'assets/Icons/amity_ic_ban_group_member_button.svg',
+              //             package: 'amity_uikit_beta_service',
+              //             width: 24,
+              //             height: 24,
+              //             colorFilter: ColorFilter.mode(
+              //                 theme.baseColor, BlendMode.srcIn),
+              //           ),
+              //         ),
+              //         const SizedBox(width: 12),
+              //         Text(
+              //           context.l10n.chat_ban_user,
+              //           style: AmityTextStyle.bodyBold(theme.baseColor),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
 
               // Remove from group option
               GestureDetector(
