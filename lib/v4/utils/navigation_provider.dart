@@ -1,8 +1,9 @@
+import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/chat/add_group_member/amity_add_group_member_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/create/channel_create_conversation_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/createGroup/ui/amity_select_group_member_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/notification_preference/notification_preference_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_creation/community_setup_page.dart';
-import 'package:amity_uikit_beta_service/v4/social/community/community_setting/bloc/community_setting_page_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_setting/notification_setting/community_notification_setting_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/amity_community_profile_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/amity_post_content_component.dart';
@@ -10,7 +11,6 @@ import 'package:amity_uikit_beta_service/v4/social/post/common/post_action.dart'
 import 'package:amity_uikit_beta_service/v4/social/post/post_detail/amity_post_detail_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/user/profile/amity_user_profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum AmityNavigationEvent {
   showCommunity,
@@ -19,6 +19,7 @@ enum AmityNavigationEvent {
   showPostDetail,
   showUserProfile,
   showCreateChat,
+  showAddGroupMembers,
   showChatNotificationPreferences,
 }
 
@@ -85,6 +86,17 @@ class NavigationProvider extends ChangeNotifier {
         } else {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AmityChannelCreateConversationPage()),
+          );
+        }
+        return;
+      case AmityNavigationEvent.showAddGroupMembers:
+        {
+          final channel = params?['channel'] as AmityChannel;
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AmityAddGroupMemberPage(channel: channel),
+            ),
           );
         }
         return;

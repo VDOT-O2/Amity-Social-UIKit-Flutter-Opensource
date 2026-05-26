@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
-import 'package:amity_uikit_beta_service/v4/chat/add_group_member/amity_add_group_member_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/group_message/components/amity_group_member_action_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/shared/user/user_list.dart';
@@ -13,6 +12,7 @@ import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/top_search_bar/top_search_bar.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/debouncer.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -79,26 +79,21 @@ class AmityGroupMemberListPage extends NewBasePage {
                       },
                     ),
                     centerTitle: true,
-                    //   actions: state.isCurrentUserModerator
-                    //       ? [
-                    //           GestureDetector(
-                    //             onTap: () => _navigateToSelectUsers(context),
-                    //             child: Padding(
-                    //               padding: const EdgeInsets.only(right: 16),
-                    //               child: Center(
-                    //                 child: SvgPicture.asset(
-                    //                   "assets/Icons/amity_ic_post_creation_button.svg",
-                    //                   package: 'amity_uikit_beta_service',
-                    //                   colorFilter: ColorFilter.mode(
-                    //                     theme.secondaryColor,
-                    //                     BlendMode.srcIn,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           )
-                    //         ]
-                    //       : [],
+                    actions: state.isCurrentUserModerator
+                        ? [
+                            GestureDetector(
+                              onTap: () => _navigateToSelectUsers(context),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: Icon(
+                                  Icons.add_circle_outline,
+                                  color: theme.buttonColor,
+                                  size: 32,
+                                ),
+                              ),
+                            )
+                          ]
+                        : [],
                   ),
                   body: Column(
                     children: [
@@ -236,25 +231,19 @@ class AmityGroupMemberListPage extends NewBasePage {
     );
   }
 
-  void _navigateToSelectUsers(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AmityAddGroupMemberPage(
-          channel: channel,
-        ),
-      ),
-    );
+  Future<void> _navigateToSelectUsers(BuildContext context) async {
+    final existingMemberIds = context
+        .read<AmityGroupMemberListCubit>()
+        .state
+        .members
+        .map((user) => user.userId)
+        .toList();
 
-    if (result != null && result is List<AmityUser> && context.mounted) {
-      context.read<AmityGroupMemberListCubit>().addMembersToChannel(
-            result,
-            successMessageSingle: context.l10n.toast_member_added,
-            successMessageMultiple: context.l10n.toast_members_added,
-            errorMessageSingle: context.l10n.toast_member_add_error,
-            errorMessageMultiple: context.l10n.toast_members_add_error,
-          );
-    }
+    await context.read<NavigationProvider>().handleNavigation(
+          context,
+          event: AmityNavigationEvent.showAddGroupMembers,
+          params: {'channel': channel, 'memberIds': existingMemberIds},
+        );
   }
 
   void _showMemberActions(BuildContext context, AmityUser user) {
