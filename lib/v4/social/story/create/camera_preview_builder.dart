@@ -207,7 +207,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       await cameraController.initialize();
       
       // Lock orientation to portrait to ensure consistent video recording
-      await cameraController.lockCaptureOrientation(DeviceOrientation.portraitUp);
+      //await cameraController.lockCaptureOrientation(DeviceOrientation.portraitUp);
       
       await cameraController.setFlashMode(FlashMode.off);
       _minAvailableZoom = await cameraController.getMinZoomLevel();
