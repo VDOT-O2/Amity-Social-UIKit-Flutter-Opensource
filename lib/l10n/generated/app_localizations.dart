@@ -513,52 +513,52 @@ abstract class AppLocalizations {
   /// **'This story is no longer available'**
   String get comment_create_error_story_deleted;
 
-  /// Toast message for community creation success
+  /// Toast message for group creation success
   ///
   /// In en, this message translates to:
-  /// **'Successfully created community.'**
+  /// **'Successfully created group.'**
   String get community_create_success_message;
 
-  /// Toast message for community creation failure
+  /// Toast message for group creation failure
   ///
   /// In en, this message translates to:
-  /// **'Failed to create community. Please try again.'**
+  /// **'Failed to create group. Please try again.'**
   String get community_create_error_message;
 
-  /// Toast message for community update success
+  /// Toast message for group update success
   ///
   /// In en, this message translates to:
-  /// **'Successfully updated community.'**
+  /// **'Successfully updated group.'**
   String get community_update_success_message;
 
-  /// Toast message for community update failure
+  /// Toast message for group update failure
   ///
   /// In en, this message translates to:
-  /// **'Failed to save your community profile. Please try again.'**
+  /// **'Failed to save your group profile. Please try again.'**
   String get community_update_error_message;
 
-  /// Toast message for community leave success
+  /// Toast message for group leave success
   ///
   /// In en, this message translates to:
-  /// **'Successfully left the community.'**
+  /// **'Successfully left the group.'**
   String get community_leave_success_message;
 
-  /// Toast message for community leave error
+  /// Toast message for group leave error
   ///
   /// In en, this message translates to:
-  /// **'Failed to leave the community.'**
+  /// **'Failed to leave the group.'**
   String get community_leave_error_message;
 
-  /// Toast message for community close success
+  /// Toast message for group close success
   ///
   /// In en, this message translates to:
-  /// **'Successfully closed the community.'**
+  /// **'Successfully closed the group.'**
   String get community_close_success_message;
 
-  /// Toast message for community close error
+  /// Toast message for group close error
   ///
   /// In en, this message translates to:
-  /// **'Failed to close the community.'**
+  /// **'Failed to close the group.'**
   String get community_close_error_message;
 
   /// Label for close button
@@ -567,19 +567,19 @@ abstract class AppLocalizations {
   /// **'Delete group?'**
   String get community_close;
 
-  /// Confirmation message for closing a community
+  /// Confirmation message for closing a group
   ///
   /// In en, this message translates to:
-  /// **'All members will be removed from the group. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.'**
+  /// **'Deleting this group will remove the entire page, including all of its content and comments.'**
   String get community_close_description;
 
-  /// Label for join community button
+  /// Label for join group button
   ///
   /// In en, this message translates to:
   /// **'Join'**
   String get community_join;
 
-  /// Label for joined community status
+  /// Label for joined group status
   ///
   /// In en, this message translates to:
   /// **'Joined'**
@@ -603,34 +603,34 @@ abstract class AppLocalizations {
   /// **'1.2K members'**
   String get community_placeholder_members;
 
-  /// Label for leave community button
+  /// Label for leave group button
   ///
   /// In en, this message translates to:
-  /// **'Leave community'**
+  /// **'Leave group'**
   String get community_leave;
 
   /// Confirmation message for leaving a community
   ///
   /// In en, this message translates to:
-  /// **'Leave the community. You will no longer be able to post and interact in this community.'**
+  /// **'Leave the group. You will no longer be able to post and interact in this group.'**
   String get community_leave_description;
 
   /// Label for create community button
   ///
   /// In en, this message translates to:
-  /// **'Create Community'**
+  /// **'Create Group'**
   String get community_create;
 
   /// Label for community name
   ///
   /// In en, this message translates to:
-  /// **'Community name'**
+  /// **'Group name'**
   String get community_name;
 
   /// Hint text for community name input
   ///
   /// In en, this message translates to:
-  /// **'Name your community'**
+  /// **'Name your group'**
   String get community_name_hint;
 
   /// Hint text for community description input
@@ -642,7 +642,7 @@ abstract class AppLocalizations {
   /// Label for edit community button
   ///
   /// In en, this message translates to:
-  /// **'Edit Community'**
+  /// **'Edit Group'**
   String get community_edit;
 
   /// Label for community members
@@ -666,13 +666,13 @@ abstract class AppLocalizations {
   /// Description for public community type
   ///
   /// In en, this message translates to:
-  /// **'Anyone can join, view and search the posts in this community.'**
+  /// **'Anyone can join, view and search the posts in this group.'**
   String get community_public_description;
 
   /// Description for private community type
   ///
   /// In en, this message translates to:
-  /// **'Only members invited by the moderators can join, view, and search the posts in this community.'**
+  /// **'Only members invited by the moderators can join, view, and search the posts in this group.'**
   String get community_private_description;
 
   /// Label for community about section
@@ -948,19 +948,19 @@ abstract class AppLocalizations {
   /// Label for everyone permission option
   ///
   /// In en, this message translates to:
-  /// **'Everyone'**
+  /// **'Everyone - posts go live immediately'**
   String get settings_everyone;
 
   /// Label for moderators-only permission option
   ///
   /// In en, this message translates to:
-  /// **'Only moderators'**
+  /// **'Moderators only'**
   String get settings_only_moderators;
 
   /// Label for only admins can post setting
   ///
   /// In en, this message translates to:
-  /// **'Only admins can post'**
+  /// **'Admins only'**
   String get settings_only_admins;
 
   /// Label for privacy settings
@@ -1314,7 +1314,7 @@ abstract class AppLocalizations {
   /// Error message title when leaving a community fails
   ///
   /// In en, this message translates to:
-  /// **'Unable to leave community'**
+  /// **'Unable to leave group'**
   String get error_leave_community;
 
   /// Error message description when leaving a community fails
@@ -1326,7 +1326,7 @@ abstract class AppLocalizations {
   /// Error message title when closing a community fails
   ///
   /// In en, this message translates to:
-  /// **'Unable to close community'**
+  /// **'Unable to delete group'**
   String get error_close_community;
 
   /// Error message description when closing a community fails
@@ -1542,7 +1542,7 @@ abstract class AppLocalizations {
   /// Label for close community setting
   ///
   /// In en, this message translates to:
-  /// **'Close community'**
+  /// **'Delete group'**
   String get community_setting_close_label;
 
   /// Description for close community setting
@@ -1560,7 +1560,7 @@ abstract class AppLocalizations {
   /// label for post permissions page description
   ///
   /// In en, this message translates to:
-  /// **'You can control who can create posts in your community.'**
+  /// **'Choose who can submit posts and whether they need approval before going live.'**
   String get community_post_permission_description_label;
 
   /// label for post item bottom text for non members
@@ -2424,7 +2424,7 @@ abstract class AppLocalizations {
   /// Label for member section
   ///
   /// In en, this message translates to:
-  /// **'Members'**
+  /// **'Member'**
   String get chat_member_label;
 
   /// Error message when no user is selected
@@ -2616,7 +2616,7 @@ abstract class AppLocalizations {
   /// Label for group name input field
   ///
   /// In en, this message translates to:
-  /// **'Group name'**
+  /// **'Group chat name'**
   String get chat_group_name_label;
 
   /// Text indicating group name is optional
@@ -2664,7 +2664,7 @@ abstract class AppLocalizations {
   /// AppBar title for select member page when creating group
   ///
   /// In en, this message translates to:
-  /// **'New group'**
+  /// **'New group chat'**
   String get chat_select_member_title;
 
   /// Button text to proceed to next step
@@ -2880,13 +2880,25 @@ abstract class AppLocalizations {
   /// Description for everyone messaging permission
   ///
   /// In en, this message translates to:
-  /// **'Everyone can send a message in the group.'**
+  /// **'Any member can post without approval. Moderators can remove posts after the fact.'**
   String get settings_everyone_desc;
+
+  /// Label for everyone  with approval permission option
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone - posts require approval'**
+  String get settings_everyone_with_approval;
+
+  /// Description for everyone with approval messaging permission
+  ///
+  /// In en, this message translates to:
+  /// **'Any member can submit a post, but a moderator must approve it before it\'s visible to the community.'**
+  String get settings_everyone_with_approval_desc;
 
   /// Description for moderators-only messaging permission
   ///
   /// In en, this message translates to:
-  /// **'Members who are not moderators can read messages but cannot send any messages.'**
+  /// **'Only moderators and admins can create posts. Members can comment and react.'**
   String get settings_only_moderators_desc;
 
   /// Success toast when leaving a group

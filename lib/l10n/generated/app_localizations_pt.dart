@@ -1655,6 +1655,14 @@ class AppLocalizationsPt extends AppLocalizations {
       'Todos podem enviar uma mensagem no grupo.';
 
   @override
+  String get settings_everyone_with_approval =>
+      'Everyone - posts require approval';
+
+  @override
+  String get settings_everyone_with_approval_desc =>
+      'Any member can submit a post, but a moderator must approve it before it\'s visible to the community.';
+
+  @override
   String get settings_only_moderators_desc =>
       'Membros que não são moderadores podem ler mensagens, mas não podem enviar nenhuma mensagem.';
 
