@@ -60,9 +60,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
           if (state.status == CreateGroupStatus.success) {
             // Navigate to the group chat page with the created channel
             if (state.createdChannel?.channelId != null) {
-              context
-                  .read<AmityToastBloc>()
-                  .add(AmityToastShort(message: context.l10n.chat_create_success, icon: AmityToastIcon.success));
+              context.read<AmityToastBloc>().add(AmityToastShort(message: context.l10n.chat_create_success, icon: AmityToastIcon.success));
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -173,29 +171,20 @@ class AmityCreateGroupChatPage extends NewBasePage {
                                           alignment: Alignment.center,
                                           children: [
                                             Container(
-                                              width: 120,
-                                              height: 120,
-                                              decoration: BoxDecoration(
-                                                color: theme.primaryColor.blend(ColorBlendingOption.shade2),
-                                                borderRadius: BorderRadius.circular(24),
-                                                image: imagePath != null
-                                                    ? DecorationImage(
-                                                        image: FileImage(File(imagePath)),
-                                                        fit: BoxFit.cover,
-                                                      )
-                                                    : null,
-                                              ),
-                                              child: imagePath == null
-                                                  ? Center(
-                                                      child: SvgPicture.asset(
-                                                        'assets/Icons/amity_ic_group_chat_avatar_placeholder.svg',
-                                                        package: 'amity_uikit_beta_service',
-                                                        width: 40,
-                                                        height: 40,
-                                                      ),
-                                                    )
-                                                  : null,
-                                            ),
+                                                width: 120,
+                                                height: 120,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  color: theme.avatarBackgroundColor,
+                                                  border: Border.all(color: theme.avatarBorderColor, width: 1.0),
+                                                  shape: BoxShape.circle,
+                                                  image: imagePath != null
+                                                      ? DecorationImage(
+                                                          image: FileImage(File(imagePath)),
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : null,
+                                                )),
                                             // Camera icon overlay
                                             Container(
                                               width: 120,
@@ -333,8 +322,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 4.0),
-                              child: Text(context.l10n.chat_member_label,
-                                  style: AmityTextStyle.titleBold(theme.baseColor)),
+                              child: Text(context.l10n.chat_member_label, style: AmityTextStyle.titleBold(theme.baseColor)),
                             ),
                             // Remove height constraint to allow all users to be visible
                             gridUserList(

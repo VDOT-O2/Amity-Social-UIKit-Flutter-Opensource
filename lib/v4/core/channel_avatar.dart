@@ -23,8 +23,7 @@ class AmityChannelAvatar extends BaseElement {
     required this.displayName,
     this.avatarSize = const Size(40, 40),
     this.placeholderSize = const Size(16, 16),
-    this.avatarPlaceholder =
-        "assets/Icons/amity_ic_group_chat_avatar_placeholder.svg",
+    this.avatarPlaceholder = "assets/Icons/amity_ic_group_chat_avatar_placeholder.svg",
     this.characterTextStyle,
     this.borderRadius = 10.0,
     this.showPrivateBadge = false,
@@ -38,8 +37,7 @@ class AmityChannelAvatar extends BaseElement {
     AmityChannel? channel,
     this.avatarSize = const Size(40, 40),
     this.placeholderSize = const Size(16, 16),
-    this.avatarPlaceholder =
-        "assets/Icons/amity_ic_group_chat_avatar_placeholder.svg",
+    this.avatarPlaceholder = "assets/Icons/amity_ic_group_chat_avatar_placeholder.svg",
     this.characterTextStyle,
     this.borderRadius = 10.0,
     this.showPrivateBadge = false,
@@ -62,21 +60,24 @@ class AmityChannelAvatar extends BaseElement {
       avatarWidget = SizedBox(
         width: avatarSize.width,
         height: avatarSize.height,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.avatarBackgroundColor,
+            border: Border.all(color: theme.avatarBorderColor, width: 1.0),
+            shape: BoxShape.circle,
+          ),
+          clipBehavior: Clip.antiAlias,
           child: Image.network(
             avatarUrl!,
             fit: BoxFit.cover,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) {
                 return child;
               } else {
                 return placeHolderImage();
               }
             },
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stackTrace) {
+            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
               return placeHolderImage();
             },
           ),
@@ -87,7 +88,7 @@ class AmityChannelAvatar extends BaseElement {
     }
 
     if (showPrivateBadge) {
-      return Container(
+      return SizedBox(
         height: avatarSize.height + 2,
         width: avatarSize.width + 2,
         child: Stack(
@@ -112,13 +113,18 @@ class AmityChannelAvatar extends BaseElement {
       height: avatarSize.height,
       width: avatarSize.width,
       decoration: BoxDecoration(
-        color: theme.primaryColor.blend(ColorBlendingOption.shade2),
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        color: theme.avatarBackgroundColor,
+        border: Border.all(color: theme.avatarBorderColor, width: 1.0),
+        shape: BoxShape.circle,
       ),
       child: Center(
         child: SvgPicture.asset(
           avatarPlaceholder,
           package: 'amity_uikit_beta_service',
+          colorFilter: ColorFilter.mode(
+            theme.avatarTextColor,
+            BlendMode.srcIn,
+          ),
           height: placeholderSize.height,
           width: placeholderSize.width,
         ),

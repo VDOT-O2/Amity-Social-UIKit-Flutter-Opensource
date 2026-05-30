@@ -430,7 +430,7 @@ class ChatListItem extends BaseElement {
             AmityChannelAvatar.withChannel(
               channel: channel,
               avatarSize: const Size(40, 40),
-              showPrivateBadge: (channel.isPublic == false),
+              // showPrivateBadge: (channel.isPublic == false),
             )
           else
             AmityChatAvatar(channelMember: channelMember),

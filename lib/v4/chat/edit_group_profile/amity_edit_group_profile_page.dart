@@ -23,8 +23,7 @@ part 'amity_edit_group_profile_state.dart';
 class AmityEditGroupProfilePage extends NewBasePage {
   final AmityChannel channel;
 
-  AmityEditGroupProfilePage({Key? key, required this.channel})
-      : super(key: key, pageId: 'edit_group_profile_page');
+  AmityEditGroupProfilePage({Key? key, required this.channel}) : super(key: key, pageId: 'edit_group_profile_page');
 
   @override
   Widget buildPage(BuildContext context) {
@@ -39,8 +38,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
               actions: [
                 BlocBuilder<AmityEditGroupProfileCubit, AmityEditGroupProfileState>(
                   builder: (context, state) {
-                    final hasChanged =
-                        state is AmityEditGroupProfileLoaded ? state.hasChanged : false;
+                    final hasChanged = state is AmityEditGroupProfileLoaded ? state.hasChanged : false;
                     return TextButton(
                       onPressed: hasChanged
                           ? () {
@@ -50,10 +48,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
                       child: Text(
                         context.l10n.general_save,
                         style: TextStyle(
-                          color: hasChanged
-                              ? theme.primaryColor
-                              : theme.primaryColor
-                                  .blend(ColorBlendingOption.shade2),
+                          color: hasChanged ? theme.primaryColor : theme.primaryColor.blend(ColorBlendingOption.shade2),
                         ),
                       ),
                     );
@@ -81,11 +76,9 @@ class AmityEditGroupProfilePage extends NewBasePage {
                           Center(
                             child: Column(
                               children: [
-                                BlocBuilder<AmityEditGroupProfileCubit,
-                                    AmityEditGroupProfileState>(
+                                BlocBuilder<AmityEditGroupProfileCubit, AmityEditGroupProfileState>(
                                   builder: (context, state) {
-                                    if (state is! AmityEditGroupProfileLoaded)
-                                      return const SizedBox();
+                                    if (state is! AmityEditGroupProfileLoaded) return const SizedBox();
 
                                     return GestureDetector(
                                       behavior: HitTestBehavior.translucent,
@@ -98,68 +91,36 @@ class AmityEditGroupProfilePage extends NewBasePage {
                                           Container(
                                             width: 120,
                                             height: 120,
+                                            clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
-                                              color: theme.primaryColor.blend(
-                                                  ColorBlendingOption.shade2),
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
-                                              image: (state.selectedImagePath !=
-                                                      null)
+                                              color: theme.avatarBackgroundColor,
+                                              border: Border.all(color: theme.avatarBorderColor, width: 1.0),
+                                              shape: BoxShape.circle,
+                                              image: (state.selectedImagePath != null)
                                                   ? DecorationImage(
-                                                      image: FileImage(File(state
-                                                          .selectedImagePath!)),
+                                                      image: FileImage(File(state.selectedImagePath!)),
                                                       fit: BoxFit.cover,
                                                     )
                                                   : (state.imagePath != null)
                                                       ? DecorationImage(
-                                                          image: FileImage(File(
-                                                              state
-                                                                  .imagePath!)),
+                                                          image: FileImage(File(state.imagePath!)),
                                                           fit: BoxFit.cover,
                                                         )
-                                                      : (channel.avatar
-                                                                      ?.fileUrl !=
-                                                                  null &&
-                                                              channel
-                                                                  .avatar!
-                                                                  .fileUrl!
-                                                                  .isNotEmpty)
+                                                      : (channel.avatar?.fileUrl != null && channel.avatar!.fileUrl!.isNotEmpty)
                                                           ? DecorationImage(
-                                                              image: NetworkImage(
-                                                                  channel
-                                                                      .avatar!
-                                                                      .fileUrl!),
+                                                              image: NetworkImage(channel.avatar!.fileUrl!),
                                                               fit: BoxFit.cover,
                                                             )
                                                           : null,
                                             ),
-                                            child: (state.selectedImagePath ==
-                                                        null &&
-                                                    state.imagePath == null &&
-                                                    (channel.avatar?.fileUrl ==
-                                                            null ||
-                                                        channel.avatar!.fileUrl!
-                                                            .isEmpty))
-                                                ? Center(
-                                                    child: SvgPicture.asset(
-                                                      'assets/Icons/amity_ic_group_chat_avatar_placeholder.svg',
-                                                      package:
-                                                          'amity_uikit_beta_service',
-                                                      width: 40,
-                                                      height: 40,
-                                                    ),
-                                                  )
-                                                : null,
                                           ),
                                           // Camera icon overlay
                                           Container(
                                             width: 120,
                                             height: 120,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.3),
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
+                                              color: Colors.black.withOpacity(0.3),
+                                              borderRadius: BorderRadius.circular(24),
                                             ),
                                             child: Center(
                                               child: SvgPicture.asset(
@@ -186,37 +147,29 @@ class AmityEditGroupProfilePage extends NewBasePage {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   RichText(
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
                                           text: context.l10n.chat_group_name_label,
-                                          style: AmityTextStyle.titleBold(
-                                              theme.baseColor),
+                                          style: AmityTextStyle.titleBold(theme.baseColor),
                                         ),
                                         TextSpan(
                                           text: ' ${context.l10n.chat_group_name_required}',
-                                          style: AmityTextStyle.caption(
-                                              theme.baseColorShade3),
+                                          style: AmityTextStyle.caption(theme.baseColorShade3),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  BlocBuilder<AmityEditGroupProfileCubit,
-                                      AmityEditGroupProfileState>(
+                                  BlocBuilder<AmityEditGroupProfileCubit, AmityEditGroupProfileState>(
                                     builder: (context, state) {
-                                      final count = state is AmityEditGroupProfileLoaded
-                                          ? state.charCount
-                                          : 0;
+                                      final count = state is AmityEditGroupProfileLoaded ? state.charCount : 0;
                                       return Text(
                                         '$count/100',
                                         style: AmityTextStyle.caption(
-                                          count > 100
-                                              ? Colors.red
-                                              : theme.baseColorShade2,
+                                          count > 100 ? Colors.red : theme.baseColorShade2,
                                         ),
                                       );
                                     },
@@ -225,9 +178,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
                               ),
                               const SizedBox(height: 8),
                               TextField(
-                                controller: context
-                                    .read<AmityEditGroupProfileCubit>()
-                                    .nameController,
+                                controller: context.read<AmityEditGroupProfileCubit>().nameController,
                                 decoration: InputDecoration(
                                   hintText: context.l10n.chat_group_name_hint,
                                   hintStyle: TextStyle(
@@ -236,16 +187,13 @@ class AmityEditGroupProfilePage extends NewBasePage {
                                   ),
                                   contentPadding: EdgeInsets.only(bottom: 8),
                                   border: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(color: Colors.grey.shade300),
                                   ),
                                   enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(color: Colors.grey.shade300),
                                   ),
                                   focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: theme.primaryColor),
+                                    borderSide: BorderSide(color: theme.primaryColor),
                                   ),
                                   counterText: '', // Hide the default counter
                                 ),
@@ -254,10 +202,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null, // Allow unlimited lines
                                 textInputAction: TextInputAction.newline,
-                                buildCounter: (context,
-                                    {required currentLength,
-                                    required isFocused,
-                                    maxLength}) {
+                                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
                                   return null; // Return null to hide the default counter
                                 },
                               ),
@@ -284,10 +229,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
 
     if (state.selectedImagePath != null) {
       final file = File(state.selectedImagePath!);
-      AmityCoreClient.newFileRepository()
-          .uploadImage(file)
-          .stream
-          .listen((amityUploadResult) {
+      AmityCoreClient.newFileRepository().uploadImage(file).stream.listen((amityUploadResult) {
         amityUploadResult.when(
           progress: (uploadInfo, cancelToken) {},
           complete: (file) {
@@ -299,30 +241,28 @@ class AmityEditGroupProfilePage extends NewBasePage {
                 .then((updatedChannel) {
               // Show success toast
               if (context.mounted) {
-                context.read<AmityToastBloc>().add(AmityToastShort(
-                    message: context.l10n.toast_group_profile_updated,
-                    icon: AmityToastIcon.success));
-                Navigator.pop(
-                    context, {'status': 'success', 'channel': updatedChannel});
+                context
+                    .read<AmityToastBloc>()
+                    .add(AmityToastShort(message: context.l10n.toast_group_profile_updated, icon: AmityToastIcon.success));
+                Navigator.pop(context, {'status': 'success', 'channel': updatedChannel});
               }
             }).catchError((error) {
               // Show error toast
               if (context.mounted) {
-                context.read<AmityToastBloc>().add(AmityToastShort(
-                    message: context.l10n.toast_group_profile_error,
-                    icon: AmityToastIcon.warning));
+                context
+                    .read<AmityToastBloc>()
+                    .add(AmityToastShort(message: context.l10n.toast_group_profile_error, icon: AmityToastIcon.warning));
                 Navigator.pop(context, {'status': 'error'});
               }
             });
           },
           error: (error) {
             // Handle upload errors with more specific feedback
-            final Map<String, dynamic>? errorData = 
-                error.data is Map<String, dynamic> ? error.data as Map<String, dynamic> : null;
-            
+            final Map<String, dynamic>? errorData = error.data is Map<String, dynamic> ? error.data as Map<String, dynamic> : null;
+
             String errorMessage = "Please try again.";
             String errorTitle = "Upload Failed";
-            
+
             if (errorData != null) {
               final int? uploadErrorCode = errorData["detail"]?["error"]?["code"];
               if (uploadErrorCode == 403) {
@@ -330,7 +270,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
                 errorMessage = "Inappropriate image. Please choose a different image to upload.";
               }
             }
-            
+
             // Show error dialog for upload failures
             AmityV4Dialog().showAlertErrorDialog(
               title: errorTitle,
@@ -341,9 +281,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
           cancel: () {
             // Show toast for cancelled upload
             if (context.mounted) {
-              context.read<AmityToastBloc>().add(const AmityToastShort(
-                  message: "Image upload cancelled.",
-                  icon: AmityToastIcon.warning));
+              context.read<AmityToastBloc>().add(const AmityToastShort(message: "Image upload cancelled.", icon: AmityToastIcon.warning));
             }
           },
         );
@@ -357,18 +295,17 @@ class AmityEditGroupProfilePage extends NewBasePage {
           .then((updatedChannel) {
         // Show success toast
         if (context.mounted) {
-          context.read<AmityToastBloc>().add(AmityToastShort(
-              message: context.l10n.toast_group_profile_updated,
-              icon: AmityToastIcon.success));
-          Navigator.pop(
-              context, {'status': 'success', 'channel': updatedChannel});
+          context
+              .read<AmityToastBloc>()
+              .add(AmityToastShort(message: context.l10n.toast_group_profile_updated, icon: AmityToastIcon.success));
+          Navigator.pop(context, {'status': 'success', 'channel': updatedChannel});
         }
       }).catchError((error) {
         // Show error toast
         if (context.mounted) {
-          context.read<AmityToastBloc>().add(AmityToastShort(
-              message: context.l10n.toast_group_profile_error,
-              icon: AmityToastIcon.warning));
+          context
+              .read<AmityToastBloc>()
+              .add(AmityToastShort(message: context.l10n.toast_group_profile_error, icon: AmityToastIcon.warning));
           Navigator.pop(context, {'status': 'error'});
         }
       });

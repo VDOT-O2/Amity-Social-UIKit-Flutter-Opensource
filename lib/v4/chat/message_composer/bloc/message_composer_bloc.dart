@@ -320,8 +320,9 @@ class MessageComposerBloc
 
   @override
   Future<void> close() async {
-    state.controller.dispose();
-    state.scrollController.dispose();
-    super.close();
+    // Controllers are owned by `_MessageComposerStateful`.
+    // Disposing here causes double-dispose and can trigger
+    // "MentionTextEditingController was used after being disposed".
+    return super.close();
   }
 }
