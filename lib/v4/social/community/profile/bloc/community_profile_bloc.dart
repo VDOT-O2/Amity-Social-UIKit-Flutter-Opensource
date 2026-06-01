@@ -203,7 +203,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
       _pendingPostsLiveCollection!.loadNext();
 
       AmityLog.debug("CommunityProfileBloc listening to community updates for communityId: $communityId");
-      scrollController.addListener(() {
+      _scrollListener = () {
         if (state.scrollController.hasClients && state.scrollController.offset > 330 && state.isExpanded) {
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, collapsing header");
           addEvent(CommunityProfileEventCollapsed());
@@ -211,7 +211,8 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, expanding header");
           addEvent(CommunityProfileEventExpanded());
         }
-      });
+      };
+      scrollController.addListener(_scrollListener!);
 
       AmityLog.debug('CommunityProfileBloc successfully initialized and listening to community updates');
       _log(
