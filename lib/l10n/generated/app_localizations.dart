@@ -564,13 +564,13 @@ abstract class AppLocalizations {
   /// Label for close button
   ///
   /// In en, this message translates to:
-  /// **'Close community?'**
+  /// **'Delete group?'**
   String get community_close;
 
   /// Confirmation message for closing a community
   ///
   /// In en, this message translates to:
-  /// **'All members will be removed from the community. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.'**
+  /// **'All members will be removed from the group. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.'**
   String get community_close_description;
 
   /// Label for join community button
@@ -2424,7 +2424,7 @@ abstract class AppLocalizations {
   /// Label for member section
   ///
   /// In en, this message translates to:
-  /// **'Member'**
+  /// **'Members'**
   String get chat_member_label;
 
   /// Error message when no user is selected
@@ -2604,10 +2604,10 @@ abstract class AppLocalizations {
   /// AppBar title for create group page
   ///
   /// In en, this message translates to:
-  /// **'New Group'**
+  /// **'New Group Chat'**
   String get chat_create_title;
 
-  /// Button text to create a new group
+  /// Button text to create a new group chat
   ///
   /// In en, this message translates to:
   /// **'Create'**
