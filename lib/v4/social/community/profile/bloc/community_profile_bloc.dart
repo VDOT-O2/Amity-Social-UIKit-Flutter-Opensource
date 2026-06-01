@@ -20,6 +20,8 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
 
   List<AmityDebugLogEntry> get debugLogHistory => debugLogController.history;
   Stream<List<AmityDebugLogEntry>> get debugLogHistoryStream => debugLogController.historyStream;
+  PostLiveCollection? _pendingPostsLiveCollection;
+  StreamSubscription<List<AmityPost>>? _pendingPostsSubscription;
 
   CommunityProfileBloc(
     String communityId,
@@ -36,17 +38,20 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
     );
 
     on<CommunityProfileEventUpdated>((event, emit) async {
-      final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check();
-      final canManageStory =
-          AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check();
-      emit(state.copyWith(
-          community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
-
       _log(
         action: 'CommunityProfileEventUpdated',
         message: 'Community updated: ${event.community.communityId}',
         snapshot: state.toString(),
       );
+      
+      if (event.community != null) {
+        final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check() ?? false;
+        final canManageStory =
+            AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check() ??
+                false;
+        emit(state.copyWith(
+            community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
+      }
     });
 
     on<CommunityProfileEventExpanded>((event, emit) async {
@@ -75,6 +80,10 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
           message: 'Pending post count updated: $pendingPostCount',
         );
       }
+    });
+
+    on<CommunityProfileEventPendingPostsObserved>((event, emit) async {
+      emit(state.copyWith(pendingPostCount: event.count));
     });
 
     on<CommunityProfileEventRefreshFromPendingPage>((event, emit) async {
@@ -172,8 +181,29 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         );
       });
 
+      // Real-time observer for pending (REVIEWING) posts in this community.
+      // We derive the banner count directly from the live collection's local
+      // page count. Using community.getPostCount() would read from the
+      // community-feed cache, which lags behind local create/delete actions
+      // until the server pushes the new count.
+      //
+      // The banner UI caps the displayed value at "10+", so first-page items
+      // (default page size) are sufficient.
+      _pendingPostsLiveCollection = AmitySocialClient.newPostRepository()
+          .getPosts()
+          .targetCommunity(communityId)
+          .feedType(AmityFeedType.REVIEWING)
+          .includeDeleted(false)
+          .getLiveCollection();
+
+      _pendingPostsSubscription = _pendingPostsLiveCollection!.getStreamController().stream.listen((posts) {
+        addEvent(CommunityProfileEventPendingPostsObserved(count: posts.length));
+      });
+
+      _pendingPostsLiveCollection!.loadNext();
+
       AmityLog.debug("CommunityProfileBloc listening to community updates for communityId: $communityId");
-      _scrollListener = () {
+      scrollController.addListener(() {
         if (state.scrollController.hasClients && state.scrollController.offset > 330 && state.isExpanded) {
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, collapsing header");
           addEvent(CommunityProfileEventCollapsed());
@@ -181,8 +211,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, expanding header");
           addEvent(CommunityProfileEventExpanded());
         }
-      };
-      scrollController.addListener(_scrollListener!);
+      });
 
       AmityLog.debug('CommunityProfileBloc successfully initialized and listening to community updates');
       _log(
