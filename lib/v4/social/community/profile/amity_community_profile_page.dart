@@ -59,7 +59,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                 _buildFeed(context, state),
               ]),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-              floatingActionButton: (state.isJoined)
+              floatingActionButton: (state.isJoined && !(state.community?.onlyAdminCanPost == true && !state.isModerator))
                   ? GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
@@ -502,8 +502,7 @@ class AmityCommunityProfilePage extends NewBasePage {
   void _showPostReviewDialog(BuildContext context) {
     AmityV4Dialog().showAlertErrorDialog(
       title: "Posts sent for review",
-      message:
-          "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
+      message: "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
       closeText: "OK",
     );
   }
@@ -572,11 +571,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     ),
                   ),
                   if (state.community?.isOfficial == true)
-                    Container(
-                        width: 28,
-                        height: 28,
-                        margin: const EdgeInsets.only(top: 2),
-                        child: AmityOfficialBadgeElement()),
+                    Container(width: 28, height: 28, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement()),
                 ],
               ),
             ),
@@ -588,8 +583,8 @@ class AmityCommunityProfilePage extends NewBasePage {
                   onTap: () => {
                     if (state.community != null)
                       {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
                       }
                   },
                   child: Container(
@@ -682,10 +677,7 @@ class AmityCommunityProfilePage extends NewBasePage {
 
   Widget _buildPendingPost(BuildContext context, CommunityProfileState state) {
     return SliverToBoxAdapter(
-      child: (state.community != null &&
-              state.isJoined &&
-              state.pendingPostCount > 0 &&
-              (state.community!.isPostReviewEnabled ?? false))
+      child: (state.community != null && state.isJoined && state.pendingPostCount > 0 && (state.community!.isPostReviewEnabled ?? false))
           ? Container(
               color: theme.backgroundColor,
               padding: const EdgeInsets.all(16),

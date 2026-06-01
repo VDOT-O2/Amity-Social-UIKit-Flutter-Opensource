@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
@@ -9,6 +11,9 @@ part 'community_profile_events.dart';
 part 'community_profile_state.dart';
 
 class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileState> {
+  PostLiveCollection? _pendingPostsLiveCollection;
+  StreamSubscription<List<AmityPost>>? _pendingPostsSubscription;
+
   CommunityProfileBloc(
     String communityId,
     ScrollController scrollController,
@@ -20,17 +25,12 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
 
     on<CommunityProfileEventUpdated>((event, emit) async {
       if (event.community != null) {
-        final isModerator =
-            AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check() ?? false;
-        final canManageStory = AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY)
-                .atCommunity(event.community.communityId!)
-                .check() ??
-            false;
+        final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check() ?? false;
+        final canManageStory =
+            AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check() ??
+                false;
         emit(state.copyWith(
-            community: event.community,
-            isJoined: event.community.isJoined,
-            isModerator: isModerator,
-            canManageStory: canManageStory));
+            community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
       }
     });
 
@@ -48,6 +48,10 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         final pendingPostCount = await community.getPostCount(AmityFeedType.REVIEWING);
         emit(state.copyWith(pendingPostCount: pendingPostCount));
       }
+    });
+
+    on<CommunityProfileEventPendingPostsObserved>((event, emit) async {
+      emit(state.copyWith(pendingPostCount: event.count));
     });
 
     on<CommunityProfileEventRefreshFromPendingPage>((event, emit) async {
@@ -93,7 +97,28 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         addEvent(CommunityProfileEventGetPendingPosts());
       });
 
-      AmityLog.debug( "CommunityProfileBloc listening to community updates for communityId: $communityId");
+      // Real-time observer for pending (REVIEWING) posts in this community.
+      // We derive the banner count directly from the live collection's local
+      // page count. Using community.getPostCount() would read from the
+      // community-feed cache, which lags behind local create/delete actions
+      // until the server pushes the new count.
+      //
+      // The banner UI caps the displayed value at "10+", so first-page items
+      // (default page size) are sufficient.
+      _pendingPostsLiveCollection = AmitySocialClient.newPostRepository()
+          .getPosts()
+          .targetCommunity(communityId)
+          .feedType(AmityFeedType.REVIEWING)
+          .includeDeleted(false)
+          .getLiveCollection();
+
+      _pendingPostsSubscription = _pendingPostsLiveCollection!.getStreamController().stream.listen((posts) {
+        addEvent(CommunityProfileEventPendingPostsObserved(count: posts.length));
+      });
+
+      _pendingPostsLiveCollection!.loadNext();
+
+      AmityLog.debug("CommunityProfileBloc listening to community updates for communityId: $communityId");
       scrollController.addListener(() {
         if (state.scrollController.hasClients && state.scrollController.offset > 330 && state.isExpanded) {
           AmityLog.debug("Scroll offset: ${state.scrollController.offset}, collapsing header");
