@@ -43,7 +43,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         message: 'Community updated: ${event.community.communityId}',
         snapshot: state.toString(),
       );
-      
+
       if (event.community != null) {
         final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check() ?? false;
         final canManageStory =
@@ -252,6 +252,8 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
 
   @override
   Future<void> close() async {
+    _pendingPostsSubscription?.cancel();
+    
     if (_scrollListener != null) {
       state.scrollController.removeListener(_scrollListener!);
     }
