@@ -18,6 +18,24 @@ class GlobalSearchBloc extends Bloc<GlobalSearchEvent, GlobalSearchState> {
   var isFetching = true;
 
   GlobalSearchBloc() : super(GlobalSearchInitial()) {
+    on<PreloadRecommendedCommunitiesEvent>((event, emit) async {
+      emit(const GlobalSearchLoaded([], true));
+
+      try {
+        final communities = await AmitySocialClient.newCommunityRepository()
+            .getRecommendedCommunities();
+
+        final publicCommunities = communities
+            .where((community) => community.isPublic == true)
+            .take(pageSize)
+            .toList();
+
+        emit(GlobalSearchLoaded(publicCommunities, false));
+      } catch (_) {
+        emit(const GlobalSearchLoaded([], false));
+      }
+    });
+
     on<SearchUsersEvent>((event, emit) async {
       emit(GlobalSearchTextChange(event.searchText));
       var searchText = '';

@@ -29,8 +29,8 @@ class AmitySocialGlobalSearchPage extends NewBasePage {
         searchType: AmityGlobalSearchType.community,
         scrollController: communityScrollController);
     userSearchViewModel = AmityGlobalSearchViewModel(
-        searchType: AmityGlobalSearchType.user,
-        scrollController: userScrollController);
+      searchType: AmityGlobalSearchType.user,
+      scrollController: userScrollController);
 
     return BlocProvider(
       create: (_) => GlobalSearchBloc(),
@@ -46,7 +46,8 @@ class AmitySocialGlobalSearchPage extends NewBasePage {
                       .read<GlobalSearchBloc>()
                       .add(const GlobalSearchLoadMoreEvent());
                 });
-          } else if (state is GlobalUserSearchLoaded) {
+          }
+          else if (state is GlobalUserSearchLoaded) {
             isLoaded = true;
             userSearchViewModel.updateUserModel(
                 users: state.users,

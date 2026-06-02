@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -156,8 +157,7 @@ class _PostPollContentState extends State<PostPollContent> {
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
                   backgroundColor: selectedIndices.isEmpty
-                      ? widget.theme.primaryColor
-                          .blend(ColorBlendingOption.shade2)
+                      ? widget.theme.primaryColor.withAlpha(160)
                       : widget.theme.primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -165,14 +165,17 @@ class _PostPollContentState extends State<PostPollContent> {
                   minimumSize: const Size(double.infinity, 40),
                   splashFactory: NoSplash.splashFactory,
                 ),
-                child: isVoting
-                    ? const CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
+                child: isVoting || kDebugMode
+                    ? Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: CircularProgressIndicator(
+                          color: widget.theme.buttonTextColor,
+                          strokeWidth: 2,
+                        ),
                       )
                     : Text(context.l10n.poll_vote,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: widget.theme.buttonTextColor,
                           fontWeight: FontWeight.bold,
                         )),
               );

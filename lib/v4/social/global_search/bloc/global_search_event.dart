@@ -50,6 +50,13 @@ class GlobalUserSearchLoadMoreEvent extends GlobalSearchEvent {
   List<Object> get props => [];
 }
 
+class PreloadRecommendedCommunitiesEvent extends GlobalSearchEvent {
+  const PreloadRecommendedCommunitiesEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
 
 
 class SearchCommunitiesEvent extends GlobalSearchEvent {
