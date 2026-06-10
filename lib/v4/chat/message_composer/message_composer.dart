@@ -88,22 +88,16 @@ class AmityMessageComposer extends NewBaseComponent {
           if (state.replyTo != expectedReplyTo) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (context.mounted) {
-                context
-                    .read<MessageComposerBloc>()
-                    .add(MessageComposerReplyChanged(replyTo: expectedReplyTo));
+                context.read<MessageComposerBloc>().add(MessageComposerReplyChanged(replyTo: expectedReplyTo));
               }
             });
           }
 
-          context
-              .read<MessageComposerBloc>()
-              .add(MessageComposerTextChange(text: controller.text));
+          context.read<MessageComposerBloc>().add(MessageComposerTextChange(text: controller.text));
           return Column(
             children: [
-              if (editingMessage != null)
-                renderEditPanel(context, editingMessage, state),
-              if (state.replyTo != null)
-                renderReplyPanel(state.replyTo!, context),
+              if (editingMessage != null) renderEditPanel(context, editingMessage, state),
+              if (state.replyTo != null) renderReplyPanel(state.replyTo!, context),
               SafeArea(
                 top: false,
                 child: renderComposer(context, state, subChannelId),
@@ -115,20 +109,17 @@ class AmityMessageComposer extends NewBaseComponent {
     );
   }
 
-  Widget renderComposer(
-      BuildContext context, MessageComposerState state, String subChannelId) {
+  Widget renderComposer(BuildContext context, MessageComposerState state, String subChannelId) {
     bool isSendable = false;
 
     if (state.text.trim().isEmpty) {
-      isSendable = true;
+      isSendable = false;
     } else {
       if (editingMessage != null) {
         final currentText = (editingMessage!.data as MessageTextData).text;
-        if (state.text.trim() == currentText) {
-          isSendable = true;
-        }
+        isSendable = state.text.trim() != currentText;
       } else {
-        isSendable = false;
+        isSendable = true;
       }
     }
     return Column(
@@ -147,7 +138,7 @@ class AmityMessageComposer extends NewBaseComponent {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (editingMessage == null)
                       Container(
@@ -157,39 +148,46 @@ class AmityMessageComposer extends NewBaseComponent {
                           onTap: () {
                             if (state.showMediaSection) {
                               focusNode.requestFocus();
-                              context
-                                  .read<MessageComposerBloc>()
-                                  .add(MessageComposerMediaCollapsed());
+                              context.read<MessageComposerBloc>().add(MessageComposerMediaCollapsed());
                             } else {
                               focusNode.unfocus();
-                              context
-                                  .read<MessageComposerBloc>()
-                                  .add(MessageComposerMediaExpanded());
+                              context.read<MessageComposerBloc>().add(MessageComposerMediaExpanded());
                             }
                           },
-                          child: SizedBox(
-                            width: 32,
-                            height: 32,
-                            child: SvgPicture.asset(
+                          child: Stack(children: [
+                            Container(
+                              height: 38,
+                              width: 38,
+                              margin: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: theme.textMuted,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SvgPicture.asset(
+                              height: 42,
+                              width: 42,
                               (state.showMediaSection)
                                   ? "assets/Icons/amity_ic_close_message_media_section.svg"
                                   : "assets/Icons/amity_ic_open_message_media_section.svg",
+                              colorFilter: ColorFilter.mode(
+                                theme.surfaceCard,
+                                BlendMode.srcIn,
+                              ),
                               package: 'amity_uikit_beta_service',
                             ),
-                          ),
+                          ]),
                         ),
                       ),
                     Expanded(
                       child: Container(
-                        constraints:
-                            const BoxConstraints(minHeight: 45, maxHeight: 120),
+                        constraints: const BoxConstraints(minHeight: 45, maxHeight: 120),
                         // alignment: Alignment.centerLeft,
                         // padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: ShapeDecoration(
-                          color: theme.baseColorShade4,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: theme.backgroundColor),
-                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide.none,
+                            borderRadius: BorderRadius.circular(24),
                           ),
                         ),
                         child: MediaQuery.removePadding(
@@ -210,22 +208,15 @@ class AmityMessageComposer extends NewBaseComponent {
                                 focusNode: focusNode,
                                 channelId: subChannelId,
                                 enableMention: enableMention,
-                                suggestionOverlayBottomPaddingWhenKeyboardOpen:
-                                    80.0,
-                                suggestionOverlayBottomPaddingWhenKeyboardClosed:
-                                    80.0,
+                                suggestionOverlayBottomPaddingWhenKeyboardOpen: 80.0,
+                                suggestionOverlayBottomPaddingWhenKeyboardClosed: 80.0,
                                 onTap: () {
-                                  context
-                                      .read<MessageComposerBloc>()
-                                      .add(MessageComposerMediaCollapsed());
+                                  context.read<MessageComposerBloc>().add(MessageComposerMediaCollapsed());
                                 },
                                 onTapOutside: (event) {
-                                  final RenderBox? composerBox = composerKey
-                                      .currentContext
-                                      ?.findRenderObject() as RenderBox?;
+                                  final RenderBox? composerBox = composerKey.currentContext?.findRenderObject() as RenderBox?;
                                   if (composerBox != null) {
-                                    final localPos = composerBox
-                                        .globalToLocal(event.position);
+                                    final localPos = composerBox.globalToLocal(event.position);
                                     final isInsideComposer = localPos.dx >= 0 &&
                                         localPos.dx <= composerBox.size.width &&
                                         localPos.dy >= 0 &&
@@ -241,21 +232,16 @@ class AmityMessageComposer extends NewBaseComponent {
                                 },
                                 cursorColor: theme.primaryColor,
                                 onChanged: (value) {
-                                  context.read<MessageComposerBloc>().add(
-                                      MessageComposerTextChange(text: value));
-                                  FocusScope.of(context)
-                                      .requestFocus(focusNode);
-                                  context
-                                      .read<MessageComposerBloc>()
-                                      .add(MessageComposerMediaCollapsed());
+                                  context.read<MessageComposerBloc>().add(MessageComposerTextChange(text: value));
+                                  FocusScope.of(context).requestFocus(focusNode);
+                                  context.read<MessageComposerBloc>().add(MessageComposerMediaCollapsed());
                                 },
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 minLines: 1,
                                 textAlignVertical: TextAlignVertical.bottom,
                                 suggestionMaxRow: 2,
-                                suggestionDisplayMode:
-                                    SuggestionDisplayMode.bottom,
+                                suggestionDisplayMode: SuggestionDisplayMode.bottom,
                                 mentionContentType: MentionContentType.general,
                                 style: TextStyle(
                                   color: theme.baseColor,
@@ -265,15 +251,30 @@ class AmityMessageComposer extends NewBaseComponent {
                                 ),
                                 decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 10),
+                                  filled: true,
+                                  fillColor: focusNode.hasFocus ? theme.surfaceRaised : theme.surfaceCard,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                   hintText: context.l10n.message_placeholder,
-                                  border: InputBorder.none,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: theme.border,
+                                      width: 1,
+                                    ),
+                                  ),
                                   prefixIconColor: theme.primaryColor,
                                   suffixIconColor: theme.primaryColor,
                                   hoverColor: theme.primaryColor,
                                   hintStyle: TextStyle(
-                                    color: theme.baseColorShade2,
+                                    color: theme.textMuted,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w400,
                                     letterSpacing: -0.24,
@@ -293,30 +294,21 @@ class AmityMessageComposer extends NewBaseComponent {
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
-                              if (!isSendable) {
+                              if (isSendable) {
                                 if (editingMessage != null) {
-                                  context
-                                      .read<MessageComposerBloc>()
-                                      .add(MessageComposerUpdateTextMessage(
+                                  context.read<MessageComposerBloc>().add(MessageComposerUpdateTextMessage(
                                         text: controller.text,
                                         messageId: editingMessage!.messageId!,
-                                        mentionUserIds:
-                                            controller.getMentionUserIds(),
-                                        mentionMetadataList: controller
-                                            .getAmityMentionMetadata(),
+                                        mentionUserIds: controller.getMentionUserIds(),
+                                        mentionMetadataList: controller.getAmityMentionMetadata(),
                                       ));
                                   action.onMessageCreated();
                                 } else {
-                                  context
-                                      .read<MessageComposerBloc>()
-                                      .add(MessageComposerCreateTextMessage(
+                                  context.read<MessageComposerBloc>().add(MessageComposerCreateTextMessage(
                                         text: controller.text,
-                                        parentId:
-                                            replyingMessage?.message.messageId,
-                                        mentionUserIds:
-                                            controller.getMentionUserIds(),
-                                        mentionMetadataList: controller
-                                            .getAmityMentionMetadata(),
+                                        parentId: replyingMessage?.message.messageId,
+                                        mentionUserIds: controller.getMentionUserIds(),
+                                        mentionMetadataList: controller.getAmityMentionMetadata(),
                                       ));
                                   action.onMessageCreated();
                                 }
@@ -327,24 +319,29 @@ class AmityMessageComposer extends NewBaseComponent {
                               }
                             },
                             child: Container(
-                              padding:
-                                  const EdgeInsets.only(bottom: 6, left: 12),
-                              child: SizedBox(
-                                width: 32,
-                                height: 32,
-                                child: (isSendable)
-                                    ? SvgPicture.asset(
-                                        "assets/Icons/amity_ic_sent_message_button_disable.svg",
-                                        package: 'amity_uikit_beta_service',
-                                      )
-                                    : SvgPicture.asset(
-                                        "assets/Icons/amity_ic_sent_message_button.svg",
-                                        colorFilter: ColorFilter.mode(
-                                          theme.primaryColor,
-                                          BlendMode.srcIn,
-                                        ),
-                                        package: 'amity_uikit_beta_service',
-                                      ),
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 38,
+                                    width: 38,
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: isSendable ? Colors.transparent : theme.textMuted,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    "assets/Icons/amity_ic_sent_message_button.svg",
+                                    package: 'amity_uikit_beta_service',
+                                    width: 42,
+                                    height: 42,
+                                    colorFilter: ColorFilter.mode(
+                                      isSendable ? theme.brandPrimary : theme.surfaceCard,
+                                      BlendMode.srcIn,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -356,15 +353,12 @@ class AmityMessageComposer extends NewBaseComponent {
             ),
           ),
         ),
-        (state.showMediaSection)
-            ? renderMediaSection(context, state.appName)
-            : const SizedBox(),
+        (state.showMediaSection) ? renderMediaSection(context, state.appName) : const SizedBox(),
       ],
     );
   }
 
-  Widget renderEditPanel(
-      BuildContext context, AmityMessage? message, MessageComposerState state) {
+  Widget renderEditPanel(BuildContext context, AmityMessage? message, MessageComposerState state) {
     return Container(
       width: double.infinity,
       height: 48,
@@ -416,9 +410,8 @@ class AmityMessageComposer extends NewBaseComponent {
   }
 
   Widget renderReplyPanel(AmityMessage message, BuildContext context) {
-    final userDisplayName = message.user?.userId == AmityCoreClient.getUserId()
-        ? context.l10n.message_replying_yourself
-        : message.user?.displayName ?? "";
+    final userDisplayName =
+        message.user?.userId == AmityCoreClient.getUserId() ? context.l10n.message_replying_yourself : message.user?.displayName ?? "";
 
     Stack? imagePreview;
 
@@ -455,8 +448,7 @@ class AmityMessageComposer extends NewBaseComponent {
       onTap: () {
         // TODO Remove this condition when jump to replied message is implemented
         if (message.data is MessageTextData) {
-          final parentTextMessage =
-              (message.data as MessageTextData).text ?? "";
+          final parentTextMessage = (message.data as MessageTextData).text ?? "";
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -497,8 +489,7 @@ class AmityMessageComposer extends NewBaseComponent {
       child: Container(
         width: double.infinity,
         height: 62,
-        padding:
-            const EdgeInsets.only(top: 10, left: 16, right: 12, bottom: 10),
+        padding: const EdgeInsets.only(top: 10, left: 16, right: 12, bottom: 10),
         decoration: BoxDecoration(color: theme.baseColorShade4),
         child: Row(
           children: [
@@ -511,8 +502,7 @@ class AmityMessageComposer extends NewBaseComponent {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text:
-                              context.l10n.message_replying_to(userDisplayName),
+                          text: context.l10n.message_replying_to(userDisplayName),
                           style: AmityTextStyle.captionBold(theme.baseColor),
                         ),
                       ],
@@ -526,8 +516,7 @@ class AmityMessageComposer extends NewBaseComponent {
                         children: [
                           TextSpan(
                             text: (message.data as MessageTextData).text,
-                            style:
-                                AmityTextStyle.caption(theme.baseColorShade1),
+                            style: AmityTextStyle.caption(theme.baseColorShade1),
                           ),
                         ],
                       ),
@@ -539,12 +528,8 @@ class AmityMessageComposer extends NewBaseComponent {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: (message.data as MessageCustomData)
-                                    .rawData
-                                    ?.toString() ??
-                                "",
-                            style:
-                                AmityTextStyle.caption(theme.baseColorShade1),
+                            text: (message.data as MessageCustomData).rawData?.toString() ?? "",
+                            style: AmityTextStyle.caption(theme.baseColorShade1),
                           ),
                         ],
                       ),
@@ -572,8 +557,7 @@ class AmityMessageComposer extends NewBaseComponent {
                 ],
               ),
             ),
-            if (message.data is MessageVideoData ||
-                message.data is MessageImageData) ...[
+            if (message.data is MessageVideoData || message.data is MessageImageData) ...[
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: imagePreview,
@@ -672,8 +656,7 @@ class _MessageComposerStateful extends StatefulWidget {
   const _MessageComposerStateful({required this.composer});
 
   @override
-  State<_MessageComposerStateful> createState() =>
-      _MessageComposerStatefulState();
+  State<_MessageComposerStateful> createState() => _MessageComposerStatefulState();
 }
 
 class _MessageComposerStatefulState extends State<_MessageComposerStateful> {
@@ -734,10 +717,8 @@ class _MessageComposerStatefulState extends State<_MessageComposerStateful> {
   void _populateEditingMessage(AmityMessage editingMessage) {
     final currentText = (editingMessage.data as MessageTextData).text ?? "";
     try {
-      if (editingMessage.metadata != null &&
-          editingMessage.metadata!.containsKey('mentioned')) {
-        final mentionsData =
-            editingMessage.metadata!['mentioned'] as List<dynamic>;
+      if (editingMessage.metadata != null && editingMessage.metadata!.containsKey('mentioned')) {
+        final mentionsData = editingMessage.metadata!['mentioned'] as List<dynamic>;
 
         List<AmityUserMentionMetadata> mentionMetadataList = [];
         for (var mention in mentionsData) {
@@ -799,8 +780,7 @@ class _MessageComposerStatefulState extends State<_MessageComposerStateful> {
 
 class MessageComposerCache {
   MessageComposerCache._privateConstructor();
-  static final MessageComposerCache _instance =
-      MessageComposerCache._privateConstructor();
+  static final MessageComposerCache _instance = MessageComposerCache._privateConstructor();
   factory MessageComposerCache() => _instance;
 
   String savedText = "";

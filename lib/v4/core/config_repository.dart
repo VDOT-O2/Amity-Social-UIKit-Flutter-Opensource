@@ -133,6 +133,23 @@ extension ThemeConfig on ConfigRepository {
 
   AmityThemeColor _getThemeColor(AmityTheme? theme, AmityTheme fallbackTheme) {
     return AmityThemeColor(
+      brandPrimary: theme?.brandPrimary ?? fallbackTheme.brandPrimary,
+      background: theme?.background ?? fallbackTheme.background,
+      backgroundSubtle: theme?.backgroundSubtle ?? fallbackTheme.backgroundSubtle,
+      backgroundDisabled: theme?.backgroundDisabled ?? fallbackTheme.backgroundDisabled,
+      surfaceCard: theme?.surfaceCard ?? fallbackTheme.surfaceCard,
+      surfaceRaised: theme?.surfaceRaised ?? fallbackTheme.surfaceRaised,
+      surfaceModal: theme?.surfaceModal ?? fallbackTheme.surfaceModal,
+      surfaceAvatar: theme?.surfaceAvatar ?? fallbackTheme.surfaceAvatar,
+      surfaceOverlay: theme?.surfaceOverlay ?? fallbackTheme.surfaceOverlay,
+      textPrimary: theme?.textPrimary ?? fallbackTheme.textPrimary,
+      textSecondary: theme?.textSecondary ?? fallbackTheme.textSecondary,
+      textMuted: theme?.textMuted ?? fallbackTheme.textMuted,
+      iconDefault: theme?.iconDefault ?? fallbackTheme.iconDefault,
+      iconActive: theme?.iconActive ?? fallbackTheme.iconActive,
+      iconMuted: theme?.iconMuted ?? fallbackTheme.iconMuted,
+      border: theme?.border ?? fallbackTheme.border,
+      borderSubtle: theme?.borderSubtle ?? fallbackTheme.borderSubtle,
       primaryColor: theme?.primaryColor ?? fallbackTheme.primaryColor,
       secondaryColor: theme?.secondaryColor ?? fallbackTheme.secondaryColor,
       buttonColor: theme?.buttonColor ?? fallbackTheme.buttonColor,

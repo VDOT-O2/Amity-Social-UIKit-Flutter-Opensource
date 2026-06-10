@@ -22,8 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BaseChatListComponent extends NewBaseComponent {
-  BaseChatListComponent(
-      {super.key, super.pageId, required super.componentId, required this.chatListType, this.channelTypes});
+  BaseChatListComponent({super.key, super.pageId, required super.componentId, required this.chatListType, this.channelTypes});
 
   final scrollController = ScrollController();
   final ChatListType chatListType;
@@ -157,13 +156,11 @@ class BaseChatListComponent extends NewBaseComponent {
     );
   }
 
-  Widget renderChatListItem(
-      BuildContext context, ChatListType chatListType, AmityChannel channel, AmityChannelMember? channelMember) {
+  Widget renderChatListItem(BuildContext context, ChatListType chatListType, AmityChannel channel, AmityChannelMember? channelMember) {
     // Enable archive functionality for both conversation and community channels
     if (chatListType == ChatListType.CONVERSATION) {
       return renderDismissibleListItem(
-          chatListType, channel, channelMember, "assets/Icons/amity_ic_channel_archive.svg", context.l10n.chat_archive,
-          (direction) {
+          chatListType, channel, channelMember, "assets/Icons/amity_ic_channel_archive.svg", context.l10n.chat_archive, (direction) {
         context.read<ChatListBloc>().addEvent(ChatListEventChannelArchive(
               channelId: channel.channelId!,
               successMessage: context.l10n.toast_chat_archived,
@@ -173,8 +170,8 @@ class BaseChatListComponent extends NewBaseComponent {
             ));
       });
     } else if (chatListType == ChatListType.ARCHIVED) {
-      return renderDismissibleListItem(chatListType, channel, channelMember,
-          "assets/Icons/amity_ic_channel_unarchive.svg", context.l10n.chat_unarchive, (direction) {
+      return renderDismissibleListItem(
+          chatListType, channel, channelMember, "assets/Icons/amity_ic_channel_unarchive.svg", context.l10n.chat_unarchive, (direction) {
         context.read<ChatListBloc>().addEvent(ChatListEventChannelUnarchive(
               channelId: channel.channelId!,
               successMessage: context.l10n.toast_chat_unarchived,
@@ -186,8 +183,8 @@ class BaseChatListComponent extends NewBaseComponent {
     }
   }
 
-  Widget renderDismissibleListItem(ChatListType chatListType, AmityChannel channel, AmityChannelMember? channelMember,
-      String assetIcon, String actionText, void Function(DismissDirection)? onDismissed) {
+  Widget renderDismissibleListItem(ChatListType chatListType, AmityChannel channel, AmityChannelMember? channelMember, String assetIcon,
+      String actionText, void Function(DismissDirection)? onDismissed) {
     final channelId = channel.channelId;
     final userId = channelMember?.userId;
     return Dismissible(
@@ -201,9 +198,9 @@ class BaseChatListComponent extends NewBaseComponent {
         },
         background: Builder(builder: (context) {
           return Container(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: theme.baseColorShade2,
-              border: Border(bottom: BorderSide(color: theme.baseColorShade4, width: 1)),
+              border: Border(bottom: BorderSide(color: theme.borderSubtle, width: 1)),
             ),
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
@@ -286,7 +283,7 @@ class ChatListItem extends BaseElement {
             package: 'amity_uikit_beta_service',
             width: 18,
             height: 20,
-            color: theme.baseColorShade2,
+            color: theme.iconMuted,
           );
         } else if (messageData is MessageVideoData) {
           previewText = context.l10n.chat_message_video_sent;
@@ -295,7 +292,7 @@ class ChatListItem extends BaseElement {
             package: 'amity_uikit_beta_service',
             width: 18,
             height: 20,
-            color: theme.baseColorShade2,
+            color: theme.iconMuted,
           );
         } else if (messageData is MessageFileData || messageData is MessageAudioData) {
           previewText = context.l10n.chat_message_no_preview;
@@ -314,7 +311,7 @@ class ChatListItem extends BaseElement {
           package: 'amity_uikit_beta_service',
           width: 18,
           height: 18,
-          color: theme.baseColorShade2,
+          color: theme.iconMuted,
         );
       } else {
         final previewMessage = channel.messagePreview?.data;
@@ -327,7 +324,7 @@ class ChatListItem extends BaseElement {
             package: 'amity_uikit_beta_service',
             width: 18,
             height: 20,
-            color: theme.baseColorShade2,
+            color: theme.iconMuted,
           );
         } else if (previewMessage is MessageVideoData) {
           previewText = context.l10n.chat_message_video;
@@ -336,7 +333,7 @@ class ChatListItem extends BaseElement {
             package: 'amity_uikit_beta_service',
             width: 18,
             height: 20,
-            color: theme.baseColorShade2,
+            color: theme.iconMuted,
           );
         } else if (previewMessage is MessageFileData || previewMessage is MessageAudioData) {
           // To be implement
@@ -365,7 +362,7 @@ class ChatListItem extends BaseElement {
             const SizedBox(width: 2),
             Text(
               "(${(channel.memberCount ?? 0).formattedCompactString()})",
-              style: AmityTextStyle.caption(theme.baseColorShade2),
+              style: AmityTextStyle.caption(theme.textMuted),
             ),
           ],
         );
@@ -383,7 +380,7 @@ class ChatListItem extends BaseElement {
             const SizedBox(width: 2),
             Text(
               "(${(channel.memberCount ?? 0).formattedCompactString()})",
-              style: AmityTextStyle.caption(theme.baseColorShade2),
+              style: AmityTextStyle.caption(theme.textMuted),
             ),
           ],
         );
@@ -414,7 +411,7 @@ class ChatListItem extends BaseElement {
 
     final isUnread = (channel.unreadCount ?? 0) > 0;
     final itemDecoration = BoxDecoration(
-      border: Border(bottom: BorderSide(color: theme.baseColorShade4, width: 1)),
+      border: Border(bottom: BorderSide(color: theme.borderSubtle, width: 1)),
     );
 
     return Container(
@@ -461,15 +458,17 @@ class ChatListItem extends BaseElement {
           ),
           const SizedBox(width: 8),
           Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              const SizedBox(height: 1),
               Text(channel.lastActivity?.toChatTimestamp(context) ?? "",
-                  style: AmityTextStyle.caption(isUnread ? theme.vdotGreen : theme.baseColorShade2)),
+                  style: AmityTextStyle.caption(isUnread ? theme.vdotGreen : theme.textMuted)),
               const SizedBox(height: 4),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isArchived) ...[ 
+                  if (isArchived) ...[
                     Container(
                       padding: const EdgeInsets.only(left: 4, right: 6, top: 3.5, bottom: 3.5),
                       decoration: BoxDecoration(
@@ -542,17 +541,17 @@ class ChatListItem extends BaseElement {
 
   TextStyle _getTitleTextStyle() {
     final isUnread = (channel.unreadCount ?? 0) > 0;
-    return AmityTextStyle.body(theme.baseColor, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500);
+    return AmityTextStyle.body(isUnread ? theme.textPrimary : theme.textMuted, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500);
   }
 
   TextStyle _getPreviewTextStyle() {
     final isUnread = (channel.unreadCount ?? 0) > 0;
-    return AmityTextStyle.body(isUnread ? theme.baseColor : theme.baseColorShade2, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w400);
+    return AmityTextStyle.body(isUnread ? theme.textPrimary : theme.textMuted, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w400);
   }
 
   TextStyle _getHightlightedTextStyle() {
     final isUnread = (channel.unreadCount ?? 0) > 0;
-    return AmityTextStyle.body(isUnread ? theme.baseColor : theme.baseColorShade2, fontWeight: isUnread ? FontWeight.w700 : FontWeight.w500);
+    return AmityTextStyle.body(isUnread ? theme.textPrimary : theme.textMuted, fontWeight: isUnread ? FontWeight.w700 : FontWeight.w500);
   }
 
   /// Helper method to find exact word match positions (must start with query)
@@ -724,7 +723,7 @@ class ChatListItem extends BaseElement {
       ),
       child: Text(
         unreadCount > 99 ? '99+' : unreadCount.toString(),
-        style:  TextStyle(
+        style: TextStyle(
           color: theme.vdotGreenText,
           fontSize: 12,
           fontWeight: FontWeight.bold,
@@ -742,12 +741,7 @@ class AmityChatAvatar extends BaseElement {
   late final bool isDeletedUser;
   late final String displayName;
 
-  AmityChatAvatar(
-      {required this.channelMember,
-      super.key,
-      super.pageId = "",
-      super.componentId = "",
-      super.elementId = "chat-avatar"}) {
+  AmityChatAvatar({required this.channelMember, super.key, super.pageId = "", super.componentId = "", super.elementId = "chat-avatar"}) {
     avatarUrl = channelMember?.user?.avatarUrl;
     isDeletedUser = channelMember?.isDeleted ?? true;
     displayName = channelMember?.user?.displayName ?? "";
