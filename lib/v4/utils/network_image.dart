@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 class AmityNetworkImage extends StatelessWidget {
   final String? imageUrl;
   final String placeHolderPath;
+  final ColorFilter? placeHolderColorFilter;
   final BoxFit fit;
   final double? width;
   final double? height;
@@ -16,6 +17,7 @@ class AmityNetworkImage extends StatelessWidget {
       {super.key,
       required this.imageUrl,
       required this.placeHolderPath,
+      this.placeHolderColorFilter,
       this.fit = BoxFit.cover,
       this.width,
       this.height});
@@ -27,6 +29,7 @@ class AmityNetworkImage extends StatelessWidget {
     } else {
       return SvgPicture.asset(
         placeHolderPath,
+        colorFilter: placeHolderColorFilter,
         package: 'amity_uikit_beta_service',
       );
     }
@@ -46,6 +49,7 @@ class AmityNetworkImage extends StatelessWidget {
           } else {
             return SvgPicture.asset(
               placeHolderPath,
+              colorFilter: placeHolderColorFilter,
               package: 'amity_uikit_beta_service',
             );
           }
@@ -54,6 +58,7 @@ class AmityNetworkImage extends StatelessWidget {
             (BuildContext context, Object error, StackTrace? stackTrace) {
           return SvgPicture.asset(
             placeHolderPath,
+            colorFilter: placeHolderColorFilter,
             package: 'amity_uikit_beta_service',
           );
         },
@@ -68,6 +73,7 @@ class AmityNetworkImage extends StatelessWidget {
             (BuildContext context, Object error, StackTrace? stackTrace) {
           return SvgPicture.asset(
             placeHolderPath,
+            colorFilter: placeHolderColorFilter,
             package: 'amity_uikit_beta_service',
           );
         },

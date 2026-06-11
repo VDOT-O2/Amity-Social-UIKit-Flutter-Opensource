@@ -552,7 +552,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                       height: 28,
                       margin: const EdgeInsets.only(top: 1),
                       child: AmityPrivateBadgeElement(
-                        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
                       ),
                     ),
                   Flexible(

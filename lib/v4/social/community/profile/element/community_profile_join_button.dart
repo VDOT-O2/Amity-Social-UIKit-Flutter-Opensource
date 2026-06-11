@@ -9,8 +9,7 @@ import 'package:flutter_svg/svg.dart';
 class AmityCommunityJoinButton extends BaseElement {
   final AmityCommunity community;
 
-  AmityCommunityJoinButton({Key? key, required this.community})
-      : super(elementId: 'community_join_button', key: key);
+  AmityCommunityJoinButton({Key? key, required this.community}) : super(elementId: 'community_join_button', key: key);
 
   @override
   Widget buildElement(BuildContext context) {
@@ -24,15 +23,13 @@ class AmityCommunityJoinButton extends BaseElement {
         bottom: 10,
       ),
       decoration: ShapeDecoration(
-        color: theme.primaryColor,
+        color: theme.buttonColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          context
-            .read<CommunityProfileBloc>()
-            .add(CommunityProfileEventJoining(communityId: community.communityId!));
+          context.read<CommunityProfileBloc>().add(CommunityProfileEventJoining(communityId: community.communityId!));
         },
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -48,11 +45,13 @@ class AmityCommunityJoinButton extends BaseElement {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  Container(
+                    padding: const EdgeInsets.only(top: 2),
                     width: 20,
                     child: SvgPicture.asset(
                       'assets/Icons/amity_ic_plus_button.svg',
                       package: 'amity_uikit_beta_service',
+                      colorFilter: ColorFilter.mode(theme.buttonTextColor, BlendMode.srcIn),
                     ),
                   ),
                 ],
@@ -61,8 +60,8 @@ class AmityCommunityJoinButton extends BaseElement {
             const SizedBox(width: 8),
             Text(
               context.l10n.community_join,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: theme.buttonTextColor,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),

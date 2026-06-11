@@ -31,7 +31,7 @@ Widget communityList(
         itemCount: communities.length,
         separatorBuilder: (context, index) {
           return Divider(
-            color: theme.baseColorShade4,
+            color: theme.borderSubtle,
             thickness: 1.0,
             indent: 16,
             endIndent: 16,
@@ -63,6 +63,7 @@ Widget communityList(
 
 Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeColor theme, {bool isUnseen = false}) {
   var categoriesName = community.categories?.map((category) => category?.name).toList();
+  var hasCommunityImage = (community.avatarImage?.fileUrl?.isNotEmpty ?? false);
 
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
@@ -76,14 +77,15 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
       children: [
         const SizedBox(width: 16),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(16),
           child: Container(
-            color: theme.baseColorShade3,
+            color: theme.backgroundSubtle,
             width: 80,
             height: 80,
             child: CommunityImageAvatarElement(
                 avatarUrl: UrlBuilder.appendParam(community.avatarImage?.fileUrl, name: 'size', value: 'medium'),
-                placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
+                placeHolderPath: hasCommunityImage ? "" : "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
+                placeHolderColorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
                 elementId: AmityMyCommunityElement.communityAvatar.stringValue),
           ),
         ),
@@ -92,21 +94,16 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 4),
               Row(
                 children: [
-                  if (!(community.isPublic ?? false))
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: AmityPrivateBadgeElement(),
-                    ),
                   Flexible(
                     child: Text(
                       community.displayName ?? '',
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: theme.baseColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: theme.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -120,10 +117,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                   const SizedBox(width: 16),
                 ],
               ),
-              const SizedBox(height: 4),
-              if (categoriesName != null && categoriesName.isNotEmpty) ...[
-                AmityCommunityCategoriesName(tags: categoriesName),
-              ],
+              const SizedBox(height: 3),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -143,7 +137,26 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                     memberCount: community.membersCount,
                   )),
                 ],
-              )
+              ),
+              if (categoriesName != null && categoriesName.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (!(community.isPublic ?? false)) ...[
+                      Container(
+                        width: 20,
+                        height: 20,
+                        transform: Matrix4.translationValues(-2, -2, 0),
+                        margin: const EdgeInsets.only(right: 1),
+                        child: AmityCoachGroupBadgeElement(),
+                      ),
+                    ],
+                    Expanded(child: AmityCommunityCategoriesName(tags: categoriesName, labelOnly: true)),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -209,7 +222,7 @@ Widget communitySkeletonRow() {
           child: const SkeletonImage(
             height: 80,
             width: 80,
-            borderRadius: 4,
+            borderRadius: 16,
           ),
         ),
         const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

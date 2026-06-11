@@ -22,9 +22,12 @@ class AmityCommunityHeaderComponent extends NewBaseComponent {
 
   @override
   Widget buildComponent(BuildContext context) {
+    const internalCategoryNames = {'coach group', 'public group'};
     final categories = community?.categories
             ?.map((e) => (e?.name ?? ""))
-            .where((e) => e.isNotEmpty)
+        .where((e) =>
+          e.isNotEmpty &&
+          !internalCategoryNames.contains(e.trim().toLowerCase()))
             .toList() ??
         <String>[];
     return (community == null)
@@ -51,6 +54,12 @@ class AmityCommunityHeaderComponent extends NewBaseComponent {
                       Container(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: AmityCommunityCategoryList(tags: categories)),
+                    if (community != null)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16, top: 8),
+                        child: AmityCommunityInfoView(community: community!),
+                      ),
                     if (community?.description?.isNotEmpty == true)
                       SizedBox(
                         width: double.infinity,
@@ -85,12 +94,7 @@ class AmityCommunityHeaderComponent extends NewBaseComponent {
                           ],
                         ),
                       ),
-                    if (community != null)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16, right: 16, bottom: 16, top: 8),
-                        child: AmityCommunityInfoView(community: community!),
-                      ),
+                    
                   ],
                 ),
               ),

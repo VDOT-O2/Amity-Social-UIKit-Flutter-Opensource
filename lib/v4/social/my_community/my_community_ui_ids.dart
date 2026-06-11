@@ -17,6 +17,7 @@ enum AmityMyCommunityElement {
   communityAvatar,
   communityDisplayName,
   communityPrivateBadge,
+  communityCoachGroupBadge,
   communityOfficialBadge,
   communityCetegoryName,
   communityMemberCount
@@ -31,6 +32,8 @@ extension AmityMyCommunityElementExtension on AmityMyCommunityElement {
         return 'community_display_name';
       case AmityMyCommunityElement.communityPrivateBadge:
         return 'community_private_badge';
+      case AmityMyCommunityElement.communityCoachGroupBadge:
+        return 'community_coach_group_badge';
       case AmityMyCommunityElement.communityOfficialBadge:
         return 'community_official_badge';
       case AmityMyCommunityElement.communityCetegoryName:
