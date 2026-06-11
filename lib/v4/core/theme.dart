@@ -257,6 +257,7 @@ class AmityTheme {
 }
 
 class AmityThemeColor {
+  final Brightness brightness;
   final Color brandPrimary;
   final Color background;
   final Color backgroundSubtle;
@@ -298,7 +299,11 @@ class AmityThemeColor {
   final Color rightBubbleColor;
   final Color rightBubbleTextColor;
 
+  bool get isDark => brightness == Brightness.dark;
+  bool get isLight => brightness == Brightness.light;
+
   AmityThemeColor({
+    required this.brightness,
     required this.brandPrimary,
     required this.background,
     required this.backgroundSubtle,

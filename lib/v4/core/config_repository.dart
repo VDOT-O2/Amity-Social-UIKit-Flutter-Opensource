@@ -132,7 +132,11 @@ extension ThemeConfig on ConfigRepository {
   }
 
   AmityThemeColor _getThemeColor(AmityTheme? theme, AmityTheme fallbackTheme) {
+    final currentThemeStyle = _getCurrentThemeStyle();
     return AmityThemeColor(
+      brightness: currentThemeStyle == AmityThemeStyle.dark
+          ? Brightness.dark
+          : Brightness.light,
       brandPrimary: theme?.brandPrimary ?? fallbackTheme.brandPrimary,
       background: theme?.background ?? fallbackTheme.background,
       backgroundSubtle: theme?.backgroundSubtle ?? fallbackTheme.backgroundSubtle,

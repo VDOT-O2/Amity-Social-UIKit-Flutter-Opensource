@@ -33,18 +33,18 @@ class PostItemBottom extends NewBaseComponent {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Container(
+        //   width: double.infinity,
+        //   padding: const EdgeInsets.symmetric(horizontal: 16),
+        //   child: Container(
+        //     width: double.infinity,
+        //     height: 1,
+        //     color: theme.baseColorShade4,
+        //   ),
+        // ),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            width: double.infinity,
-            height: 1,
-            color: theme.baseColorShade4,
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 0),
+          padding: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,

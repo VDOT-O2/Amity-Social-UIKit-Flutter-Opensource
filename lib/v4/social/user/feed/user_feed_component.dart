@@ -189,8 +189,8 @@ class UserFeedComponent extends NewBaseComponent {
                   onPostUpdated: (post) {},
                 )),
             Divider(
-              color: theme.baseColorShade4,
-              thickness: 8,
+              color: theme.borderSubtle,
+              thickness: 5,
             )
           ],
         ),

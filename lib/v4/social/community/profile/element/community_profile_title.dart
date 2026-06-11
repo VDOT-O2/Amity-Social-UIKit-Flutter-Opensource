@@ -20,13 +20,13 @@ class AmityCommunityProfileTitleView extends BaseElement {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (community?.isPublic == false)
-            Container(
-              width: 28,
-              height: 28,
-              margin: const EdgeInsets.only(top: 1),
-              child: AmityPrivateBadgeElement(),
-            ),
+          // if (community?.isPublic == false)
+          //   Container(
+          //     width: 28,
+          //     height: 28,
+          //     margin: const EdgeInsets.only(top: 1),
+          //     child: AmityPrivateBadgeElement(),
+          //   ),
           Flexible(
             flex: 1,
             fit: FlexFit.loose,

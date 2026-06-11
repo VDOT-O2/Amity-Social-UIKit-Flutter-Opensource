@@ -28,9 +28,7 @@ class PostDisplayName extends StatelessWidget {
     var isModerator = false;
     if (post.target is CommunityTarget) {
       var roles = (post.target as CommunityTarget).postedCommunityMember?.roles;
-      if (roles != null &&
-          (roles.contains("moderator") ||
-              roles.contains("community-moderator"))) {
+      if (roles != null && (roles.contains("moderator") || roles.contains("community-moderator"))) {
         isModerator = true;
       }
     }
@@ -52,12 +50,9 @@ class PostDisplayName extends StatelessWidget {
             children: (!hideTarget &&
                     post.target != null &&
                     ((post.target is CommunityTarget) ||
-                        (post.target is UserTarget &&
-                            (post.target as UserTarget).targetUserId !=
-                                post.postedUserId)))
+                        (post.target is UserTarget && (post.target as UserTarget).targetUserId != post.postedUserId)))
                 ? [
-                    Flexible(
-                        flex: 4, child: DisplayName(context, post.postedUser)),
+                    Flexible(flex: 4, child: DisplayName(context, post.postedUser)),
                     if (post.postedUser?.isBrand ?? false) brandBadge(),
                     TargetArrow(),
                     Expanded(
@@ -65,36 +60,32 @@ class PostDisplayName extends StatelessWidget {
                       child: Row(
                         children: [
                           Flexible(child: PostTarget(context, post.target!)),
-                          if ((post.target as CommunityTarget)
-                                  .targetCommunity
-                                  ?.isOfficial ==
-                              true)
-                            verifiedBadge(),
+                          if ((post.target as CommunityTarget).targetCommunity?.isOfficial == true) verifiedBadge(),
                         ],
                       ),
                     )
                   ]
                 : [
-                    Flexible(
-                        fit: FlexFit.loose,
-                        child: DisplayName(context, post.postedUser)),
+                    Flexible(fit: FlexFit.loose, child: DisplayName(context, post.postedUser)),
                     if (post.postedUser?.isBrand ?? false) brandBadge(),
                   ],
           ),
+          const SizedBox(height: 2),
           Row(
             children: [
-              if (isModerator)  CommunityModeratorBadge(theme: theme),
-              if (isModerator)
+              if (isModerator) ...[
+                CommunityModeratorBadge(theme: theme),
                 Container(
-                    padding: const EdgeInsets.only(left: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
-                      "• ",
+                      "•",
                       style: TextStyle(
                         color: theme.baseColorShade2,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     )),
+              ],
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
@@ -138,29 +129,24 @@ class PostDisplayName extends StatelessWidget {
     VoidCallback? onTap;
     var targetName = '';
     if (target is CommunityTarget && target.targetCommunity != null) {
-      targetName =
-          (post.target as CommunityTarget).targetCommunity?.displayName ??
-              'Unknown';
+      targetName = (post.target as CommunityTarget).targetCommunity?.displayName ?? 'Unknown';
 
       onTap = () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AmityCommunityProfilePage(
-                communityId: target.targetCommunityId!),
+            builder: (context) => AmityCommunityProfilePage(communityId: target.targetCommunityId!),
           ),
         );
       };
     } else if (target is UserTarget) {
       if (post.postedUserId != target.targetUserId) {
         if (post.postedUserId != target.targetUserId) {
-          targetName =
-              (post.target as UserTarget).targetUser?.displayName ?? 'Unknown';
+          targetName = (post.target as UserTarget).targetUser?.displayName ?? 'Unknown';
         }
         onTap = () {
           final userId = target.targetUser?.userId;
           if (userId != null && userId.isNotEmpty) {
-            AmityUIKit4Manager.behavior.postContentComponentBehavior
-                .goToUserProfilePage(
+            AmityUIKit4Manager.behavior.postContentComponentBehavior.goToUserProfilePage(
               context,
               userId,
             );
@@ -208,10 +194,6 @@ class PostDisplayName extends StatelessWidget {
   }
 
   Widget verifiedBadge() {
-    return Container(
-        width: 23,
-        height: 23,
-        margin: const EdgeInsets.only(top: 2),
-        child: AmityOfficialBadgeElement());
+    return Container(width: 23, height: 23, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement());
   }
 }

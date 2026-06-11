@@ -11,11 +11,14 @@ class CommunityModeratorBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = theme.isLight ? theme.backgroundSubtle : theme.surfaceRaised;
+    final textColor = theme.isLight ? theme.textPrimary : theme.textSecondary;
+
     return Container(
-      padding: const EdgeInsets.only(left: 6, right: 6),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: theme.baseColorShade4,
+        color: bgColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -27,22 +30,20 @@ class CommunityModeratorBadge extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: SvgPicture.asset(
-                'assets/Icons/amity_ic_community_moderator.svg',
-                package: 'amity_uikit_beta_service',
-                colorFilter: ColorFilter.mode(
-                  theme.primaryColor,
-                  BlendMode.srcIn,
-                ),
-                width: 12,
-                height: 10,
+            SvgPicture.asset(
+              'assets/Icons/amity_ic_community_moderator.svg',
+              package: 'amity_uikit_beta_service',
+              colorFilter: ColorFilter.mode(
+                textColor,
+                BlendMode.srcIn,
               ),
+              width: 12,
+              height: 10,
             ),
-            const SizedBox(width: 3),
+            const SizedBox(width: 6),
             Text(
               context.l10n.general_moderator,
-              style: AmityTextStyle.captionSmall(theme.primaryColor),
+              style: AmityTextStyle.captionSmall(textColor),
             ),
           ],
         ),

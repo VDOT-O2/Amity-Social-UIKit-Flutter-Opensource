@@ -166,7 +166,7 @@ class CommunityPinComponent extends NewBaseComponent {
         },
         child: Column(
           children: [
-            if (index > 0) const SizedBox(height: 8),
+            if (index > 0) const SizedBox(height: 5),
             AmityPostContentComponent(
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
@@ -220,7 +220,7 @@ class CommunityPinComponent extends NewBaseComponent {
                   onPostDeleted: (AmityPost post) {},
                   onPostUpdated: (post) {},
                 )),
-            const SizedBox(height: 8),
+            const SizedBox(height: 5),
           ],
         ),
       );

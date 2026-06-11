@@ -115,7 +115,7 @@ class AmityGlobalFeedComponent extends NewBaseComponent {
                                         onPostDeleted: (AmityPost post) {},
                                         onPostUpdated: (post) {},
                                       )),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 5),
                                 ],
                               ),
                             );

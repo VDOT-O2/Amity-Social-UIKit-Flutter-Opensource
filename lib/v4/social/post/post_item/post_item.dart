@@ -114,7 +114,7 @@ class PostItem extends NewBaseComponent {
               ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
               child: getChildrenPostContent(context, post, hideMenu, () => _goToDetail(context, post, postAction)),
             ),
             hideMenu
