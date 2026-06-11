@@ -79,6 +79,11 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
     super.initState();
     controller = MentionTextEditingController();
     scrollController = ScrollController();
+    focusNode.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
 
     fetchUserInfo();
   }
@@ -87,6 +92,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
   void dispose() {
     controller.dispose();
     scrollController.dispose();
+    focusNode.dispose();
 
     super.dispose();
   }
@@ -112,8 +118,8 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
     );
   }
 
-  Widget renderComposer(BuildContext context, CommentCreatorState state, String referenceId,
-      AmityCommentReferenceType referenceType, String? communityId) {
+  Widget renderComposer(
+      BuildContext context, CommentCreatorState state, String referenceId, AmityCommentReferenceType referenceType, String? communityId) {
     AmityUser user = AmityCoreClient.getCurrentUser();
 
     return Padding(
@@ -141,15 +147,13 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
               ),
               Expanded(
                 child: Container(
-                  constraints: const BoxConstraints(maxHeight: 135),
+                  constraints: const BoxConstraints(minHeight: 45, maxHeight: 135),
                   height: state.currentHeight,
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                   decoration: ShapeDecoration(
-                    color: widget.theme.baseColorShade4,
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(color: widget.theme.backgroundColor),
-                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide.none,
+                      borderRadius: BorderRadius.circular(24),
                     ),
                   ),
                   child: MediaQuery.removePadding(
@@ -165,6 +169,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                         suggestionDisplayMode: SuggestionDisplayMode.bottom,
                         mentionContentType: MentionContentType.comment,
                         communityId: communityId,
+                        focusNode: focusNode,
                         controller: controller,
                         scrollController: scrollController,
                         onChanged: (value) {
@@ -176,21 +181,37 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           isDense: true,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          filled: true,
+                          fillColor: WidgetStateColor.resolveWith(
+                            (states) => states.contains(WidgetState.focused)
+                                ? widget.theme.surfaceRaised
+                                : widget.theme.surfaceCard,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide(
+                              color: widget.theme.border,
+                              width: 1,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           hintText: context.l10n.comment_create_hint,
                           hintStyle: TextStyle(
-                            color: widget.theme.baseColorShade2,
+                            color: widget.theme.textMuted,
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        suggestionOverlayBottomPaddingWhenKeyboardClosed:
-                            state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
-                        suggestionOverlayBottomPaddingWhenKeyboardOpen:
-                            state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
+                        suggestionOverlayBottomPaddingWhenKeyboardClosed: state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
+                        suggestionOverlayBottomPaddingWhenKeyboardOpen: state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
                       ),
                     ),
                   ),

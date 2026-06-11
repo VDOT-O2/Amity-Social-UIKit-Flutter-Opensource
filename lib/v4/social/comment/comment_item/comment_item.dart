@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/amity_uikit.dart';
@@ -211,13 +209,27 @@ class CommentItem extends BaseElement {
                                                   textAlignVertical: TextAlignVertical.bottom,
                                                   decoration: InputDecoration(
                                                     isDense: true,
-                                                    border: InputBorder.none,
-                                                    enabledBorder: InputBorder.none,
-                                                    focusedBorder: InputBorder.none,
+                                                    filled: true,
+                                                    fillColor: theme.surfaceRaised,
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(24),
+                                                      borderSide: BorderSide.none,
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(24),
+                                                      borderSide: BorderSide.none,
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(24),
+                                                      borderSide: BorderSide(
+                                                        color: theme.border,
+                                                        width: 1,
+                                                      ),
+                                                    ),
                                                     contentPadding:
-                                                        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                                        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                                     hintText: context.l10n.comment_create_hint,
-                                                    hintStyle: AmityTextStyle.body(theme.baseColor),
+                                                    hintStyle: AmityTextStyle.body(theme.textMuted),
                                                   ),
                                                 ),
                                               ),
@@ -276,12 +288,26 @@ class CommentItem extends BaseElement {
                                         textAlignVertical: TextAlignVertical.top, // Align text at the top
                                         decoration: InputDecoration(
                                           isDense: true,
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          border: InputBorder.none,
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                          filled: true,
+                                          fillColor: theme.surfaceRaised,
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                            borderSide: BorderSide(
+                                              color: theme.border,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                           hintText: context.l10n.comment_create_hint,
-                                          hintStyle: AmityTextStyle.body(theme.baseColor),
+                                          hintStyle: AmityTextStyle.body(theme.textMuted),
                                         ),
                                       ),
                                     ),
