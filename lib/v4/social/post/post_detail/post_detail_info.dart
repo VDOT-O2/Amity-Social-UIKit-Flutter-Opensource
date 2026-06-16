@@ -82,13 +82,17 @@ class PostDetailInfo extends NewBaseComponent {
     if (post.myReactions?.isNotEmpty ?? false) {
       return post.myReactions!.first == 'like'
           ? SvgPicture.asset(
-              'assets/Icons/amity_ic_post_reaction_like.svg',
+              'assets/Icons/amity_ic_post_quick_reaction.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
+              colorFilter: ColorFilter.mode(
+                theme.vdotGreen,
+                BlendMode.srcIn,
+              ),
             )
           : SvgPicture.asset(
-              'assets/Icons/amity_ic_post_reaction_like.svg',
+              'assets/Icons/amity_ic_post_reaction_heart.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
@@ -102,9 +106,9 @@ class PostDetailInfo extends NewBaseComponent {
     final reactionCount = post.reactionCount ?? 0;
     final text = context.l10n.post_like_count(reactionCount);
     return Text(text,
-        style: TextStyle(
-          color: theme.baseColorShade2,
-          fontSize: 13,
+        style: TextStyle( 
+          color: theme.textPrimary,
+          fontSize: 12,
           fontWeight: FontWeight.w400,
         ));
   }
@@ -114,8 +118,8 @@ class PostDetailInfo extends NewBaseComponent {
     final text = context.l10n.post_comment_count(commentCount);
     return Text(text,
         style: TextStyle(
-          color: theme.baseColorShade2,
-          fontSize: 13,
+          color: theme.textPrimary,
+          fontSize: 12,
           fontWeight: FontWeight.w400,
         ));
   }

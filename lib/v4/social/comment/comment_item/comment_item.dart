@@ -61,8 +61,7 @@ class CommentItem extends BaseElement {
     });
   }
 
-  Widget buildCommentItem(
-      BuildContext context, AmityComment comment, bool isReacting, bool isExpanded, bool isEditing) {
+  Widget buildCommentItem(BuildContext context, AmityComment comment, bool isReacting, bool isExpanded, bool isEditing) {
     // Check if comment is deleted
     if (comment.isDeleted ?? false) {
       return buildDeletedComment(context, comment);
@@ -146,8 +145,7 @@ class CommentItem extends BaseElement {
                                         onTap: () {
                                           final userId = comment.user?.userId;
                                           if (userId != null && userId.isNotEmpty) {
-                                            AmityUIKit4Manager.behavior.commentTrayBehavior
-                                                .goToUserProfilePage(context, userId);
+                                            AmityUIKit4Manager.behavior.commentTrayBehavior.goToUserProfilePage(context, userId);
                                           }
                                         },
                                         child: Row(
@@ -226,8 +224,7 @@ class CommentItem extends BaseElement {
                                                         width: 1,
                                                       ),
                                                     ),
-                                                    contentPadding:
-                                                        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                                     hintText: context.l10n.comment_create_hint,
                                                     hintStyle: AmityTextStyle.body(theme.textMuted),
                                                   ),
@@ -319,12 +316,8 @@ class CommentItem extends BaseElement {
                         ),
                       ),
                 const SizedBox(height: 8),
-                (isEditing)
-                    ? renderCommentEditAction(context, comment)
-                    : renderCommentBottom(context, comment, isReacting),
-                (isExpanded)
-                    ? renderReplyExpanded(comment, parentScrollController)
-                    : renderReplyCollapsed(context, comment),
+                (isEditing) ? renderCommentEditAction(context, comment) : renderCommentBottom(context, comment, isReacting),
+                (isExpanded) ? renderReplyExpanded(comment, parentScrollController) : renderReplyCollapsed(context, comment),
               ],
             ),
           )
@@ -692,8 +685,7 @@ class CommentItem extends BaseElement {
     );
   }
 
-  Widget renderReactionPreview(
-      BuildContext context, AmityComment comment, bool isReacting, bool shouldAllowInteraction) {
+  Widget renderReactionPreview(BuildContext context, AmityComment comment, bool isReacting, bool shouldAllowInteraction) {
     final hasMyReactions = comment.hasMyReactions();
     var reactionCount = comment.reactionCount ?? 0;
     if (isReacting) {
@@ -737,8 +729,7 @@ class CommentItem extends BaseElement {
     );
   }
 
-  Widget getReactionIcon(
-      BuildContext context, String commentId, bool hasReactions, bool isReacting, bool hasMyReactions) {
+  Widget getReactionIcon(BuildContext context, String commentId, bool hasReactions, bool isReacting, bool hasMyReactions) {
     void showReactionsBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -782,17 +773,23 @@ class CommentItem extends BaseElement {
     }
     if (showReactionIcon) {
       return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          showReactionsBottomSheet();
-        },
-        child: SvgPicture.asset(
-          'assets/Icons/amity_ic_post_reaction_like.svg',
-          package: 'amity_uikit_beta_service',
-          width: 20,
-          height: 20,
-        ),
-      );
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            showReactionsBottomSheet();
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: SvgPicture.asset(
+              'assets/Icons/amity_ic_post_quick_reaction.svg',
+              package: 'amity_uikit_beta_service',
+              width: 15,
+              height: 15,
+              colorFilter: ColorFilter.mode(
+                theme.vdotGreen,
+                BlendMode.srcIn,
+              ),
+            ),
+          ));
     } else {
       return Container();
     }
@@ -837,8 +834,7 @@ class CommentItem extends BaseElement {
     userActions.add(editAction);
 
     // Delete
-    final deleteActionTitle =
-        (comment.parentId == null) ? context.l10n.comment_delete : context.l10n.comment_reply_delete;
+    final deleteActionTitle = (comment.parentId == null) ? context.l10n.comment_delete : context.l10n.comment_reply_delete;
     final deleteAction = BottomSheetMenuOption(
         title: deleteActionTitle,
         icon: "assets/Icons/amity_ic_delete.svg",
@@ -848,8 +844,7 @@ class CommentItem extends BaseElement {
           Navigator.pop(context);
 
           final alertTitle = (comment.parentId == null) ? localize.comment_delete : localize.comment_reply_delete;
-          final alertContent =
-              (comment.parentId == null) ? localize.post_comment.toLowerCase() : localize.comment_reply.toLowerCase();
+          final alertContent = (comment.parentId == null) ? localize.post_comment.toLowerCase() : localize.comment_reply.toLowerCase();
 
           showConfirmationAlert(context, alertTitle, alertContent, localize.general_delete, onDelete);
         });
@@ -874,8 +869,7 @@ class CommentItem extends BaseElement {
     final isFlaggedByMe = comment.isFlaggedByMe;
     var reportButtonLabel = "";
     if (isFlaggedByMe) {
-      reportButtonLabel =
-          (comment.parentId == null) ? context.l10n.comment_unreport : context.l10n.comment_reply_unreport;
+      reportButtonLabel = (comment.parentId == null) ? context.l10n.comment_unreport : context.l10n.comment_reply_unreport;
     } else {
       reportButtonLabel = (comment.parentId == null) ? context.l10n.comment_report : context.l10n.comment_reply_report;
     }

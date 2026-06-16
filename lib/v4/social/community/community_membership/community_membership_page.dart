@@ -181,7 +181,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
                     height: 16,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: theme.primaryColor.blend(ColorBlendingOption.shade3),
+                      color: theme.textFieldBackground,
                     ),
                     child: Center(
                       child: SvgPicture.asset(
@@ -190,6 +190,10 @@ class AmityCommunityMembershipPage extends NewBasePage {
                         height: 10,
                         package: 'amity_uikit_beta_service',
                         fit: BoxFit.contain,
+                        colorFilter: ColorFilter.mode(
+                          theme.textPrimary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),

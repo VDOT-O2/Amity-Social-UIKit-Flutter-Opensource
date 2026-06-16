@@ -114,9 +114,10 @@ class PostItem extends NewBaseComponent {
               ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
               child: getChildrenPostContent(context, post, hideMenu, () => _goToDetail(context, post, postAction)),
             ),
+            const SizedBox(height: 12),
             hideMenu
                 ? PostBottomNonMember()
                 : getPostBottom(
@@ -160,6 +161,10 @@ class PostItem extends NewBaseComponent {
       mentionedUsers.sort((a, b) => a.index.compareTo(b.index));
     }
 
+    if (textContent.isEmpty) {
+      return const SizedBox(height: 16);
+    }
+    
     // Return a RichText widget with the computed spans.
     return Container(
         width: double.infinity,

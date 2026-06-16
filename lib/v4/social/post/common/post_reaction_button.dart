@@ -1,7 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/common/post_action.dart';
-import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,14 +14,18 @@ class PostReactionButton extends StatelessWidget {
   final bool isReacting;
   final bool showLabel;
   final bool isOptimisticUi;
+  final AmityThemeColor theme;
+  final VoidCallback? onReactionLabelTap;
 
   const PostReactionButton({
     super.key,
     required this.post,
     required this.action,
     required this.isReacting,
+    required this.theme,
     this.showLabel = false,
     this.isOptimisticUi = false,
+    this.onReactionLabelTap,
   });
 
   @override
@@ -30,92 +34,95 @@ class PostReactionButton extends StatelessWidget {
       'assets/Icons/amity_ic_post_quick_reaction.svg',
       package: 'amity_uikit_beta_service',
       width: 20,
-      height: 16,
+      height: 20,
     );
     if (post.myReactions?.isNotEmpty ?? false) {
       reactionIcon = post.myReactions!.first == 'like'
           ? SvgPicture.asset(
-              'assets/Icons/amity_ic_post_reaction_like.svg',
+              'assets/Icons/amity_ic_post_quick_reaction.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
+              colorFilter: ColorFilter.mode(
+                theme.vdotGreen,
+                BlendMode.srcIn,
+              ),
             )
           : SvgPicture.asset(
-              'assets/Icons/amity_ic_post_reaction_like.svg',
+              'assets/Icons/amity_ic_post_reaction_heart.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
             );
     }
-    var iconAsset = 'assets/Icons/amity_ic_post_quick_reaction.svg';
-    if (post.myReactions?.isNotEmpty ?? false) {
-      iconAsset = post.myReactions!.first == 'like'
-          ? 'assets/Icons/amity_ic_post_reaction_like.svg'
-          : 'assets/Icons/amity_ic_post_reaction_heart.svg';
-    }
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        if (!isReacting) {
-          if (post.myReactions?.isNotEmpty ?? false) {
-            action.onRemoveReaction("like");
-          } else {
-            action.onAddReaction("like");
-          }
-          HapticFeedback.lightImpact();
-        }
-      },
-      child: Container(
-        height: 44,
-        color: Colors.transparent,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            (isReacting && isOptimisticUi)
+    // var iconAsset = 'assets/Icons/amity_ic_post_quick_reaction.svg';
+    // if (post.myReactions?.isNotEmpty ?? false) {
+    //   iconAsset = post.myReactions!.first == 'like'
+    //       ? 'assets/Icons/amity_ic_post_reaction_like.svg'
+    //       : 'assets/Icons/amity_ic_post_reaction_heart.svg';
+    // }
+    return Container(
+      height: 44,
+      color: Colors.transparent,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              if (!isReacting) {
+                if (post.myReactions?.isNotEmpty ?? false) {
+                  action.onRemoveReaction("like");
+                } else {
+                  action.onAddReaction("like");
+                }
+                HapticFeedback.lightImpact();
+              }
+            },
+            child: (isReacting && isOptimisticUi)
                 ? Container(
                     alignment: Alignment.center,
                     width: 20,
                     height: 20,
-                    child: loadingIndicator(
-                        context, !(post.myReactions?.isNotEmpty ?? false)))
+                    child: loadingIndicator(context, !(post.myReactions?.isNotEmpty ?? false)))
                 : Container(
                     alignment: Alignment.center,
                     width: 20,
                     height: 20,
-                    child: reactionIcon),
-            const SizedBox(width: 4),
-            (isReacting && isOptimisticUi)
+                    margin: const EdgeInsets.only(bottom: 4),
+                    child: reactionIcon,
+                  ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: onReactionLabelTap,
+            child: (isReacting && isOptimisticUi)
                 ? getReactingLabel(context, post, showLabel)
                 : getReactionLabel(context, post, showLabel),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget getReactionLabel(
-      BuildContext context, AmityPost post, bool showLabel) {
+  Widget getReactionLabel(BuildContext context, AmityPost post, bool showLabel) {
     final appTheme = Provider.of<ConfigProvider>(context).getTheme(null, null);
-    bool hasMyReaction = post.myReactions?.isNotEmpty ?? false;
-    var text = (post.reactionCount ?? 0).formattedCompactString();
-    if (showLabel) {
-      text = hasMyReaction ? context.l10n.post_like: context.l10n.post_like;
-    }
+    var text = showLabel ?  context.l10n.post_like :  context.l10n.post_like_count(post.reactionCount ?? 0);
+
     return Text(
       text,
       style: TextStyle(
-        color: hasMyReaction ? appTheme.primaryColor : const Color(0xFF898E9E),
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
+        color: appTheme.textPrimary,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
 
-  Widget getReactingLabel(
-      BuildContext context, AmityPost post, bool showLabel) {
-    final appTheme = Provider.of<ConfigProvider>(context).getTheme(null, null);
+  Widget getReactingLabel(BuildContext context, AmityPost post, bool showLabel) {
     bool hasMyReaction = post.myReactions?.isNotEmpty ?? false;
     final isAdding = !hasMyReaction;
     var count = post.reactionCount ?? 0;
@@ -124,16 +131,14 @@ class PostReactionButton extends StatelessWidget {
     } else {
       count--;
     }
-    var text = count.formattedCompactString();
-    if (showLabel) {
-      text = hasMyReaction ? context.l10n.post_like : context.l10n.post_like;
-    }
+    var text = showLabel ?  context.l10n.post_like :  context.l10n.post_like_count(count);
+    
     return Text(
       text,
       style: TextStyle(
-        color: !hasMyReaction ? appTheme.primaryColor : const Color(0xFF898E9E),
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
+        color: theme.textPrimary,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -144,12 +149,15 @@ class PostReactionButton extends StatelessWidget {
             alignment: Alignment.center,
             height: 44,
             child: SvgPicture.asset(
-              'assets/Icons/amity_ic_post_reaction_like.svg',
+              'assets/Icons/amity_ic_post_quick_reaction.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
-            ),
-          )
+              colorFilter: ColorFilter.mode(
+                theme.vdotGreen,
+                BlendMode.srcIn,
+              ),
+            ))
         : Container(
             alignment: Alignment.center,
             height: 44,
@@ -157,7 +165,7 @@ class PostReactionButton extends StatelessWidget {
               'assets/Icons/amity_ic_post_quick_reaction.svg',
               package: 'amity_uikit_beta_service',
               width: 20,
-              height: 16,
+              height: 20,
             ),
           );
   }

@@ -53,7 +53,7 @@ class AmityTopSearchBarComponent extends NewBaseComponent {
                         'assets/Icons/amity_ic_navigation_search.svg',
                         package: 'amity_uikit_beta_service',
                         colorFilter: ColorFilter.mode(
-                          theme.baseColorShade2,
+                          theme.textSecondary,
                           BlendMode.srcIn,
                         ),
                       ),

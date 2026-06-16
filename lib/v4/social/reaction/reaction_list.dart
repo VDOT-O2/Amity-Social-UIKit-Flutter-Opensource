@@ -38,8 +38,7 @@ class AmityReactionList extends NewBaseComponent {
     }
 
     return BlocProvider(
-      create: (context) => ReactionListBloc(
-          referenceId: referenceId, referenceType: referenceType),
+      create: (context) => ReactionListBloc(referenceId: referenceId, referenceType: referenceType),
       child: Builder(
         builder: (context) {
           // Initialize the bloc
@@ -67,11 +66,10 @@ class AmityReactionList extends NewBaseComponent {
       child: Column(
         children: [
           bottomSheetHandle(),
-          _buildReactionTabs(state is ReactionListLoaded ||
-                  state is ReactionListFiltering ||
-                  (state is ReactionListLoading && state.reactionMap != null)
-              ? state.reactionMap
-              : null),
+          _buildReactionTabs(
+              state is ReactionListLoaded || state is ReactionListFiltering || (state is ReactionListLoading && state.reactionMap != null)
+                  ? state.reactionMap
+                  : null),
           _buildDivider(),
           Expanded(
             child: _buildListBasedOnState(context, state),
@@ -85,8 +83,7 @@ class AmityReactionList extends NewBaseComponent {
   Widget _buildListBasedOnState(BuildContext context, ReactionListState state) {
     if (state is ReactionListLoaded) {
       return _buildReactionListView(context, state.list);
-    } else if (state is ReactionListFiltering ||
-        (state is ReactionListLoading && state.reactionMap != null)) {
+    } else if (state is ReactionListFiltering || (state is ReactionListLoading && state.reactionMap != null)) {
       final skeletonCount = _calculateItemCount(state.reactionMap);
       return buildSkeletonListView(itemCount: skeletonCount);
     } else {
@@ -97,12 +94,9 @@ class AmityReactionList extends NewBaseComponent {
   // Initialize user reaction data for messages
   Future<void> _initUserReactionData() async {
     try {
-      final message =
-          await AmityChatClient.newMessageRepository().getMessage(referenceId);
+      final message = await AmityChatClient.newMessageRepository().getMessage(referenceId);
       final userReactions = message.myReactions;
-      _userReactionName = (userReactions != null && userReactions.isNotEmpty)
-          ? userReactions.first
-          : null;
+      _userReactionName = (userReactions != null && userReactions.isNotEmpty) ? userReactions.first : null;
     } catch (e) {
       debugPrint('Error fetching message for user reaction: $e');
     }
@@ -120,22 +114,18 @@ class AmityReactionList extends NewBaseComponent {
   }
 
   // Build the reaction list view with optional user reaction at top
-  Widget _buildReactionListView(
-      BuildContext context, List<AmityReaction> reactions) {
+  Widget _buildReactionListView(BuildContext context, List<AmityReaction> reactions) {
     final ScrollController scrollController = ScrollController();
 
     // Find user's reaction and prepare data for display
     final userReactionToShow = _getUserReaction(reactions);
 
     // Filter list to exclude user's reaction if showing separately
-    final filteredList = userReactionToShow != null
-        ? reactions.where((r) => r != userReactionToShow).toList()
-        : reactions;
+    final filteredList = userReactionToShow != null ? reactions.where((r) => r != userReactionToShow).toList() : reactions;
 
     // Setup scroll listener for pagination
     scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
         context.read<ReactionListBloc>().add(ReactionListEventLoadMore());
       }
     });
@@ -157,17 +147,14 @@ class AmityReactionList extends NewBaseComponent {
   // Get user's reaction if it should be shown
   AmityReaction? _getUserReaction(List<AmityReaction> reactions) {
     // Only show user reaction if current filter allows it
-    if (!_shouldShowUserReaction(
-        filter: _currentReactionFilter, userReaction: _userReactionName)) {
+    if (!_shouldShowUserReaction(filter: _currentReactionFilter, userReaction: _userReactionName)) {
       return null;
     }
 
     // Find user reaction in the list
     if (_userReactionName != null && _userReactionName!.isNotEmpty) {
       _userReaction = reactions.firstWhere(
-        (reaction) =>
-            reaction.creator?.userId == AmityCoreClient.getUserId() &&
-            reaction.reactionName == _userReactionName,
+        (reaction) => reaction.creator?.userId == AmityCoreClient.getUserId() && reaction.reactionName == _userReactionName,
         orElse: () => AmityReaction(),
       );
 
@@ -212,8 +199,7 @@ class AmityReactionList extends NewBaseComponent {
 
     if (reactionMap.isNotEmpty) {
       return _buildMessageReactionTabs(reactionMap);
-    } else if ((referenceType == AmityReactionReferenceType.POST ||
-            referenceType == AmityReactionReferenceType.COMMENT) &&
+    } else if ((referenceType == AmityReactionReferenceType.POST || referenceType == AmityReactionReferenceType.COMMENT) &&
         reactionCount != null) {
       return _buildPostCommentReactionTab();
     }
@@ -237,10 +223,7 @@ class AmityReactionList extends NewBaseComponent {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: List.generate(
-                tabsData.length,
-                (index) =>
-                    _buildTabItem(context, setState, tabsData[index], index)),
+            children: List.generate(tabsData.length, (index) => _buildTabItem(context, setState, tabsData[index], index)),
           ),
         ),
       );
@@ -248,24 +231,19 @@ class AmityReactionList extends NewBaseComponent {
   }
 
   // Build individual tab item
-  Widget _buildTabItem(BuildContext context, StateSetter setState,
-      Map<String, dynamic> tabData, int index) {
+  Widget _buildTabItem(BuildContext context, StateSetter setState, Map<String, dynamic> tabData, int index) {
     final bool isSelected = _selectedTabIndex == index;
     final textColor = isSelected ? theme.primaryColor : theme.baseColorShade2;
     final tabTextStyle = AmityTextStyle.titleBold(textColor);
-    final tabDataCount =
-        ((tabData['count'] ?? 0) as int).formattedCompactString();
+    final tabDataCount = ((tabData['count'] ?? 0) as int).formattedCompactString();
 
-    final String displayText =
-        tabData['type'] == 'all' ? "All $tabDataCount" : tabDataCount;
+    final String displayText = tabData['type'] == 'all' ? "All $tabDataCount" : tabDataCount;
 
-    final contentWidth =
-        _calculateTabWidth(displayText, tabData['imagePath'], tabTextStyle);
+    final contentWidth = _calculateTabWidth(displayText, tabData['imagePath'], tabTextStyle);
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () =>
-          _handleTabTap(context, setState, index, tabData['reactionName']),
+      onTap: () => _handleTabTap(context, setState, index, tabData['reactionName']),
       child: Container(
         padding: EdgeInsets.only(
           left: index == 0 ? 16 : 10,
@@ -307,16 +285,13 @@ class AmityReactionList extends NewBaseComponent {
   }
 
   // Handle tab tap
-  void _handleTabTap(BuildContext context, StateSetter setState, int index,
-      String? reactionName) {
+  void _handleTabTap(BuildContext context, StateSetter setState, int index, String? reactionName) {
     setState(() {
       _selectedTabIndex = index;
     });
 
     _currentReactionFilter = reactionName;
-    context
-        .read<ReactionListBloc>()
-        .add(ReactionListEventFilterByName(reactionName));
+    context.read<ReactionListBloc>().add(ReactionListEventFilterByName(reactionName));
   }
 
   // Generate tabs data from reaction map
@@ -327,7 +302,7 @@ class AmityReactionList extends NewBaseComponent {
     // Create individual reaction tabs
     reactionMap.forEach((reactionName, count) {
       final reactionConfig = configProvider.getReaction(reactionName);
-
+      
       reactionTabs.add({
         'type': 'reaction',
         'count': count,
@@ -338,8 +313,7 @@ class AmityReactionList extends NewBaseComponent {
     });
 
     // Sort by count (highest to lowest)
-    reactionTabs
-        .sort((a, b) => (b['count'] as int).compareTo(a['count'] as int));
+    reactionTabs.sort((a, b) => (b['count'] as int).compareTo(a['count'] as int));
 
     // Add "All" tab if multiple reactions
     if (reactionMap.length > 1) {
@@ -382,15 +356,19 @@ class AmityReactionList extends NewBaseComponent {
             Row(
               children: [
                 SvgPicture.asset(
-                  likeReaction.imagePath,
+                  'assets/Icons/amity_ic_post_quick_reaction.svg',
                   package: 'amity_uikit_beta_service',
                   width: 20,
                   height: 20,
+                  colorFilter: ColorFilter.mode(
+                    theme.vdotGreen,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   countText,
-                  style: AmityTextStyle.titleBold(theme.primaryColor),
+                  style: AmityTextStyle.titleBold(theme.textPrimary),
                 ),
               ],
             ),
@@ -398,9 +376,7 @@ class AmityReactionList extends NewBaseComponent {
             Container(
               margin: const EdgeInsets.only(top: 4),
               height: 2,
-              width: _calculateTabWidth(countText, likeReaction.imagePath,
-                      AmityTextStyle.titleBold(theme.primaryColor)) +
-                  28,
+              width: _calculateTabWidth(countText, likeReaction.imagePath, AmityTextStyle.titleBold(theme.primaryColor)) + 28,
               decoration: BoxDecoration(
                 color: theme.primaryColor,
                 borderRadius: BorderRadius.circular(2.5),
@@ -442,8 +418,7 @@ class AmityReactionList extends NewBaseComponent {
             Container(
               width: 64,
               height: 56,
-              padding:
-                  const EdgeInsets.only(top: 8, left: 16, right: 8, bottom: 8),
+              padding: const EdgeInsets.only(top: 8, left: 16, right: 8, bottom: 8),
               child: const SkeletonImage(
                 height: 40,
                 width: 40,
@@ -460,8 +435,9 @@ class AmityReactionList extends NewBaseComponent {
 
   // Builds a single reaction row
   Widget reactionRow(BuildContext context, AmityReaction reaction) {
-    final isCurrentUser =
-        reaction.creator?.userId == AmityCoreClient.getUserId();
+    final isCurrentUser = reaction.creator?.userId == AmityCoreClient.getUserId();
+
+    final isLike = reaction.reactionName == "like";
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -487,8 +463,7 @@ class AmityReactionList extends NewBaseComponent {
                       fontFamily: AmityTextStyle.fontFamily,
                     ),
                   ),
-                  if (referenceType == AmityReactionReferenceType.MESSAGE &&
-                      isCurrentUser)
+                  if (referenceType == AmityReactionReferenceType.MESSAGE && isCurrentUser)
                     Text(
                       context.l10n.reaction_tap_to_remove,
                       style: AmityTextStyle.caption(theme.baseColorShade1),
@@ -497,10 +472,16 @@ class AmityReactionList extends NewBaseComponent {
               ),
             ),
             SvgPicture.asset(
-              configProvider.getReaction(reaction.reactionName ?? "").imagePath,
+              isLike ? 'assets/Icons/amity_ic_post_quick_reaction.svg' : configProvider.getReaction(reaction.reactionName ?? "").imagePath,
               package: 'amity_uikit_beta_service',
               width: 24,
               height: 24,
+              colorFilter: isLike
+                  ? ColorFilter.mode(
+                      theme.vdotGreen,
+                      BlendMode.srcIn,
+                    )
+                  : null,
             ),
             const SizedBox(width: 16),
           ],
@@ -510,13 +491,10 @@ class AmityReactionList extends NewBaseComponent {
   }
 
   // Handle reaction tap
-  void _handleReactionTap(
-      BuildContext context, AmityReaction reaction, bool isCurrentUser) {
+  void _handleReactionTap(BuildContext context, AmityReaction reaction, bool isCurrentUser) {
     if (referenceType == AmityReactionReferenceType.MESSAGE && isCurrentUser) {
       // Remove user's reaction
-      AmityChatClient.newMessageRepository()
-          .getMessage(referenceId)
-          .then((message) {
+      AmityChatClient.newMessageRepository().getMessage(referenceId).then((message) {
         message.react().removeReaction(reaction.reactionName ?? "");
         Navigator.of(context).pop();
       });
@@ -524,8 +502,7 @@ class AmityReactionList extends NewBaseComponent {
       // Navigate to user profile
       final userId = reaction.creator?.userId;
       if (userId != null) {
-        AmityUIKit4Manager.behavior.postContentComponentBehavior
-            .goToUserProfilePage(
+        AmityUIKit4Manager.behavior.postContentComponentBehavior.goToUserProfilePage(
           context,
           userId,
         );

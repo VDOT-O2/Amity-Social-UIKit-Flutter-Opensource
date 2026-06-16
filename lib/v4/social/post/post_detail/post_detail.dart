@@ -88,14 +88,14 @@ class PostDetail extends NewBaseComponent {
                   hideMenu: hideMenu,
                   theme: theme),
             ),
-            PostDetailInfo(post: post, componentId: ''),
+            hideMenu ? PostDetailInfo(post: post, componentId: '') : const SizedBox.shrink(),
             hideMenu
                 ? PostBottomNonMember()
                 : PostItemBottom(
                     post: post,
                     action: postAction,
                     isReacting: state.isReacting,
-                    hideReactionCount: true,
+                    hideReactionCount: false,
                     componentId: '',
                     isOptimisticUi: false,
                   ),
