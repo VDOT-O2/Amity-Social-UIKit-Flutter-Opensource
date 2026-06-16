@@ -446,7 +446,7 @@ class CommentTextField extends StatelessWidget {
                         ),
                         onPressed: navigateToFullCommentPage,
                       ),
-                      hintText: 'Say something nice...',
+                      hintText: 'Type a message...',
                       fillColor:
                           Colors.grey[300], // Set the background color to grey
                       filled: true, // Enable the fill color

@@ -164,7 +164,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                       controller: scrollController,
                       child: MentionTextField(
                         theme: widget.theme,
-                        style: AmityTextStyle.body(widget.theme.baseColor),
+                        style: AmityTextStyle.body(widget.theme.textPrimary),
                         suggestionMaxRow: 2,
                         suggestionDisplayMode: SuggestionDisplayMode.bottom,
                         mentionContentType: MentionContentType.comment,

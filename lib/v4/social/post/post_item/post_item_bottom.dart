@@ -103,6 +103,10 @@ class PostItemBottom extends NewBaseComponent {
           package: 'amity_uikit_beta_service',
           width: 20,
           height: 17,
+          colorFilter: ColorFilter.mode(
+            theme.textPrimary,
+            BlendMode.srcIn,
+          ),
         ),
         const SizedBox(width: 8),
         Text(

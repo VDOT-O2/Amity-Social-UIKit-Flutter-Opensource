@@ -200,7 +200,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get poll_question_hint => 'What\'s your poll question?';
 
   @override
-  String get comment_create_hint => 'Say something nice...';
+  String get comment_create_hint => 'Type a message...';
 
   @override
   String get comment_reply => 'Reply';

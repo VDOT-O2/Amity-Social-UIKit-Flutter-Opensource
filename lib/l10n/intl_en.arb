@@ -237,7 +237,7 @@
   "@poll_question_hint": {
     "description": "Hint text for poll question input"
   },
-  "comment_create_hint": "Say something nice...",
+  "comment_create_hint": "Type a message...",
   "@comment_create_hint": {
     "description": "Hint text for comment input"
   },

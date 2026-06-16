@@ -426,7 +426,7 @@ abstract class AppLocalizations {
   /// Hint text for comment input
   ///
   /// In en, this message translates to:
-  /// **'Say something nice...'**
+  /// **'Type a message...'**
   String get comment_create_hint;
 
   /// Label for reply button
