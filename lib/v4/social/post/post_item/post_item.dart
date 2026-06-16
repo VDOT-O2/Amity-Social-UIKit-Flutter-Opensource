@@ -107,17 +107,18 @@ class PostItem extends NewBaseComponent {
               action: postAction,
             ),
             getTextPostContent(context, post),
-            if (post.children?.isEmpty ?? true && post.data is TextData)
+            if (post.children?.isEmpty ?? true && post.data is TextData) ...[
               Container(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: PreviewLinkWidget(text: (post.data as TextData).text ?? '', theme: theme),
               ),
+            ],
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: getChildrenPostContent(context, post, hideMenu, () => _goToDetail(context, post, postAction)),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             hideMenu
                 ? PostBottomNonMember()
                 : getPostBottom(
@@ -164,7 +165,7 @@ class PostItem extends NewBaseComponent {
     if (textContent.isEmpty) {
       return const SizedBox(height: 16);
     }
-    
+
     // Return a RichText widget with the computed spans.
     return Container(
         width: double.infinity,
@@ -200,18 +201,25 @@ class PostItem extends NewBaseComponent {
 
   Widget getChildrenPostContent(BuildContext context, AmityPost post, bool hideMenu, Function goToDetail) {
     final noChildrenPost = post.children?.isEmpty ?? true;
+    Widget? contentWidget;
+
     if (noChildrenPost) {
       return Container();
     } else if (post.children!.first.data is ImageData) {
-      return PostContentImage(posts: post.children!, theme: theme);
+      contentWidget = PostContentImage(posts: post.children!, theme: theme);
     } else if (post.children!.first.data is VideoData) {
-      return PostContentVideo(posts: post.children!, theme: theme);
+      contentWidget = PostContentVideo(posts: post.children!, theme: theme);
     } else if (post.children!.first.data is PollData) {
-      return PostPollContent(
+      contentWidget = PostPollContent(
           post: post.children!.first, style: AmityPostContentComponentStyle.feed, theme: theme, hideMenu: hideMenu, goToDetail: goToDetail);
     } else {
       return Container();
     }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: contentWidget,
+    );
   }
 
   Widget getPostBottom({required AmityPost post, required AmityPostAction action, bool isReacting = false}) {

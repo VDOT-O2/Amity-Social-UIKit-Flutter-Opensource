@@ -95,8 +95,7 @@ class MessageBubbleView extends NewBaseComponent {
         builder: (context, state) {
           AmityMessage? parentMessage;
           if (message.parentId != null) {
-            final cacheMessage =
-                ParentMessageCache().getMessage(message.parentId!);
+            final cacheMessage = ParentMessageCache().getMessage(message.parentId!);
             if (cacheMessage != null) {
               parentMessage = cacheMessage;
             } else if (state.parentMessage != null) {
@@ -109,9 +108,7 @@ class MessageBubbleView extends NewBaseComponent {
           final reactionMap = message.reactions?.reactions;
           List<String?> imagePaths = [];
           bool showReaction = false;
-          if (message.reactionCount != null &&
-              message.reactionCount! > 0 &&
-              message.isDeleted == false) {
+          if (message.reactionCount != null && message.reactionCount! > 0 && message.isDeleted == false) {
             showReaction = true;
           }
           if (reactionMap != null) {
@@ -122,8 +119,7 @@ class MessageBubbleView extends NewBaseComponent {
                 }
                 return b.value.compareTo(a.value);
               });
-            imagePaths =
-                sortedEntries.where((entry) => entry.value > 0).map((entry) {
+            imagePaths = sortedEntries.where((entry) => entry.value > 0).map((entry) {
               return configProvider.getReaction(entry.key).imagePath;
             }).toList();
           }
@@ -142,30 +138,25 @@ class MessageBubbleView extends NewBaseComponent {
               child: Stack(
                 children: [
                   Column(
-                    crossAxisAlignment:
-                        message.userId == AmityCoreClient.getUserId()
-                            ? CrossAxisAlignment.end
-                            : CrossAxisAlignment.start,
+                    crossAxisAlignment: message.userId == AmityCoreClient.getUserId() ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                     children: [
-                      if (message.parentId != null &&
-                          message.isDeleted == false)
-                        _buildParentMessage(message, parentMessage, context),
+                      if (message.parentId != null && message.isDeleted == false) _buildParentMessage(message, parentMessage, context),
                       if (!isUser && (isGroupChat && message.parentId == null))
                         Container(
-                          margin: EdgeInsets.only(left: isModerator ? 44 : 40, bottom: 4), // 44px for moderator (36px avatar + 8px spacing), 40px for regular (32px avatar + 8px spacing)
+                          margin: EdgeInsets.only(
+                              left: isModerator ? 44 : 40,
+                              bottom: 4), // 44px for moderator (36px avatar + 8px spacing), 40px for regular (32px avatar + 8px spacing)
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.6, // Same as bubble width
                           ),
                           child: Text(
                             message.user?.displayName ?? "",
-                            style: AmityTextStyle.captionBold(
-                                theme.baseColorShade1),
+                            style: AmityTextStyle.captionBold(theme.baseColorShade1),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      _buildMessageContent(
-                          context, isUser, state, bounceAnimator, bounce),
+                       _buildMessageContent(context, isUser, state, bounceAnimator, bounce),
                       // If message have reaction will reserve space for it
                       if (showReaction)
                         const SizedBox(
@@ -181,15 +172,12 @@ class MessageBubbleView extends NewBaseComponent {
                       right: isUser ? 0 : null,
                       child: Container(
                         height: 28,
-                        padding: isUser
-                            ? const EdgeInsets.only(left: 0)
-                            : const EdgeInsets.only(left: 40),
+                        padding: isUser ? const EdgeInsets.only(left: 0) : const EdgeInsets.only(left: 40),
                         child: ReactionBubble(
                           reactions: imagePaths,
                           totalReactionCount: message.reactionCount ?? 0,
                           theme: theme,
-                          containMyReations:
-                              message.myReactions?.isNotEmpty ?? false,
+                          containMyReations: message.myReactions?.isNotEmpty ?? false,
                           onTap: () {
                             showReactionsBottomSheet(context);
                           },
@@ -215,8 +203,7 @@ class MessageBubbleView extends NewBaseComponent {
     );
   }
 
-  Widget _buildMessageContent(BuildContext context, bool isUser,
-      MessageBubbleState state, BounceAnimator? bounceAnimator, double bounce) {
+  Widget _buildMessageContent(BuildContext context, bool isUser, MessageBubbleState state, BounceAnimator? bounceAnimator, double bounce) {
     if (message.isDeleted ?? false) {
       return _buildDeletedMessage(context, theme, isUser);
     } else {
@@ -238,21 +225,17 @@ class MessageBubbleView extends NewBaseComponent {
     final customData = message.data as MessageCustomData;
     // Convert the custom data to a string representation
     final dataString = customData.rawData;
-    
+
     // Use yellow color for custom messages
     Color initialColor = Colors.yellow;
 
     return Transform.translate(
-      offset: Offset(
-          ((bounce * bounceOffset) - bounceOffset) * (isUser ? -1 : 1),
-          0), // Bounce effect
+      offset: Offset(((bounce * bounceOffset) - bounceOffset) * (isUser ? -1 : 1), 0), // Bounce effect
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (isUser &&
-              message.createdAt != null &&
-              message.syncState == AmityMessageSyncState.SYNCED) ...[
+          if (isUser && message.createdAt != null && message.syncState == AmityMessageSyncState.SYNCED) ...[
             _buildDateWidget(message.createdAt!),
             const SizedBox(width: 8),
           ],
@@ -260,9 +243,7 @@ class MessageBubbleView extends NewBaseComponent {
             _buildAvatarWidget(context),
             const SizedBox(width: 8),
           ],
-          if (isUser &&
-              message.syncState != AmityMessageSyncState.SYNCED &&
-              message.syncState != AmityMessageSyncState.FAILED) ...[
+          if (isUser && message.syncState != AmityMessageSyncState.SYNCED && message.syncState != AmityMessageSyncState.FAILED) ...[
             _buildSideTextWidget(context.l10n.message_sending),
             const SizedBox(width: 8),
           ],
@@ -297,32 +278,21 @@ class MessageBubbleView extends NewBaseComponent {
                     setState(() {
                       initialColor = Colors.yellow.shade600; // Darker yellow when pressed
                     });
-                    final RenderBox? messageBox =
-                        context.findRenderObject() as RenderBox?;
-                    final Offset? messagePosition =
-                        messageBox?.localToGlobal(Offset.zero);
+                    final RenderBox? messageBox = context.findRenderObject() as RenderBox?;
+                    final Offset? messagePosition = messageBox?.localToGlobal(Offset.zero);
                     double height = messageBox?.size.height ?? 0;
                     double width = messageBox?.size.width ?? 0;
-                    if (message.reactionCount != null &&
-                        message.reactionCount! > 0) {
+                    if (message.reactionCount != null && message.reactionCount! > 0) {
                       height += 26;
                     } else {
                       height += 4;
                     }
-                    final offset = Offset(
-                        isUser
-                            ? messagePosition!.dx + width
-                            : messagePosition!.dx,
-                        messagePosition.dy + height);
+                    final offset = Offset(isUser ? messagePosition!.dx + width : messagePosition!.dx, messagePosition.dy + height);
 
                     final reactions = configProvider.getAllMessageReactions();
-                    final reactionActionOffset = Offset(
-                        isUser
-                            ? messagePosition.dx + width - 208
-                            : messagePosition.dx,
-                        messagePosition.dy - 52);
-                    await _showReactionAndMenu(context, offset,
-                        reactionActionOffset, message, state, reactions);
+                    final reactionActionOffset =
+                        Offset(isUser ? messagePosition.dx + width - 208 : messagePosition.dx, messagePosition.dy - 52);
+                    await _showReactionAndMenu(context, offset, reactionActionOffset, message, state, reactions);
 
                     setState(() {
                       initialColor = Colors.yellow; // Back to yellow when released
@@ -372,10 +342,7 @@ class MessageBubbleView extends NewBaseComponent {
             },
             child: Text(
               context.l10n.message_resend,
-              style: const TextStyle(
-                  color: Color(0xff007AFF),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w400),
+              style: const TextStyle(color: Color(0xff007AFF), fontSize: 17, fontWeight: FontWeight.w400),
             ),
           ),
           CupertinoActionSheetAction(
@@ -386,10 +353,7 @@ class MessageBubbleView extends NewBaseComponent {
             },
             child: Text(
               context.l10n.general_delete,
-              style: const TextStyle(
-                  color: Color(0xffFF3B30),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w400),
+              style: const TextStyle(color: Color(0xffFF3B30), fontSize: 17, fontWeight: FontWeight.w400),
             ),
           ),
         ],
@@ -399,10 +363,7 @@ class MessageBubbleView extends NewBaseComponent {
             },
             child: Text(
               context.l10n.general_cancel,
-              style: const TextStyle(
-                  color: Color(0xff007AFF),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600),
+              style: const TextStyle(color: Color(0xff007AFF), fontSize: 17, fontWeight: FontWeight.w600),
             )),
       ),
     );

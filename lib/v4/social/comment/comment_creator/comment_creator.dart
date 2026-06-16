@@ -184,8 +184,8 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                           filled: true,
                           fillColor: WidgetStateColor.resolveWith(
                             (states) => states.contains(WidgetState.focused)
-                                ? widget.theme.surfaceRaised
-                                : widget.theme.surfaceCard,
+                                ? widget.theme.textFieldBackgroundFocused
+                                : widget.theme.textFieldBackground,
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),

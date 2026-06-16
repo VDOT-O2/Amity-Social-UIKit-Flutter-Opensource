@@ -71,9 +71,9 @@ class PostDetail extends NewBaseComponent {
               post: post,
               theme: theme,
             ),
-            if (post.children?.isEmpty ?? true && post.data is TextData)
+            if ((post.children?.isEmpty ?? true) && post.data is TextData)
               Container(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+                padding: const EdgeInsets.only(left: 16, right: 16),
                 child: PreviewLinkWidget(
                   text: (post.data as TextData).text ?? '',
                   theme: theme,
@@ -81,13 +81,14 @@ class PostDetail extends NewBaseComponent {
               ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: PostChildrenContent(
                   post: post,
                   style: AmityPostContentComponentStyle.detail,
                   hideMenu: hideMenu,
                   theme: theme),
             ),
+            const SizedBox(height: 8),
             hideMenu ? PostDetailInfo(post: post, componentId: '') : const SizedBox.shrink(),
             hideMenu
                 ? PostBottomNonMember()

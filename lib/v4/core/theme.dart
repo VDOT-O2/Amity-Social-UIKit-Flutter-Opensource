@@ -391,9 +391,9 @@ final lightTheme = AmityTheme(
   avatarBackgroundColor: const Color(0xff000000),
   avatarBorderColor: const Color(0xffe7e7e7),
   avatarTextColor: const Color(0xffffffff),
-  leftBubbleColor: const Color(0xFFF1F1F1),
+  leftBubbleColor: const Color(0xFFF5F5F5),
   leftBubbleTextColor: const Color(0xFF000000),
-  rightBubbleColor: const Color(0xFF000000),
+  rightBubbleColor: const Color(0xFF00C805),
   rightBubbleTextColor: const Color(0xFFFFFFFF),
 );
 
@@ -434,10 +434,10 @@ final darkTheme = AmityTheme(
   avatarBackgroundColor: const Color(0xff0f1217),
   avatarBorderColor: const Color(0xff2E3742),
   avatarTextColor: const Color(0xFFFFFFFF),
-  leftBubbleColor: const Color(0xFF222222),
+  leftBubbleColor: const Color(0xFF1B1E22),
   leftBubbleTextColor: const Color(0xFFFFFFFF),
-  rightBubbleColor: const Color(0xFFFFFFFF),
-  rightBubbleTextColor: const Color(0xFF000000),
+  rightBubbleColor: const Color(0xFF3AFF64),
+  rightBubbleTextColor: const Color(0xFF111111),
 );
 
 enum ColorBlendingOption {

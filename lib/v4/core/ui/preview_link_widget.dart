@@ -102,6 +102,7 @@ class _PreviewLinkWidgetState extends State<PreviewLinkWidget> {
       behavior: HitTestBehavior.translucent,
       onTap: widget.onTap ?? _launchUrl,
       child: Container(
+        margin: const EdgeInsets.only(top: 12, bottom: 8),
         decoration: BoxDecoration(
           border: Border.all(
             color: widget.theme.baseColorShade4,

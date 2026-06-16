@@ -524,7 +524,7 @@ class AmityCommunityProfilePage extends NewBasePage {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => {Navigator.pop(context)},
-                child: Container(
+                child: SizedBox(
                   height: 32,
                   width: 32,
                   // decoration: BoxDecoration(
@@ -535,6 +535,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     child: SvgPicture.asset(
                       "assets/Icons/amity_ic_back_button.svg",
                       package: 'amity_uikit_beta_service',
+                      colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
                       // height: 18,
                       // width: 18,
                     ),
@@ -564,8 +565,8 @@ class AmityCommunityProfilePage extends NewBasePage {
                       state.community?.displayName ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: theme.textPrimary,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
@@ -601,7 +602,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                         package: 'amity_uikit_beta_service',
                         // height: 18,
                         // width: 18,
-                        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
                       ),
                     ),
                   ),

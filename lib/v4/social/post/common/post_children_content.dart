@@ -18,16 +18,23 @@ class PostChildrenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final noChildrenPost = post.children?.isEmpty ?? true;
+    Widget? contentWidget;
+
     if(noChildrenPost) {
       return Container();
     } else if (post.children!.first.data is ImageData) {
-      return PostContentImage(posts: post.children!, theme: theme);
+      contentWidget = PostContentImage(posts: post.children!, theme: theme);
     } else if (post.children!.first.data is VideoData) {
-      return PostContentVideo(posts: post.children!, theme: theme);
+      contentWidget = PostContentVideo(posts: post.children!, theme: theme);
     } else if (post.children!.first.data is PollData) {
-      return PostPollContent(post: post.children!.first, style: style, theme: theme, hideMenu: hideMenu, goToDetail: (){},);
+      contentWidget = PostPollContent(post: post.children!.first, style: style, theme: theme, hideMenu: hideMenu, goToDetail: (){},);
     } else {
       return Container();
     }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: contentWidget,
+    );
   }
 }

@@ -47,6 +47,10 @@ class PostContentText extends StatelessWidget {
       mentionedUsers.sort((a, b) => a.index.compareTo(b.index));
     }
 
+    if (textContent.isEmpty) {
+      return const SizedBox(height: 16);
+    }
+
     // Return a RichText widget with the computed spans.
     return Container(
       width: double.infinity,
