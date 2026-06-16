@@ -111,7 +111,12 @@ class AmityGroupMemberListPage extends NewBasePage {
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
                         ),
-                        indicatorColor: theme.primaryColor,
+                        indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 3,
+                          ),
+                        ),
                         dividerColor: theme.baseColorShade4,
                         dividerHeight: 1.0,
                         tabs: [

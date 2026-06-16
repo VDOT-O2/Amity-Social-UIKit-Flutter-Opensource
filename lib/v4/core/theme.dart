@@ -302,6 +302,9 @@ class AmityThemeColor {
   bool get isDark => brightness == Brightness.dark;
   bool get isLight => brightness == Brightness.light;
 
+  Color get textFieldBackground => isDark ? surfaceCard : backgroundSubtle;
+  Color get textFieldBackgroundFocused => isDark ? surfaceRaised : surfaceCard;
+
   AmityThemeColor({
     required this.brightness,
     required this.brandPrimary,

@@ -35,8 +35,8 @@ class CommunitySettingItem extends BaseElement {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
                           4), // Adjust radius to your need
-                      color: theme
-                          .baseColorShade4, // Choose the color to fit your design
+                      // color: theme
+                      //     .baseColorShade4, // Choose the color to fit your design
                     ),
                     child: SvgPicture.asset(
                       iconPath,

@@ -252,7 +252,7 @@ class AmityMessageComposer extends NewBaseComponent {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
-                                  fillColor: focusNode.hasFocus ? theme.surfaceRaised : theme.surfaceCard,
+                                  fillColor: focusNode.hasFocus ? theme.textFieldBackgroundFocused : theme.textFieldBackground,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                   hintText: context.l10n.message_placeholder,
                                   border: OutlineInputBorder(

@@ -19,6 +19,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
   final ScrollController _memberScrollController = ScrollController();
   final ScrollController _moderatorScrollController = ScrollController();
   final TextEditingController _textcontroller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   AmityCommunityMembershipPage({super.key, required this.community}) : super(pageId: 'community_membership_page');
 
@@ -26,9 +27,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
   Widget buildPage(BuildContext context) {
     return BlocProvider(
       create: (_) => CommunityMembershipPageBloc(
-          community: community,
-          memberScrollController: _memberScrollController,
-          moderatorScrollController: _moderatorScrollController),
+          community: community, memberScrollController: _memberScrollController, moderatorScrollController: _moderatorScrollController),
       child: BlocBuilder<CommunityMembershipPageBloc, CommunityMembershipPageState>(
         builder: (context, state) {
           return _getPageWidget(context, state);
@@ -70,7 +69,6 @@ class AmityCommunityMembershipPage extends NewBasePage {
                 TabBar(
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
-                  indicatorSize: TabBarIndicatorSize.label,
                   labelColor: theme.primaryColor,
                   labelStyle: const TextStyle(
                     fontSize: 17,
@@ -82,8 +80,14 @@ class AmityCommunityMembershipPage extends NewBasePage {
                     fontWeight: FontWeight.w600,
                   ),
                   indicatorColor: theme.primaryColor,
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      color: theme.primaryColor,
+                      width: 3,
+                    ),
+                  ),
                   dividerColor: theme.baseColorShade4,
-                  dividerHeight: 1.0, // Makes indicator match text width
+                  dividerHeight: 1.0,
                   tabs: [
                     Tab(text: context.l10n.community_members),
                     Tab(text: context.l10n.community_moderators),
@@ -96,12 +100,11 @@ class AmityCommunityMembershipPage extends NewBasePage {
                         children: [
                           AmityTopSearchBarComponent(
                             textcontroller: _textcontroller,
+                            focusNode: _focusNode,
                             hintText: context.l10n.community_search_member_hint,
                             showCancelButton: false,
                             onTextChanged: (value) {
-                              context
-                                  .read<CommunityMembershipPageBloc>()
-                                  .add(CommunityMembershipPageSearchMemberEvent(value));
+                              context.read<CommunityMembershipPageBloc>().add(CommunityMembershipPageSearchMemberEvent(value));
                             },
                           ),
                           Expanded(
@@ -139,8 +142,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
     );
   }
 
-  Widget _getUserListItem(
-      BuildContext context, CommunityMembershipPageState state, AmityCommunityMember member, int index) {
+  Widget _getUserListItem(BuildContext context, CommunityMembershipPageState state, AmityCommunityMember member, int index) {
     return Padding(
         padding: EdgeInsets.fromLTRB(16, (index == 0) ? 16 : 8, 16, 8),
         child: Row(
@@ -287,24 +289,19 @@ class AmityCommunityMembershipPage extends NewBasePage {
                 ),
                 if (state.isCurrentUserModerator) ...[
                   _buildListTile(
-                    assetPath: member.isModerator()
-                        ? 'assets/Icons/amity_ic_demote_member.svg'
-                        : 'assets/Icons/amity_ic_promote_moderator.svg',
-                    title: member.isModerator()
-                        ? context.l10n.community_demote_member
-                        : context.l10n.community_promote_moderator,
+                    assetPath:
+                        member.isModerator() ? 'assets/Icons/amity_ic_demote_member.svg' : 'assets/Icons/amity_ic_promote_moderator.svg',
+                    title: member.isModerator() ? context.l10n.community_demote_member : context.l10n.community_promote_moderator,
                     onTap: () {
                       final action = member.isModerator()
                           ? CommunityMembershipPageBottomSheetAction.demote
                           : CommunityMembershipPageBottomSheetAction.promote;
 
-                      final successMessage = member.isModerator()
-                          ? context.l10n.moderator_demote_success
-                          : context.l10n.moderator_promote_success;
+                      final successMessage =
+                          member.isModerator() ? context.l10n.moderator_demote_success : context.l10n.moderator_promote_success;
 
-                      final errorMessage = member.isModerator()
-                          ? context.l10n.moderator_demote_error
-                          : context.l10n.moderator_promote_error;
+                      final errorMessage =
+                          member.isModerator() ? context.l10n.moderator_demote_error : context.l10n.moderator_promote_error;
 
                       context.read<CommunityMembershipPageBloc>().add(CommunityMembershipPageBottomSheetEvent(
                           member, action, context.read<AmityToastBloc>(), successMessage, errorMessage));
@@ -313,19 +310,16 @@ class AmityCommunityMembershipPage extends NewBasePage {
                   ),
                   _buildListTile(
                       assetPath: 'assets/Icons/amity_ic_flag.svg',
-                      title:
-                          member.user?.isFlaggedByMe ?? false ? context.l10n.user_unreport : context.l10n.user_report,
+                      title: member.user?.isFlaggedByMe ?? false ? context.l10n.user_unreport : context.l10n.user_report,
                       onTap: () {
                         final isReporting = !(member.user?.isFlaggedByMe ?? false);
                         final action = isReporting
                             ? CommunityMembershipPageBottomSheetAction.report
                             : CommunityMembershipPageBottomSheetAction.unreport;
 
-                        final successMessage =
-                            isReporting ? context.l10n.user_report_success : context.l10n.user_unreport_success;
+                        final successMessage = isReporting ? context.l10n.user_report_success : context.l10n.user_unreport_success;
 
-                        final errorMessage =
-                            isReporting ? context.l10n.user_report_error : context.l10n.user_unreport_error;
+                        final errorMessage = isReporting ? context.l10n.user_report_error : context.l10n.user_unreport_error;
 
                         context.read<CommunityMembershipPageBloc>().add(CommunityMembershipPageBottomSheetEvent(
                             member, action, context.read<AmityToastBloc>(), successMessage, errorMessage));
@@ -349,19 +343,16 @@ class AmityCommunityMembershipPage extends NewBasePage {
                 ] else ...[
                   _buildListTile(
                       assetPath: 'assets/Icons/amity_ic_flag.svg',
-                      title:
-                          member.user?.isFlaggedByMe ?? false ? context.l10n.user_unreport : context.l10n.user_report,
+                      title: member.user?.isFlaggedByMe ?? false ? context.l10n.user_unreport : context.l10n.user_report,
                       onTap: () {
                         final isReporting = !(member.user?.isFlaggedByMe ?? false);
                         final action = isReporting
                             ? CommunityMembershipPageBottomSheetAction.report
                             : CommunityMembershipPageBottomSheetAction.unreport;
 
-                        final successMessage =
-                            isReporting ? context.l10n.user_report_success : context.l10n.user_unreport_success;
+                        final successMessage = isReporting ? context.l10n.user_report_success : context.l10n.user_unreport_success;
 
-                        final errorMessage =
-                            isReporting ? context.l10n.user_report_error : context.l10n.user_unreport_error;
+                        final errorMessage = isReporting ? context.l10n.user_report_error : context.l10n.user_unreport_error;
 
                         context.read<CommunityMembershipPageBloc>().add(CommunityMembershipPageBottomSheetEvent(
                             member, action, context.read<AmityToastBloc>(), successMessage, errorMessage));
