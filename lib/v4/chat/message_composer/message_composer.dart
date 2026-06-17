@@ -160,7 +160,7 @@ class AmityMessageComposer extends NewBaseComponent {
                               width: 38,
                               margin: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                color: theme.textMuted,
+                                color: theme.textSecondary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -604,7 +604,17 @@ class AmityMessageComposer extends NewBaseComponent {
             },
           ),
           const SizedBox(
-            width: 72,
+            width: 48,
+          ),
+          renderMediaButton(
+            "assets/Icons/amity_ic_video_button.svg",
+            context.l10n.general_video,
+            () {
+              onVideoTap(context);
+            },
+          ),
+          const SizedBox(
+            width: 48,
           ),
           renderMediaButton(
             "assets/Icons/amity_ic_image_button.svg",

@@ -32,7 +32,7 @@ dependencies:
   chewie: ^1.13.0
   video_player: ^2.4.5
   # extended_image: ^6.2.1
-  image_picker: ^1.1.2
+  image_picker: ^1.2.2
   image_picker_android: ^0.8.12+22
   image_picker_platform_interface: ^2.10.1
   get_time_ago: ^2.3.2
