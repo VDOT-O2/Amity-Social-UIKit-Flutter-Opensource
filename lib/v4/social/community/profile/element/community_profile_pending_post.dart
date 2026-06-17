@@ -22,6 +22,7 @@ class AmityCommunityPendingPost extends BaseElement {
   @override
   Widget buildElement(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         AmityUIKit4Manager.behavior.communityProfilePageBehavior
             .goToPendingRequestsPage(

@@ -11,6 +11,7 @@ class AmityStoryViewCountElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         onClick();
       },

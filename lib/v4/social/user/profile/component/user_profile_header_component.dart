@@ -66,6 +66,7 @@ class AmityUserProfileHeaderComponent extends NewBaseComponent {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () {
                               final avatarUrl = user?.avatarUrl;
                               if (avatarUrl != null && avatarUrl.isNotEmpty) {

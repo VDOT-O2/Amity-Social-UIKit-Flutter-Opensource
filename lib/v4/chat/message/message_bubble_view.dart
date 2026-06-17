@@ -270,6 +270,7 @@ class MessageBubbleView extends NewBaseComponent {
             Container(
               padding: const EdgeInsets.only(bottom: 8),
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _showActionSheet(context);
                 },

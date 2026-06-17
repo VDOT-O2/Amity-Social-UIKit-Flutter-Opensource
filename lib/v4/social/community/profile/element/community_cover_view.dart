@@ -38,6 +38,7 @@ class AmityCommunityCoverView extends BaseElement {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () => {Navigator.pop(context)},
                       child: Container(
                         height: 32,
@@ -58,6 +59,7 @@ class AmityCommunityCoverView extends BaseElement {
                     ),
                     Flexible(flex: 1, child: Container()),
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () => {
                         if (community != null)
                           {

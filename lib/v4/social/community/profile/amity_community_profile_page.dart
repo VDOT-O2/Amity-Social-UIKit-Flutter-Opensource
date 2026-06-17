@@ -59,8 +59,9 @@ class AmityCommunityProfilePage extends NewBasePage {
                 _buildFeed(context, state),
               ]),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-              floatingActionButton: (state.isJoined)
+              floatingActionButton: (state.isJoined && !(state.community?.onlyAdminCanPost == true && !state.isModerator))
                   ? GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         showActions(context, state.canManageStory, state.community, state.isModerator);
                       },
@@ -302,6 +303,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     final createOptions = AmityPostComposerOptions.createOptions(
                         targetId: communityId, community: community, targetType: AmityPostTargetType.COMMUNITY);
@@ -374,6 +376,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                 ),
                 if (canManageStory)
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.of(context).push(
@@ -419,6 +422,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     ),
                   ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     Navigator.of(context).push(
                       PageRouteBuilder(
@@ -498,8 +502,7 @@ class AmityCommunityProfilePage extends NewBasePage {
   void _showPostReviewDialog(BuildContext context) {
     AmityV4Dialog().showAlertErrorDialog(
       title: "Posts sent for review",
-      message:
-          "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
+      message: "Your post has been submitted to the pending list. It will be published once approved by the community moderator.",
       closeText: "OK",
     );
   }
@@ -518,6 +521,7 @@ class AmityCommunityProfilePage extends NewBasePage {
             leading: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => {Navigator.pop(context)},
                 child: Container(
                   height: 32,
@@ -567,11 +571,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                     ),
                   ),
                   if (state.community?.isOfficial == true)
-                    Container(
-                        width: 28,
-                        height: 28,
-                        margin: const EdgeInsets.only(top: 2),
-                        child: AmityOfficialBadgeElement()),
+                    Container(width: 28, height: 28, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement()),
                 ],
               ),
             ),
@@ -579,11 +579,12 @@ class AmityCommunityProfilePage extends NewBasePage {
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => {
                     if (state.community != null)
                       {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
                       }
                   },
                   child: Container(
@@ -676,10 +677,7 @@ class AmityCommunityProfilePage extends NewBasePage {
 
   Widget _buildPendingPost(BuildContext context, CommunityProfileState state) {
     return SliverToBoxAdapter(
-      child: (state.community != null &&
-              state.isJoined &&
-              state.pendingPostCount > 0 &&
-              (state.community!.isPostReviewEnabled ?? false))
+      child: (state.community != null && state.isJoined && state.pendingPostCount > 0 && (state.community!.isPostReviewEnabled ?? false))
           ? Container(
               color: theme.backgroundColor,
               padding: const EdgeInsets.all(16),

@@ -6,6 +6,7 @@ import 'package:amity_uikit_beta_service/v4/chat/message/bloc/chat_page_bloc.dar
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/replying_message.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_thumbnail/flutter_video_thumbnail.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/transformers.dart';
 
 part 'amity_group_chat_page_events.dart';
 part 'amity_group_chat_page_state.dart';
@@ -536,7 +538,13 @@ class AmityGroupChatPageBloc
 
     liveCollection = query.getLiveCollection();
 
-    liveCollection?.getStreamController().stream.listen((event) {
+    liveCollection?.getStreamController().stream.debounceTime(const Duration(milliseconds: 300)).listen((event) {
+      final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
+          ? (event.first.data as MessageTextData).text
+          : "N/A";
+
+      AmityLog.debug("GroupChatPageEventChanged: $lastMessageText (${event.length} total)");
+
       addEvent(GroupChatPageEventChanged(
           messages: event, isFetching: state.isFetching));
     });

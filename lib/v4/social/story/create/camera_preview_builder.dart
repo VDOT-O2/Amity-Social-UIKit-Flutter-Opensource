@@ -315,6 +315,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       bottom: 48,
       right: 16,
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           if (!state.canCapture || AmityUIKit.cameras.length < 2) {
             return;
@@ -382,6 +383,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       top: 16,
       right: 16,
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           if (!state.canCapture) {
             return;
@@ -470,6 +472,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       top: 16,
       left: 16,
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: widget.onCloseClicked,
         child: Container(
           height: 32,
@@ -584,6 +587,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       );
     } else {
       return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () => _onTakePicture(context, state),
         child: Container(
           height: captureButtonSizeRingSize,
@@ -612,6 +616,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
       bottom: 48,
       left: 16,
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: _onGalleryButtonPressed,
         child: Container(
           height: 40,

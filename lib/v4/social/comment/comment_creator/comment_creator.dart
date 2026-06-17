@@ -197,6 +197,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   context.read<CommentCreatorBloc>().add(CommentCreatorCreated(
                         referenceId: referenceId,
@@ -274,6 +275,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
             ),
           ),
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               widget.action.onDissmiss();
             },

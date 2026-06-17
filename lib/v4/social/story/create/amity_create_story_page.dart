@@ -124,6 +124,7 @@ class AmityCreateStoryPage extends NewBasePage {
                                 Row(
                                   children: [
                                     GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
                                       onTap: () {
                                         context.read<CreateStoryPageBloc>().add(SelectImageEvent());
                                       },
@@ -140,6 +141,7 @@ class AmityCreateStoryPage extends NewBasePage {
                                       ),
                                     ),
                                     GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
                                       onTap: () {
                                         context.read<CreateStoryPageBloc>().add(SelectVideoEvent());
                                       },

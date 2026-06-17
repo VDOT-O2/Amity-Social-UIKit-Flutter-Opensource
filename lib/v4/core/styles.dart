@@ -25,8 +25,12 @@ class AmityTextStyle {
     return getStyle(15, FontWeight.w600, color, textHeight);
   }
 
-  static TextStyle body(Color color, {double? textHeight}) {
-    return getStyle(15, FontWeight.w400, color, textHeight);
+    static TextStyle bodySemiBold(Color color, {double? textHeight}) {
+    return getStyle(15, FontWeight.w500, color, textHeight);
+  }
+
+  static TextStyle body(Color color, {double? textHeight, FontWeight fontWeight = FontWeight.w400}) {
+    return getStyle(15, fontWeight, color, textHeight);
   }
 
   static TextStyle captionBold(Color color, {double? textHeight}) {

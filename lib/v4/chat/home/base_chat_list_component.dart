@@ -90,6 +90,7 @@ class BaseChatListComponent extends NewBaseComponent {
               //       ],
               //     ),
               //   ),
+              const SizedBox(height: 8),
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
@@ -200,9 +201,12 @@ class BaseChatListComponent extends NewBaseComponent {
         },
         background: Builder(builder: (context) {
           return Container(
-            color: theme.baseColorShade2,
+            decoration:  BoxDecoration(
+              color: theme.baseColorShade2,
+              border: Border(bottom: BorderSide(color: theme.baseColorShade4, width: 1)),
+            ),
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -219,7 +223,7 @@ class BaseChatListComponent extends NewBaseComponent {
                 const SizedBox(height: 2),
                 Text(
                   actionText,
-                  style: AmityTextStyle.captionBold(Colors.white),
+                  style: AmityTextStyle.caption(Colors.white),
                 ),
               ],
             ),
@@ -371,7 +375,7 @@ class ChatListItem extends BaseElement {
             Flexible(
               child: Text(
                 displayName,
-                style: AmityTextStyle.titleBold(theme.baseColor),
+                style: _getTitleTextStyle(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -401,16 +405,23 @@ class ChatListItem extends BaseElement {
       } else {
         displayNameWidget = Text(
           displayName,
-          style: AmityTextStyle.titleBold(theme.baseColor),
+          style: _getHightlightedTextStyle(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         );
       }
     }
 
+    final isUnread = (channel.unreadCount ?? 0) > 0;
+    final itemDecoration = BoxDecoration(
+      border: Border(bottom: BorderSide(color: theme.baseColorShade4, width: 1)),
+    );
+
     return Container(
-      height: 82,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      height: 72,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: itemDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,6 +444,7 @@ class ChatListItem extends BaseElement {
                     Expanded(child: displayNameWidget),
                   ],
                 ),
+                const SizedBox(height: 4),
                 Row(
                   children: [
                     if (previewIcon != null) ...[
@@ -447,17 +459,17 @@ class ChatListItem extends BaseElement {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(channel.lastActivity?.toChatTimestamp(context) ?? "",
-                  style: AmityTextStyle.caption(theme.baseColorShade2)),
-              const SizedBox(height: 10),
+                  style: AmityTextStyle.caption(isUnread ? theme.vdotGreen : theme.baseColorShade2)),
+              const SizedBox(height: 4),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isArchived) ...[
+                  if (isArchived) ...[ 
                     Container(
                       padding: const EdgeInsets.only(left: 4, right: 6, top: 3.5, bottom: 3.5),
                       decoration: BoxDecoration(
@@ -505,8 +517,8 @@ class ChatListItem extends BaseElement {
     if (previewText == null || previewText.isEmpty) {
       return Text(
         "",
-        style: AmityTextStyle.body(theme.baseColorShade2),
-        maxLines: 2,
+        style: _getPreviewTextStyle(),
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
       );
     }
@@ -514,18 +526,33 @@ class ChatListItem extends BaseElement {
     // If we have a search query and this is from a search message, highlight it
     if (searchQuery.isNotEmpty && searchMessage != null && _hasExactWordMatch(previewText, searchQuery)) {
       return RichText(
-        maxLines: 2,
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
         text: _buildHighlightedTextSpan(previewText, searchQuery),
       );
     } else {
       return Text(
         previewText,
-        style: AmityTextStyle.body(theme.baseColorShade2),
-        maxLines: 2,
+        style: _getPreviewTextStyle(),
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
       );
     }
+  }
+
+  TextStyle _getTitleTextStyle() {
+    final isUnread = (channel.unreadCount ?? 0) > 0;
+    return AmityTextStyle.body(theme.baseColor, fontWeight: isUnread ? FontWeight.w700 : FontWeight.w400);
+  }
+
+  TextStyle _getPreviewTextStyle() {
+    final isUnread = (channel.unreadCount ?? 0) > 0;
+    return AmityTextStyle.body(isUnread ? theme.baseColor : theme.baseColorShade2, fontWeight: isUnread ? FontWeight.w600 : FontWeight.w400);
+  }
+
+  TextStyle _getHightlightedTextStyle() {
+    final isUnread = (channel.unreadCount ?? 0) > 0;
+    return AmityTextStyle.body(isUnread ? theme.baseColor : theme.baseColorShade2, fontWeight: isUnread ? FontWeight.w700 : FontWeight.w500);
   }
 
   /// Helper method to find exact word match positions (must start with query)
@@ -569,7 +596,7 @@ class ChatListItem extends BaseElement {
     if (matches.isEmpty) {
       return TextSpan(
         text: searchableText,
-        style: AmityTextStyle.body(theme.baseColorShade2),
+        style: _getPreviewTextStyle(),
       );
     }
 
@@ -582,14 +609,14 @@ class ChatListItem extends BaseElement {
       if (matchIndex > currentIndex) {
         spans.add(TextSpan(
           text: searchableText.substring(currentIndex, matchIndex),
-          style: AmityTextStyle.body(theme.baseColorShade2),
+          style: _getPreviewTextStyle(),
         ));
       }
 
       // Add the highlighted match
       spans.add(TextSpan(
         text: searchableText.substring(matchIndex, matchIndex + query.length),
-        style: AmityTextStyle.bodyBold(theme.baseColor),
+        style: _getHightlightedTextStyle(),
       ));
 
       currentIndex = matchIndex + query.length;
@@ -599,7 +626,7 @@ class ChatListItem extends BaseElement {
     if (currentIndex < searchableText.length) {
       spans.add(TextSpan(
         text: searchableText.substring(currentIndex),
-        style: AmityTextStyle.body(theme.baseColorShade2),
+        style: _getPreviewTextStyle(),
       ));
     }
 
@@ -607,7 +634,7 @@ class ChatListItem extends BaseElement {
     if (text.length > maxCharsForTwoLines) {
       spans.add(TextSpan(
         text: "...",
-        style: AmityTextStyle.body(theme.baseColorShade2),
+        style: _getPreviewTextStyle(),
       ));
     }
 
@@ -623,7 +650,7 @@ class ChatListItem extends BaseElement {
     if (matches.isEmpty) {
       return TextSpan(
         text: text,
-        style: AmityTextStyle.titleBold(theme.baseColor),
+        style: _getPreviewTextStyle(),
       );
     }
 
@@ -636,14 +663,14 @@ class ChatListItem extends BaseElement {
       if (matchIndex > currentIndex) {
         spans.add(TextSpan(
           text: text.substring(currentIndex, matchIndex),
-          style: AmityTextStyle.titleBold(theme.baseColor),
+          style: _getPreviewTextStyle(),
         ));
       }
 
       // Add the highlighted match
       spans.add(TextSpan(
         text: text.substring(matchIndex, matchIndex + query.length),
-        style: AmityTextStyle.titleBold(theme.primaryColor),
+        style: _getHightlightedTextStyle(),
       ));
 
       currentIndex = matchIndex + query.length;
@@ -653,7 +680,7 @@ class ChatListItem extends BaseElement {
     if (currentIndex < text.length) {
       spans.add(TextSpan(
         text: text.substring(currentIndex),
-        style: AmityTextStyle.titleBold(theme.baseColor),
+        style: _getPreviewTextStyle(),
       ));
     }
 
@@ -692,13 +719,13 @@ class ChatListItem extends BaseElement {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       decoration: BoxDecoration(
-        color: theme.alertColor,
+        color: theme.vdotGreen,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         unreadCount > 99 ? '99+' : unreadCount.toString(),
-        style: const TextStyle(
-          color: Colors.white,
+        style:  TextStyle(
+          color: theme.vdotGreenText,
           fontSize: 12,
           fontWeight: FontWeight.bold,
         ),

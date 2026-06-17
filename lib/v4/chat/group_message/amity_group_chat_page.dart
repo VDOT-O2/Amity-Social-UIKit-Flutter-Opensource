@@ -109,6 +109,7 @@ class AmityGroupChatPage extends NewBasePage {
                         },
                       ),
                       title: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () async {
                           final channel = state.channel;
                           if (channel != null) {

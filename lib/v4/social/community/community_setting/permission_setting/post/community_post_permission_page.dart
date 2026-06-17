@@ -43,6 +43,7 @@ class AmityCommunityPostPermissionPage extends NewBasePage {
               theme: theme,
             ),
             tailingButton: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: state.settingsChanged
                   ? () {
                       context.read<CommunityPostPermissionPageBloc>().add(

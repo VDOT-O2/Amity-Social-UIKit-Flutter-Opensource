@@ -115,6 +115,7 @@ class AmityTopSearchBarComponent extends NewBaseComponent {
           ),
           if (showCancelButton)
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.of(context).pop();
                 },

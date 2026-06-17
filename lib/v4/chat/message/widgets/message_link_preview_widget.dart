@@ -196,6 +196,7 @@ class _MessageLinkPreviewWidgetState extends State<MessageLinkPreviewWidget> {
     final imageWidth = bubbleWidth * 0.4; // Image is 40% of bubble width
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: widget.onTap ?? _launchUrl,
       child: Container(
         constraints: BoxConstraints(
@@ -405,6 +406,7 @@ class _MessageLinkPreviewWidgetState extends State<MessageLinkPreviewWidget> {
     final imageWidth = bubbleWidth * 0.4; // Image is 40% of bubble width
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: widget.onTap ?? _launchUrl,
       child: Container(
         constraints: BoxConstraints(

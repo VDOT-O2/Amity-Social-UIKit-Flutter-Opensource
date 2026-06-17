@@ -118,6 +118,7 @@ class AmityCommunityNotificationSettingPage extends NewBasePage {
   Widget _getSettingItemWidget(String iconPath, String title,
       {GestureTapCallback? onTap}) {
     return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: onTap,
         child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 16),

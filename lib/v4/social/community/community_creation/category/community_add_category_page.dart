@@ -98,6 +98,7 @@ class AmityCommunityAddCategoryPage extends NewBasePage {
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             context.read<CommunityAddCategoryPageBloc>().add(
                                 CommunityAddCategoryPageCategorySelectedEvent(
@@ -186,6 +187,7 @@ class AmityCommunityAddCategoryPage extends NewBasePage {
         children: [
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               if (state.hasCategoriesChanged) {
                 context

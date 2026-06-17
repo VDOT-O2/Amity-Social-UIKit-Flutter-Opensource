@@ -100,6 +100,7 @@ class AmityStoryTargetElement extends BaseElement {
         break;
     }
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         onClick(targetId, target);
       },

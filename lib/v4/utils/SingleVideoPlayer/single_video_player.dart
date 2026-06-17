@@ -61,8 +61,7 @@ class VideoPlayerBuilder with ChangeNotifier {
                 color: Colors.white,
                 onPressed: () {
                   context
-                      .read<SingleVideoPlayerBloc>()
-                      .add(SingleVideoPlayerEventDispose());
+                      .read<SingleVideoPlayerBloc>();
                   Navigator.of(context).pop();
                 },
               )),
@@ -108,11 +107,5 @@ class VideoPlayerBuilder with ChangeNotifier {
         valueColor: AlwaysStoppedAnimation<Color>(appTheme.primaryColor),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    context.read<SingleVideoPlayerBloc>().add(SingleVideoPlayerEventDispose());
-    super.dispose();
   }
 }

@@ -564,13 +564,13 @@ abstract class AppLocalizations {
   /// Label for close button
   ///
   /// In en, this message translates to:
-  /// **'Close community?'**
+  /// **'Delete group?'**
   String get community_close;
 
   /// Confirmation message for closing a community
   ///
   /// In en, this message translates to:
-  /// **'All members will be removed from the community. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.'**
+  /// **'All members will be removed from the group. All posts, messages, reactions, and media shared in community will be deleted. This cannot be undone.'**
   String get community_close_description;
 
   /// Label for join community button
@@ -1364,6 +1364,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to create post. Please try again.'**
   String get error_create_post;
+
+  /// Error message when post contains a banned word
+  ///
+  /// In en, this message translates to:
+  /// **'Your post wasn\'t posted because it contains a blocked word.'**
+  String get error_post_ban_word_found;
+
+  /// Error message when post contains a disallowed link
+  ///
+  /// In en, this message translates to:
+  /// **'Your post wasn\'t posted because it contains a link that\'s not allowed.'**
+  String get error_post_link_not_allowed;
 
   /// Error message when poll question exceeds maximum characters
   ///
@@ -2412,7 +2424,7 @@ abstract class AppLocalizations {
   /// Label for member section
   ///
   /// In en, this message translates to:
-  /// **'Member'**
+  /// **'Members'**
   String get chat_member_label;
 
   /// Error message when no user is selected
@@ -2592,10 +2604,10 @@ abstract class AppLocalizations {
   /// AppBar title for create group page
   ///
   /// In en, this message translates to:
-  /// **'New Group'**
+  /// **'New Group Chat'**
   String get chat_create_title;
 
-  /// Button text to create a new group
+  /// Button text to create a new group chat
   ///
   /// In en, this message translates to:
   /// **'Create'**
@@ -2640,7 +2652,7 @@ abstract class AppLocalizations {
   /// Description for private group privacy setting
   ///
   /// In en, this message translates to:
-  /// **'Group is hidden from search and only accessible by invitation from moderators.'**
+  /// **'Group chat is hidden from search and only accessible by invitation from moderators.'**
   String get chat_privacy_private_desc;
 
   /// Warning message about privacy setting being permanent

@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/core/video_post_player/pager/video_post_player.dart';
+import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_video_thumbnail_cache.dart';
 import 'package:flutter/material.dart';
 
 class PostContentVideo extends StatelessWidget {
@@ -14,7 +18,16 @@ class PostContentVideo extends StatelessWidget {
     if (posts.isEmpty) return Container();
 
     Widget backgroundThumbnail(String fileUrl, int index,
-        {BorderRadius? borderRadius}) {
+        {BorderRadius? borderRadius, String? postId}) {
+      final hasNetworkUrl = fileUrl.isNotEmpty;
+      Uint8List? localThumbnail;
+      if (!hasNetworkUrl && postId != null) {
+        localThumbnail = PostVideoThumbnailCache.instance.get(postId);
+      } else if (hasNetworkUrl && postId != null) {
+        // Server thumbnail is available, clean up cache
+        PostVideoThumbnailCache.instance.remove(postId);
+      }
+
       return Padding(
         padding: const EdgeInsets.all(2.0),
         child: Stack(
@@ -23,12 +36,23 @@ class PostContentVideo extends StatelessWidget {
               decoration: BoxDecoration(
                 color: theme.baseColorShade4,
                 borderRadius: borderRadius,
-                image: DecorationImage(
-                  image: NetworkImage(fileUrl),
-                  fit: BoxFit.cover,
-                ),
+                image: hasNetworkUrl
+                    ? DecorationImage(
+                        image: NetworkImage(fileUrl),
+                        fit: BoxFit.cover,
+                      )
+                    : (localThumbnail != null
+                        ? DecorationImage(
+                            image: MemoryImage(localThumbnail),
+                            fit: BoxFit.cover,
+                          )
+                        : null),
               ),
             ),
+            // Container(
+            //   alignment: Alignment.topCenter,
+            //   child: Text(debugText, style: const TextStyle(fontSize: 12, color: Colors.red)), // Debug text overlay
+            // ),
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -36,8 +60,7 @@ class PostContentVideo extends StatelessWidget {
                 height: 40,
                 decoration: const ShapeDecoration(
                   color: Color(0x40000000),
-                  shape:
-                      OvalBorder(side: BorderSide(color: Colors.transparent)),
+                  shape: OvalBorder(side: BorderSide(color: Colors.transparent)),
                 ),
                 child: const Icon(
                   Icons.play_arrow,
@@ -59,6 +82,8 @@ class PostContentVideo extends StatelessWidget {
         var data = postData;
         return data.image?.getUrl(AmityImageSize.MEDIUM) ?? "";
       } else {
+        AmityLog.debug(
+            'PostContentVideo: Unsupported post data type for thumbnail URL extraction: ${postData.runtimeType}');
         return "";
       }
     }
@@ -66,6 +91,7 @@ class PostContentVideo extends StatelessWidget {
     switch (posts.length) {
       case 1:
         return GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             Navigator.push(
               context,
@@ -80,6 +106,7 @@ class PostContentVideo extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 1,
             child: backgroundThumbnail(getURL(posts[0].data!), 0,
+                postId: posts[0].postId,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
@@ -94,6 +121,7 @@ class PostContentVideo extends StatelessWidget {
           child: Row(children: [
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -106,12 +134,14 @@ class PostContentVideo extends StatelessWidget {
                 );
               },
               child: backgroundThumbnail(getURL(posts[0].data!), 0,
+                  postId: posts[0].postId,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                       bottomLeft: Radius.circular(8))),
             )),
             Expanded(
                 child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -124,6 +154,7 @@ class PostContentVideo extends StatelessWidget {
                 );
               },
               child: backgroundThumbnail(getURL(posts[1].data!), 1,
+                  postId: posts[1].postId,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(8),
                     bottomRight: Radius.circular(8),
@@ -139,6 +170,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -151,6 +183,7 @@ class PostContentVideo extends StatelessWidget {
                     );
                   },
                   child: backgroundThumbnail(getURL(posts[0].data!), 0,
+                      postId: posts[0].postId,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(8),
                         topRight: Radius.circular(8),
@@ -162,6 +195,7 @@ class PostContentVideo extends StatelessWidget {
                   children: [
                     Expanded(
                         child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -174,12 +208,14 @@ class PostContentVideo extends StatelessWidget {
                         );
                       },
                       child: backgroundThumbnail(getURL(posts[1].data!), 1,
+                          postId: posts[1].postId,
                           borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(8),
                           )),
                     )),
                     Expanded(
                         child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -192,6 +228,7 @@ class PostContentVideo extends StatelessWidget {
                         );
                       },
                       child: backgroundThumbnail(getURL(posts[2].data!), 2,
+                          postId: posts[2].postId,
                           borderRadius: const BorderRadius.only(
                               bottomRight: Radius.circular(8))),
                     )),
@@ -209,6 +246,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                   child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -221,6 +259,7 @@ class PostContentVideo extends StatelessWidget {
                   );
                 },
                 child: backgroundThumbnail(getURL(posts[0].data!), 0,
+                    postId: posts[0].postId,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                     )),
@@ -229,6 +268,7 @@ class PostContentVideo extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -243,6 +283,7 @@ class PostContentVideo extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: backgroundThumbnail(getURL(posts[1].data!), 1,
+                            postId: posts[1].postId,
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(8),
                             )),
@@ -251,6 +292,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -264,12 +306,14 @@ class PostContentVideo extends StatelessWidget {
                       },
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: backgroundThumbnail(getURL(posts[2].data!), 2),
+                        child: backgroundThumbnail(getURL(posts[2].data!), 2,
+                            postId: posts[2].postId),
                       ),
                     ),
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -284,6 +328,7 @@ class PostContentVideo extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: backgroundThumbnail(getURL(posts[3].data!), 3,
+                            postId: posts[3].postId,
                             borderRadius: const BorderRadius.only(
                                 bottomRight: Radius.circular(8))),
                       ),
@@ -302,6 +347,7 @@ class PostContentVideo extends StatelessWidget {
             children: [
               Expanded(
                   child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -314,6 +360,7 @@ class PostContentVideo extends StatelessWidget {
                   );
                 },
                 child: backgroundThumbnail(getURL(posts[0].data!), 0,
+                    postId: posts[0].postId,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8),
@@ -323,6 +370,7 @@ class PostContentVideo extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -337,6 +385,7 @@ class PostContentVideo extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: backgroundThumbnail(getURL(posts[1].data!), 1,
+                            postId: posts[1].postId,
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(8),
                             )),
@@ -345,6 +394,7 @@ class PostContentVideo extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -358,12 +408,14 @@ class PostContentVideo extends StatelessWidget {
                       },
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: backgroundThumbnail(getURL(posts[2].data!), 2),
+                        child: backgroundThumbnail(getURL(posts[2].data!), 2,
+                            postId: posts[2].postId),
                       ),
                     ),
                   ),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -380,13 +432,13 @@ class PostContentVideo extends StatelessWidget {
                         child: Stack(
                           children: [
                             backgroundThumbnail(getURL(posts[3].data!), 3,
+                                postId: posts[3].postId,
                                 borderRadius: const BorderRadius.only(
                                     bottomRight: Radius.circular(8))),
                             // Black filter overlay
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.black
-                                    .withOpacity(0.3), // Semi-transparent black
+                                color: Colors.black.withOpacity(0.3), // Semi-transparent black
                               ),
                             ),
                             // Centered Text "6+"
@@ -395,8 +447,7 @@ class PostContentVideo extends StatelessWidget {
                                 "+${posts.length - 3}",
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize:
-                                      24, // Adjust the font size as needed
+                                  fontSize: 24, // Adjust the font size as needed
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

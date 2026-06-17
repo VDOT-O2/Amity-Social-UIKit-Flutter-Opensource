@@ -31,6 +31,7 @@ class _UserVideoFeedElementState extends State<UserVideoFeedElement> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           Navigator.push(
             context,

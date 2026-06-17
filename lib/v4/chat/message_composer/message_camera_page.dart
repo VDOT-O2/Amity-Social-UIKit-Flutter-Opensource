@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -149,6 +150,8 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
   }
 
   void initializeVideoPlayer(String filePath) {
+    AmityLog.debug("[AmityMessageCameraScreen] Initializing video player for file=$filePath");
+
     setState(() {
       _controller = VideoPlayerController.file(File(filePath));
       _initializeVideoPlayerFuture = _controller!.initialize();
@@ -197,6 +200,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.of(context).pop(),
                   child: SizedBox(
                     width: 32,
@@ -263,6 +267,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     setState(() {
                       result = null;
@@ -380,6 +385,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () async {
                   if (isVideoMode) {
                     if (isRecording) {
@@ -477,6 +483,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
           Padding(
             padding: EdgeInsets.only(right: selectedFileType == null ? 20 : 0),
             child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 setState(() {
                   isVideoMode = true;
@@ -494,6 +501,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
           ),
         if (selectedFileType == FileType.image || selectedFileType == null)
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               setState(() {
                 isVideoMode = false;
@@ -572,6 +580,7 @@ class _AmityMessageCameraScreenState extends State<AmityMessageCameraScreen>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () async {
                     Navigator.of(context).pop(result);
                   },

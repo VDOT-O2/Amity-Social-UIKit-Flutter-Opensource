@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
+import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,33 +15,46 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class MediaPermissionHandler {
-  // Check and request permissions
-  Future<bool> handleMediaPermissions() async {
-    // For Android 13+ (API level 33+)
+  // Check and request permissions.
+  // Returns the PermissionState (authorized, limited, denied, notDetermined).
+  // Use [requestPermissions] for a bool result, or inspect the state directly
+  // to decide which picker to open without an extra system call.
+  Future<PermissionState?> requestPermissionsWithState() async {
     if (await _isAndroid13OrHigher()) {
-      final status = await Permission.photos.status;
-      if (status.isDenied) {
-        // Request permissions
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.photos,
-          Permission.videos,
-        ].request();
+      final permissionState = await PhotoManager.requestPermissionExtend();
+      if (permissionState == PermissionState.denied ||
+          permissionState == PermissionState.notDetermined) {
+        await _showPermissionDialog();
+      }
+      return permissionState;
+    }
+    return null; // Android 12 and below — use handleMediaPermissions()
+  }
 
-        final granted = statuses[Permission.photos]!.isGranted &&
-            statuses[Permission.videos]!.isGranted;
-        
-        if (!granted) {
-          await _showPermissionDialog();
-        }
-        
-        return granted;
-      } else if (status.isPermanentlyDenied) {
+  // Check and request permissions.
+  // Returns true when the user has granted either full or partial (limited)
+  // access. Use [isLimitedAccess] afterwards to decide which picker to open.
+  Future<bool> handleMediaPermissions() async {
+    // For Android 13+ (API level 33+) use photo_manager which correctly
+    // distinguishes full vs. partial (limited) access on Android 14+.
+    if (await _isAndroid13OrHigher()) {
+      final permissionState = await PhotoManager.requestPermissionExtend();
+
+      if (permissionState == PermissionState.denied ||
+          permissionState == PermissionState.notDetermined) {
         await _showPermissionDialog();
         return false;
       }
-      return status.isGranted;
+
+      // PermissionState.authorized  → full access
+      // PermissionState.limited     → partial access (Android 14+)
+      // Both are acceptable — callers use isLimitedAccess() to pick the
+      // right picker UI.
+      return permissionState == PermissionState.authorized ||
+          permissionState == PermissionState.limited;
     }
     // For Android 12 and below
     else {
@@ -98,12 +112,25 @@ class MediaPermissionHandler {
     return false;
   }
 
+  // Returns true when the user has granted only partial (limited) media access
+  // on Android 14+. Uses photo_manager which correctly reports PermissionState.limited
+  // on Android 14+ (permission_handler does not surface this on Android).
+  Future<bool> isLimitedAccess() async {
+    if (!Platform.isAndroid) return false;
+    if (!await _isAndroid13OrHigher()) return false;
+    final permissionState = await PhotoManager.requestPermissionExtend();
+    return permissionState == PermissionState.limited;
+  }
+
   // Pick image using photo picker
   Future<XFile?> pickImage() async {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(false);
+        // Use Android Photo Picker when access is limited so only the
+        // user-selected photos are shown, not the full gallery.
+        final limited = await isLimitedAccess();
+        _configureAndroidPhotoPicker(limited);
         final XFile? image = await picker.pickImage(
           source: ImageSource.gallery,
         );
@@ -121,7 +148,10 @@ class MediaPermissionHandler {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(false);
+        // Use Android Photo Picker when access is limited so only the
+        // user-selected videos are shown, not the full gallery.
+        final limited = await isLimitedAccess();
+        _configureAndroidPhotoPicker(limited);
         final XFile? video = await picker.pickVideo(
           source: ImageSource.gallery,
         );
@@ -134,28 +164,52 @@ class MediaPermissionHandler {
     return null;
   }
 
-  Future<List<XFile>> pickImageAndVideo({limit = 10}) async {
-    if (await handleMediaPermissions()) {
-      final ImagePicker picker = ImagePicker();
-      try {
-        final ImagePickerPlatform imagePickerImplementation =
-            ImagePickerPlatform.instance;
-        if (imagePickerImplementation is ImagePickerAndroid) {
-          imagePickerImplementation.useAndroidPhotoPicker = false;
-        }
-        List<XFile> mediaFiles = [];
+  Future<List<XFile>> pickImageAndVideo({int limit = 10, AmityThemeColor? theme}) async {
+    final BuildContext? context = NavigationService.navigatorKey.currentContext;
+    if (context == null) return [];
 
-        // Pick images
-        final List<XFile> images = await picker.pickMultipleMedia(
-          limit: limit,
-        );
-        mediaFiles.addAll(images);
-        return mediaFiles;
-      } catch (e) {
-        return [];
+    try {
+      // Build picker theme from UIKit AmityThemeColor if provided.
+      // Override iconTheme and textTheme so the check icon and selection
+      // index numbers (1,2,3) are always white — they sit on a colored
+      // circle background and must contrast against it regardless of
+      // whether the app is in light or dark mode.
+      final ThemeData? pickerTheme = theme != null
+          ? AssetPicker.themeData(theme.primaryColor,
+                  light: theme.backgroundColor.computeLuminance() > 0.5)
+              .copyWith(
+              iconTheme: const IconThemeData(color: Colors.white),
+              textTheme: Typography.material2021().white.copyWith(
+                    bodyLarge: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+            )
+          : null;
+
+      final List<AssetEntity>? assets = await AssetPicker.pickAssets(
+        context,
+        pickerConfig: AssetPickerConfig(
+          maxAssets: limit,
+          requestType: RequestType.common, // image + video
+          pickerTheme: pickerTheme,
+        ),
+      );
+
+      if (assets == null || assets.isEmpty) return [];
+
+      final List<XFile> files = [];
+      for (final asset in assets) {
+        final File? file = await asset.originFile;
+        if (file != null) {
+          files.add(XFile(file.path));
+        }
       }
+      return files;
+    } catch (e) {
+      return [];
     }
-    return [];
   }
 
   void _configureAndroidPhotoPicker(bool enabled) {

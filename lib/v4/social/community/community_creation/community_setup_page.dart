@@ -89,6 +89,7 @@ class AmityCommunitySetupPage extends NewBasePage {
           configProvider: configProvider,
           theme: theme,
           leadingButton: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () => _backAction(context),
               child: Center(
                 child: SvgPicture.asset(
@@ -112,6 +113,7 @@ class AmityCommunitySetupPage extends NewBasePage {
                     controller: _scrollController,
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () => _showBottomSheet(context),
                         child: _getProfileAvatarWidget(context, state),
                       ),
@@ -145,6 +147,7 @@ class AmityCommunitySetupPage extends NewBasePage {
                                   }),
                               const SizedBox(height: 24),
                               GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () {
                                   _goToCategoryPage(context, state);
                                 },
@@ -299,6 +302,7 @@ class AmityCommunitySetupPage extends NewBasePage {
           children: [
             for (var member in state.communityMembers)
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   context
                       .read<CommunitySetupPageBloc>()
@@ -307,6 +311,7 @@ class AmityCommunitySetupPage extends NewBasePage {
                 child: _userItemWidget(context, member),
               ),
             GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _goToMemberPage(context, state);
                 },
@@ -326,6 +331,7 @@ class AmityCommunitySetupPage extends NewBasePage {
         children: [
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               if (state.communityName.isNotEmpty) {
                 context
@@ -386,6 +392,7 @@ class AmityCommunitySetupPage extends NewBasePage {
         children: [
           Expanded(
               child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               if (state.communityName.isNotEmpty &&
                   state.hasExistingDataChanged) {

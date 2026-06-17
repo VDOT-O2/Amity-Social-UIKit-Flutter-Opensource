@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/amity_uikit.dart';
@@ -29,7 +30,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kDebugTestAuthToken = '85b53c056331cfd30a5048bdc5d47e2c2fad90e5';
+const _kDebugTestAuthToken = 'ae3d2a17563a1ff9b45a74e5c78a168aa5be9d76';
 
 List<CameraDescription> camera = <CameraDescription>[];
 void main() async {
@@ -38,8 +39,24 @@ void main() async {
   // await Firebase.initializeApp(
   // options: DefaultFirebaseOptions.currentPlatform,
   // );
+
+  // Proxyman proxy — debug only.
+  // iOS Simulator: use 127.0.0.1. Physical device: use your Mac's local IP.
+//   assert(() {
+//     HttpOverrides.global = _ProxyHttpOverrides();
+//     return true;
+//   }());
+
   runApp(const MyApp());
 }
+
+// class _ProxyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..findProxy = (Uri uri) => 'PROXY 192.168.1.35:9090';
+//   }
+// }
 
 final GlobalKey<NavigatorState> MyAppNavigatorKey = GlobalKey<NavigatorState>();
 

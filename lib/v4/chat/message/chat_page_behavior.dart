@@ -1,5 +1,7 @@
 import 'package:amity_uikit_beta_service/v4/utils/amity_image_viewer.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmityChatPageBehavior {
   /// Called when user taps on avatar in chat page header
@@ -13,6 +15,18 @@ class AmityChatPageBehavior {
     String? avatarUrl,
     String? userId,
   ) {
+    if (userId != null && userId.isNotEmpty) {
+      final navigationProvider = context.read<NavigationProvider>();
+      navigationProvider.handleNavigation(
+        context,
+        event: AmityNavigationEvent.showUserProfile,
+        params: {'userId': userId},
+      );
+      
+      
+      return;
+    }
+
     if (avatarUrl != null && avatarUrl.isNotEmpty) {
       Navigator.push(
         context,

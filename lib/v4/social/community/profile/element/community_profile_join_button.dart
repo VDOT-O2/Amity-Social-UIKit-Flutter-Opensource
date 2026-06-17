@@ -28,6 +28,7 @@ class AmityCommunityJoinButton extends BaseElement {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           context
             .read<CommunityProfileBloc>()

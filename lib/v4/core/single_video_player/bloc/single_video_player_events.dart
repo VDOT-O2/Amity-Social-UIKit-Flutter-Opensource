@@ -8,5 +8,3 @@ abstract class SingleVideoPlayerEvent extends Equatable {
 }
 
 class SingleVideoPlayerEventInitial extends SingleVideoPlayerEvent {}
-
-class SingleVideoPlayerEventDispose extends SingleVideoPlayerEvent {}

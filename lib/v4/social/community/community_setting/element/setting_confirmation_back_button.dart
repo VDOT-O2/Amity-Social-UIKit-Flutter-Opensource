@@ -23,6 +23,7 @@ class SettingConfirmationBackButton extends StatelessWidget {
 
   Widget _backButton(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         if (shouldShowConfirmationDialog) {
           ConfirmationDialog().show(

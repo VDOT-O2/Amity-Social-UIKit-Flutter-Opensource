@@ -88,6 +88,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
                                       return const SizedBox();
 
                                     return GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
                                       onTap: () {
                                         _showBottomSheet(context);
                                       },

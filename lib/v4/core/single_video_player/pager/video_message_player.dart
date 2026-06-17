@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/v4/chat/message/chat_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/single_video_player/pager/bloc/video_message_player_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/media_permission_handler.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +25,13 @@ class VideoMessagePlayer extends StatelessWidget with ChangeNotifier {
   @override
   Widget build(BuildContext context) {
     final video = (message.data as MessageVideoData).getVideo();
-    final thumbnailUrl =
-        (message.data as MessageVideoData).thumbnailImageFile?.fileUrl ?? "";
+    final thumbnailUrl = (message.data as MessageVideoData).thumbnailImageFile?.fileUrl ?? "";
     return BlocProvider(
-      create: (context) =>
-          VideoMessagePlayerBloc(video: video, thumbnailUrl: thumbnailUrl),
-      child:
-          AmityVideoPlayerBuilder(context: context, onDelete: onDelete).build(),
+      create: (context) => VideoMessagePlayerBloc(video: video, thumbnailUrl: thumbnailUrl),
+      child: AmityVideoPlayerBuilder(context: context, onDelete: onDelete).build(),
     );
   }
+
 }
 
 class AmityVideoPlayerBuilder with ChangeNotifier {
@@ -42,8 +41,7 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
   AmityVideoPlayerBuilder({required this.context, required this.onDelete});
 
   Widget build() {
-    return BlocBuilder<VideoMessagePlayerBloc, VideoMessagePlayerState>(
-        builder: (context, state) {
+    return BlocBuilder<VideoMessagePlayerBloc, VideoMessagePlayerState>(builder: (context, state) {
       return SafeArea(
         child: Scaffold(
             backgroundColor: Colors.black,
@@ -70,8 +68,7 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                                   videoPlayerController: state.videoController!,
                                   showControlsOnInitialize: false,
                                   autoInitialize: true,
-                                  aspectRatio:
-                                      state.videoController!.value.aspectRatio,
+                                  aspectRatio: state.videoController!.value.aspectRatio,
                                   autoPlay: true,
                                   looping: true,
                                 ),
@@ -84,6 +81,7 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                           children: [
                             ...[
                               GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () {
                                   onDelete();
                                 },
@@ -99,47 +97,36 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                               ),
                             ],
                             GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () async {
                                 try {
-                                  final permissionHandler =
-                                      MediaPermissionHandler();
-                                  final bool mediaPermissionGranted =
-                                      await permissionHandler
-                                          .handleMediaPermissions();
+                                  final permissionHandler = MediaPermissionHandler();
+                                  final bool mediaPermissionGranted = await permissionHandler.handleMediaPermissions();
                                   if (mediaPermissionGranted == false) {
-                                    context.read<AmityToastBloc>().add(
-                                        AmityToastShort(
-                                            message: "Permission denied.",
-                                            icon: AmityToastIcon.warning,
-                                            bottomPadding: AmityChatPage
-                                                .toastBottomPadding));
+                                    context.read<AmityToastBloc>().add(AmityToastShort(
+                                        message: "Permission denied.",
+                                        icon: AmityToastIcon.warning,
+                                        bottomPadding: AmityChatPage.toastBottomPadding));
                                     return;
                                   } else {
-                                    final saved = await permissionHandler
-                                        .downloadAndSaveVideo(state.videoUrl);
+                                    final saved = await permissionHandler.downloadAndSaveVideo(state.videoUrl);
                                     if (saved) {
-                                      context.read<AmityToastBloc>().add(
-                                          AmityToastShort(
-                                              message: "Saved video.",
-                                              icon: AmityToastIcon.success,
-                                              bottomPadding: AmityChatPage
-                                                  .toastBottomPadding));
+                                      context.read<AmityToastBloc>().add(AmityToastShort(
+                                          message: "Saved video.",
+                                          icon: AmityToastIcon.success,
+                                          bottomPadding: AmityChatPage.toastBottomPadding));
                                     } else {
-                                      context.read<AmityToastBloc>().add(
-                                          AmityToastShort(
-                                              message: "Failed to save video.",
-                                              icon: AmityToastIcon.warning,
-                                              bottomPadding: AmityChatPage
-                                                  .toastBottomPadding));
+                                      context.read<AmityToastBloc>().add(AmityToastShort(
+                                          message: "Failed to save video.",
+                                          icon: AmityToastIcon.warning,
+                                          bottomPadding: AmityChatPage.toastBottomPadding));
                                     }
                                   }
                                 } catch (e) {
-                                  context.read<AmityToastBloc>().add(
-                                      AmityToastShort(
-                                          message: "Failed to save video.",
-                                          icon: AmityToastIcon.warning,
-                                          bottomPadding: AmityChatPage
-                                              .toastBottomPadding));
+                                  context.read<AmityToastBloc>().add(AmityToastShort(
+                                      message: "Failed to save video.",
+                                      icon: AmityToastIcon.warning,
+                                      bottomPadding: AmityChatPage.toastBottomPadding));
                                 }
                               },
                               child: Container(
@@ -177,13 +164,5 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
             )),
       );
     });
-  }
-
-  @override
-  void dispose() {
-    context
-        .read<VideoMessagePlayerBloc>()
-        .add(VideoMessagePlayerEventDispose());
-    super.dispose();
   }
 }

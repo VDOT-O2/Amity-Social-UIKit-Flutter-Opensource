@@ -102,6 +102,7 @@ class AmityRecommendedCommunityCard extends StatelessWidget {
         community.categories != null && community.categories!.isNotEmpty;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         Navigator.push(
             context,
