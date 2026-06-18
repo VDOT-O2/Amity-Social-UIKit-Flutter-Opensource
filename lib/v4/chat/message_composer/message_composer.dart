@@ -598,7 +598,7 @@ class AmityMessageComposer extends NewBaseComponent {
         children: [
           renderMediaButton(
             "assets/Icons/amity_ic_camera_button.svg",
-            context.l10n.general_camera,
+            context.l10n.general_photo,
             () {
               onCameraTap(context);
             },
@@ -620,7 +620,7 @@ class AmityMessageComposer extends NewBaseComponent {
             "assets/Icons/amity_ic_image_button.svg",
             context.l10n.message_media,
             () {
-              pickMultipleFiles(context, appName, FileType.any, maxFiles: mediaAttachmentLimit);
+              onMediaTap(context);
             },
           ),
         ],

@@ -9,7 +9,6 @@ import 'package:amity_uikit_beta_service/v4/social/globalfeed/bloc/global_feed_b
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/bloc/post_composer_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/detailed_media_attachment_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/media_attachment_component.dart';
-import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_camera_screen.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_composer_file_picker.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_composer_views.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_composer_model.dart';
@@ -47,14 +46,12 @@ class AmityPostComposerPage extends NewBasePage {
   bool isPosting = false;
   String appName = '';
 
-  AmityPostComposerPage({Key? key, required this.options, this.onPopRequested})
-      : super(key: key, pageId: 'post_composer_page');
+  AmityPostComposerPage({Key? key, required this.options, this.onPopRequested}) : super(key: key, pageId: 'post_composer_page');
 
   @override
   Widget buildPage(BuildContext context) {
     _getAppName();
-    String? communityId =
-        (options.targetType == AmityPostTargetType.COMMUNITY && options.targetId != null) ? options.targetId : null;
+    String? communityId = (options.targetType == AmityPostTargetType.COMMUNITY && options.targetId != null) ? options.targetId : null;
 
     if (options.mode == AmityPostComposerMode.edit) {
       AmityPost post = options.post!;
@@ -202,10 +199,10 @@ class AmityPostComposerPage extends NewBasePage {
                         onCameraTap(context);
                       },
                       onImageTap: () async {
-                        pickMultipleFiles(context, FileType.image, maxFiles: 10);
+                        onMediaTap(context);
                       },
                       onVideoTap: () async {
-                        pickMultipleFiles(context, FileType.video, maxFiles: 10);
+                        onVideoTap(context);
                       },
                       mediaType: selectedMediaType,
                     ),
@@ -214,10 +211,10 @@ class AmityPostComposerPage extends NewBasePage {
                           onCameraTap(context);
                         },
                         onImageTap: () {
-                          pickMultipleFiles(context, FileType.image, maxFiles: 10);
+                          onMediaTap(context);
                         },
                         onVideoTap: () {
-                          pickMultipleFiles(context, FileType.video, maxFiles: 10);
+                          onVideoTap(context);
                         },
                         mediaType: selectedMediaType),
                   ),
@@ -304,8 +301,7 @@ class AmityPostComposerPage extends NewBasePage {
     bool hasAnyError = selectedFiles.values.any((file) => file.isError == true);
 
     // Check if all files are uploaded
-    bool isAllImageUploaded =
-        selectedFiles.values.every((image) => image.isUploaded == true);
+    bool isAllImageUploaded = selectedFiles.values.every((image) => image.isUploaded == true);
 
     if (hasAnyError) {
       // If any file failed, media is not ready
@@ -323,51 +319,101 @@ class AmityPostComposerPage extends NewBasePage {
     appName = packageInfo.appName;
   }
 
-  void onCameraTap(BuildContext context) {
+  Future<void> onCameraTap(BuildContext context) async {
     final localize = context.l10n;
 
-    // Use a different context for navigation to avoid conflicts
-    Navigator.of(context)
-        .push(
-      MaterialPageRoute(
-        builder: (dialogContext) => AmityPostCameraScreen(
-          selectedType: selectedMediaType,
-        ),
-      ),
-    )
-        .then(
-      (value) {
-        AmityCameraResult? result = value;
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
 
-        if (result != null) {
-          if (result.type == FileType.video) {
-            if (selectedFiles.length == 10) {
-              AmityV4Dialog().showAlertErrorDialog(
-                title: localize.error_max_upload_reached,
-                message: localize.error_max_upload_videos_reached_description(10),
-                closeText: localize.general_close,
-              );
-            } else {
-              context.read<PostComposerBloc>().add(
-                    PostComposerSelectVideosEvent(selectedVideos: result.file),
-                  );
-            }
-          } else {
-            if (selectedFiles.length == 10) {
-              AmityV4Dialog().showAlertErrorDialog(
-                  title: localize.error_max_upload_reached,
-                  message: localize.error_max_upload_image_reached_description(10),
-                  closeText: localize.general_close);
-            } else {
-              context.read<PostComposerBloc>().add(
-                    PostComposerSelectImagesEvent(selectedImage: result.file),
-                  );
-            }
-          }
-        }
-      },
-    );
+    if (pickedFile == null || !context.mounted) {
+      return;
+    }
+
+    if (selectedFiles.length == 10) {
+      AmityV4Dialog().showAlertErrorDialog(
+        title: localize.error_max_upload_reached,
+        message: localize.error_max_upload_image_reached_description(10),
+        closeText: localize.general_close,
+      );
+      return;
+    }
+
+    context.read<PostComposerBloc>().add(
+          PostComposerSelectImagesEvent(selectedImage: pickedFile),
+        );
   }
+
+  Future<void> onVideoTap(BuildContext context) async {
+    final localize = context.l10n;
+
+    final pickedFile = await imagePicker.pickVideo(source: ImageSource.camera);
+
+    if (pickedFile == null || !context.mounted) {
+      return;
+    }
+
+    if (selectedFiles.length == 10) {
+      AmityV4Dialog().showAlertErrorDialog(
+        title: localize.error_max_upload_reached,
+        message: localize.error_max_upload_videos_reached_description(10),
+        closeText: localize.general_close,
+      );
+      return;
+    }
+
+    context.read<PostComposerBloc>().add(
+          PostComposerSelectVideosEvent(selectedVideos: pickedFile),
+        );
+  }
+
+  Future<void> onMediaTap(BuildContext context) async {
+    final localize = context.l10n;
+
+    final pickedFiles = await imagePicker.pickMultipleMedia();
+
+    if (pickedFiles.isEmpty || !context.mounted) {
+      return;
+    }
+
+    final remainingSlots = 10 - selectedFiles.length;
+    if (remainingSlots <= 0) {
+      return;
+    }
+
+    final filesToUpload = pickedFiles.take(remainingSlots).toList();
+
+    if (selectedFiles.length == 10) {
+      AmityV4Dialog().showAlertErrorDialog(
+        title: localize.error_max_upload_reached,
+        message: localize.error_max_upload_image_reached_description(10),
+        closeText: localize.general_close,
+      );
+      return;
+    }
+
+    for (final pickedFile in filesToUpload) {
+      if (!context.mounted) {
+        return;
+      }
+
+      final isVideo = _isVideoPath(pickedFile.path);
+      context.read<PostComposerBloc>().add(
+            isVideo
+                ? PostComposerSelectVideosEvent(selectedVideos: pickedFile)
+                : PostComposerSelectImagesEvent(selectedImage: pickedFile),
+          );
+    }
+  }
+
+  bool _isVideoPath(String path) {
+    final lower = path.toLowerCase();
+    return lower.endsWith('.mp4') ||
+        lower.endsWith('.mov') ||
+        lower.endsWith('.m4v') ||
+        lower.endsWith('.avi') ||
+        lower.endsWith('.mkv') ||
+        lower.endsWith('.webm');
+  }
+
 
   void _initializeController(BuildContext context) {
     if (options.mode == AmityPostComposerMode.edit && options.post?.data is TextData) {
@@ -460,18 +506,14 @@ class AmityPostComposerPage extends NewBasePage {
         isPosting = false;
         if (error is AmityException) {
           if (error.isAmityErrorWithCode(AmityErrorCode.BAN_WORD_FOUND)) {
-            _showToast(context, context.l10n.error_post_ban_word_found,
-                AmityToastIcon.warning);
+            _showToast(context, context.l10n.error_post_ban_word_found, AmityToastIcon.warning);
             return;
-          } else if (error
-              .isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
-            _showToast(context, context.l10n.error_post_link_not_allowed,
-                AmityToastIcon.warning);
+          } else if (error.isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
+            _showToast(context, context.l10n.error_post_link_not_allowed, AmityToastIcon.warning);
             return;
           }
         }
-        _showToast(
-            context, context.l10n.error_edit_post, AmityToastIcon.warning);
+        _showToast(context, context.l10n.error_edit_post, AmityToastIcon.warning);
       });
     } else {
       final postEditBuilder = options.post?.edit();
@@ -548,18 +590,14 @@ class AmityPostComposerPage extends NewBasePage {
         isPosting = false;
         if (error is AmityException) {
           if (error.isAmityErrorWithCode(AmityErrorCode.BAN_WORD_FOUND)) {
-            _showToast(context, context.l10n.error_post_ban_word_found,
-                AmityToastIcon.warning);
+            _showToast(context, context.l10n.error_post_ban_word_found, AmityToastIcon.warning);
             return;
-          } else if (error
-              .isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
-            _showToast(context, context.l10n.error_post_link_not_allowed,
-                AmityToastIcon.warning);
+          } else if (error.isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
+            _showToast(context, context.l10n.error_post_link_not_allowed, AmityToastIcon.warning);
             return;
           }
         }
-        _showToast(
-            context, context.l10n.error_edit_post, AmityToastIcon.warning);
+        _showToast(context, context.l10n.error_edit_post, AmityToastIcon.warning);
       });
     }
   }
@@ -567,9 +605,7 @@ class AmityPostComposerPage extends NewBasePage {
   void _createPost(BuildContext context) {
     final targetId = options.targetId;
 
-    context
-        .read<AmityToastBloc>()
-        .add(AmityToastLoading(message: context.l10n.general_posting, icon: AmityToastIcon.loading));
+    context.read<AmityToastBloc>().add(AmityToastLoading(message: context.l10n.general_posting, icon: AmityToastIcon.loading));
 
     var targetBuilder = AmitySocialClient.newPostRepository().createPost();
 
@@ -635,18 +671,14 @@ class AmityPostComposerPage extends NewBasePage {
         if (!context.mounted) return;
         if (error is AmityException) {
           if (error.isAmityErrorWithCode(AmityErrorCode.BAN_WORD_FOUND)) {
-            _showToast(context, context.l10n.error_post_ban_word_found,
-                AmityToastIcon.warning);
+            _showToast(context, context.l10n.error_post_ban_word_found, AmityToastIcon.warning);
             return;
-          } else if (error
-              .isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
-            _showToast(context, context.l10n.error_post_link_not_allowed,
-                AmityToastIcon.warning);
+          } else if (error.isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
+            _showToast(context, context.l10n.error_post_link_not_allowed, AmityToastIcon.warning);
             return;
           }
         }
-        _showToast(
-            context, context.l10n.error_create_post, AmityToastIcon.warning);
+        _showToast(context, context.l10n.error_create_post, AmityToastIcon.warning);
       });
     });
   }
@@ -654,18 +686,12 @@ class AmityPostComposerPage extends NewBasePage {
   void _onPostSuccess(BuildContext context, AmityPost post) {
     // Cache local video thumbnails for newly created video posts
     // so the feed can show them before the server generates thumbnails.
-    if (selectedMediaType == FileType.video &&
-        post.children != null &&
-        post.children!.isNotEmpty) {
-      final thumbnailEntries =
-          selectedFiles.values.where((f) => f.videoThumbnail != null).toList();
-      for (var i = 0;
-          i < post.children!.length && i < thumbnailEntries.length;
-          i++) {
+    if (selectedMediaType == FileType.video && post.children != null && post.children!.isNotEmpty) {
+      final thumbnailEntries = selectedFiles.values.where((f) => f.videoThumbnail != null).toList();
+      for (var i = 0; i < post.children!.length && i < thumbnailEntries.length; i++) {
         final childPostId = post.children![i].postId;
         if (childPostId != null) {
-          PostVideoThumbnailCache.instance
-              .set(childPostId, thumbnailEntries[i].videoThumbnail!);
+          PostVideoThumbnailCache.instance.set(childPostId, thumbnailEntries[i].videoThumbnail!);
         }
       }
     }
@@ -679,9 +705,7 @@ class AmityPostComposerPage extends NewBasePage {
       isPostReviewEnabled = commTarget.targetCommunity?.isPostReviewEnabled ?? false;
 
       // Check if user has moderator permission
-      isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY)
-          .atCommunity(commTarget.targetCommunityId ?? "")
-          .check();
+      isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(commTarget.targetCommunityId ?? "").check();
     }
 
     context.read<AmityToastBloc>().add(AmityToastDismiss());

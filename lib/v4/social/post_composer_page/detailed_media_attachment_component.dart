@@ -62,20 +62,20 @@ class AmityDetailedMediaAttachmentComponent extends NewBaseComponent {
             if ((isVideoPostEnabled || isImagePostEnabled)) 
               _buildListTile(
                 assetPath: 'assets/Icons/amity_ic_camera_button.svg',
-                title: context.l10n.general_camera,
-                onTap: onCameraTap,
-              ),
-            if ((mediaType == FileType.image || mediaType == null) && isImagePostEnabled)
-              _buildListTile(
-                assetPath: 'assets/Icons/amity_ic_image_button.svg',
                 title: context.l10n.general_photo,
-                onTap: onImageTap,
+                onTap: onCameraTap,
               ),
             if ((mediaType == FileType.video || mediaType == null) && isVideoPostEnabled)
               _buildListTile(
                 assetPath: 'assets/Icons/amity_ic_video_button.svg',
                 title: context.l10n.general_video,
                 onTap: onVideoTap,
+              ),
+            if ((mediaType == FileType.image || mediaType == null) && isImagePostEnabled)
+              _buildListTile(
+                assetPath: 'assets/Icons/amity_ic_image_button.svg',
+                title: context.l10n.message_media,
+                onTap: onImageTap,
               ),
           ],
         ),

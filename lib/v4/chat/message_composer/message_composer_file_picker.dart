@@ -16,7 +16,7 @@ extension MessageComposerFilePicker on AmityMessageComposer {
       final handler = MediaPermissionHandler();
       final files = await handler.pickImageAndVideo(limit: maxFiles, theme: uiKitTheme);
 
-      if (files.isNotEmpty) {
+      if (files.isNotEmpty) { 
         for (final selectedMedia in files) {
           action.onMessageCreated();
           if (!context.mounted) return;
