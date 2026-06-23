@@ -46,6 +46,10 @@ class AmityCommunityProfilePage extends NewBasePage {
           return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
             final bgColor = theme.isLight ? theme.borderSubtle : theme.surfaceRaised;
+            final mediaQuery = MediaQuery.of(context);
+            final bottomInset = mediaQuery.viewPadding.bottom > mediaQuery.systemGestureInsets.bottom
+                ? mediaQuery.viewPadding.bottom
+                : mediaQuery.systemGestureInsets.bottom;
 
             return Scaffold(
               backgroundColor: bgColor,
@@ -57,58 +61,64 @@ class AmityCommunityProfilePage extends NewBasePage {
                 _buildPendingPost(context, state),
                 _buildFeedTabSelector(context, state),
                 _buildFeed(context, state),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: bottomInset),
+                ),
               ]),
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
               floatingActionButton: (state.isJoined && !(state.community?.onlyAdminCanPost == true && !state.isModerator))
-                  ? GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        showActions(context, state.canManageStory, state.community, state.isModerator);
-                      },
-                      child: SizedBox(
-                        width: 64,
-                        height: 64,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 0,
-                              top: 0,
-                              child: Container(
-                                width: 64,
-                                height: 64,
-                                decoration: ShapeDecoration(
-                                  color: theme.buttonColor,
-                                  shape: const OvalBorder(),
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: bottomInset),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          showActions(context, state.canManageStory, state.community, state.isModerator);
+                        },
+                        child: SizedBox(
+                          width: 64,
+                          height: 64,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                child: Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: ShapeDecoration(
+                                    color: theme.buttonColor,
+                                    shape: const OvalBorder(),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              left: 16,
-                              top: 16,
-                              child: SizedBox(
-                                width: 32,
-                                height: 32,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 32,
-                                      height: 32,
-                                      child: SvgPicture.asset(
-                                        'assets/Icons/amity_ic_plus_button.svg',
-                                        package: 'amity_uikit_beta_service',
+                              Positioned(
+                                left: 16,
+                                top: 16,
+                                child: SizedBox(
+                                  width: 32,
+                                  height: 32,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
                                         width: 32,
                                         height: 32,
-                                        colorFilter: ColorFilter.mode(theme.buttonTextColor, BlendMode.srcIn),
+                                        child: SvgPicture.asset(
+                                          'assets/Icons/amity_ic_plus_button.svg',
+                                          package: 'amity_uikit_beta_service',
+                                          width: 32,
+                                          height: 32,
+                                          colorFilter: ColorFilter.mode(theme.buttonTextColor, BlendMode.srcIn),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     )
