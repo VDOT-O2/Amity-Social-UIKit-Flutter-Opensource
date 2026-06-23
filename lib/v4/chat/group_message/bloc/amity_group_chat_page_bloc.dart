@@ -29,6 +29,7 @@ class AmityGroupChatPageBloc
   bool _isJumpScrollInProgress = false;
   String? _lastMessagesFingerprint;
   Timer? _jumpToMessageTimeoutTimer;
+  Timer? _loadingWatchdogTimer;
 
   final AmityToastBloc toastBloc;
 
@@ -53,10 +54,12 @@ class AmityGroupChatPageBloc
           isLoadingMore: false,
           hasNextPage: true,
           hasPrevious: false));
+      _startLoadingWatchdog();
       try {
         liveCollection?.reset();
         liveCollection?.loadNext();
       } catch (e) {
+        _stopLoadingWatchdog();
         emit(state.copyWith(
             messages: const [],
             isFetching: false,
@@ -213,6 +216,12 @@ class AmityGroupChatPageBloc
     });
 
     on<GroupChatPageEventLoadingStateUpdated>((event, emit) async {
+      if (event.isFetching) {
+        _startLoadingWatchdog();
+      } else {
+        _stopLoadingWatchdog();
+      }
+
       emit(state.copyWith(isFetching: event.isFetching));
 
       if (!event.isFetching && state is! GroupChatPageStateInitial && state.aroundMessageId != null && !_isJumpScrollInProgress && state.shouldBounceMessage == false) {
@@ -317,19 +326,32 @@ class AmityGroupChatPageBloc
     });
 
     on<GroupChatPageEventCreateNewChannel>((event, emit) async {
-      final channel = await AmityChatClient.newChannelRepository()
-          .createChannel()
-          .conversationType()
-          .withUserId(event.userId)
-          .create();
+      try {
+        final channel = await AmityChatClient.newChannelRepository()
+            .createChannel()
+            .conversationType()
+            .withUserId(event.userId)
+            .create();
 
-      final channelId = channel.channelId;
-      if (channelId != null) {
-        initLiveCollection(channelId);
-        addEvent(GroupChatPageEventChannelIdChanged(channelId));
-        addEvent(GroupChatPageEventRefresh());
-        addEvent(const GroupChatPageEventFetchMuteState());
+        final channelId = channel.channelId;
+        if (channelId != null) {
+          initLiveCollection(channelId);
+          addEvent(GroupChatPageEventChannelIdChanged(channelId));
+          addEvent(GroupChatPageEventRefresh());
+          addEvent(const GroupChatPageEventFetchMuteState());
+          return;
+        }
+      } catch (e) {
+        AmityLog.error("Error creating group conversation channel", e);
       }
+
+      _stopLoadingWatchdog();
+      emit(state.copyWith(
+        isFetching: false,
+        isLoadingMore: false,
+        hasNextPage: false,
+        hasPrevious: false,
+      ));
     });
 
     on<GroupChatPageReplyEvent>((event, emit) async {
@@ -509,9 +531,36 @@ class AmityGroupChatPageBloc
     _scrollController.dispose();
     subscription?.cancel();
     _jumpToMessageTimeoutTimer?.cancel();
+    _loadingWatchdogTimer?.cancel();
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
     return super.close();
+  }
+
+  void _startLoadingWatchdog() {
+    _loadingWatchdogTimer?.cancel();
+    _loadingWatchdogTimer = Timer(const Duration(seconds: 12), () {
+      if (isClosed) {
+        return;
+      }
+
+      final hasNoItems = state.messages.isEmpty;
+      if (state.isFetching && hasNoItems) {
+        AmityLog.debug(
+          "[GroupChatPage] Loading watchdog fired. Forcing idle. "
+          "channelId=${state.channelId}, "
+          "aroundMessageId=${state.aroundMessageId}, "
+          "messages=${state.messages.length}, "
+          "isConnected=${state.isConnected}",
+        );
+        addEvent(const GroupChatPageEventLoadingStateUpdated(isFetching: false));
+      }
+    });
+  }
+
+  void _stopLoadingWatchdog() {
+    _loadingWatchdogTimer?.cancel();
+    _loadingWatchdogTimer = null;
   }
 
   void initLiveCollection(String channelId, {String? aroundMessageId}) async {

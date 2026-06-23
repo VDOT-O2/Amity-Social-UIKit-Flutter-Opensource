@@ -33,6 +33,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   String? _lastMessagesFingerprint;
 
   Timer? _jumpToMessageTimeoutTimer;
+  Timer? _loadingWatchdogTimer;
 
   final AmityToastBloc toastBloc;
   final BuildContext _context;
@@ -52,10 +53,12 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       AmityLog.debug("ChatPageEventRefresh triggered");
       emit(state
           .copyWith(messages: const [], isFetching: true, isLoadingMore: false, hasNextPage: true, hasPrevious: false));
+      _startLoadingWatchdog();
       try {
         liveCollection?.reset();
       } catch (e) {
         AmityLog.error("Error refreshing chat page", e);
+        _stopLoadingWatchdog();
         emit(state.copyWith(
             messages: const [], isFetching: false, isLoadingMore: false, hasNextPage: false, hasPrevious: false));
       }
@@ -201,6 +204,12 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageEventLoadingStateUpdated>((event, emit) async {
+      if (event.isFetching) {
+        _startLoadingWatchdog();
+      } else {
+        _stopLoadingWatchdog();
+      }
+
       emit(state.copyWith(isFetching: event.isFetching));
 
       if (!event.isFetching &&
@@ -301,19 +310,32 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
 
     on<ChatPageEventCreateNewChannel>((event, emit) async {
-      final channel = await AmityChatClient.newChannelRepository()
-          .createChannel()
-          .conversationType()
-          .withUserId(event.userId)
-          .create();
+      try {
+        final channel = await AmityChatClient.newChannelRepository()
+            .createChannel()
+            .conversationType()
+            .withUserId(event.userId)
+            .create();
 
-      final channelId = channel.channelId;
-      if (channelId != null) {
-        await initLiveCollection(channelId);
-        addEvent(ChatPageEventChannelIdChanged(channelId));
-        addEvent(const ChatPageEventRefresh());
-        addEvent(const ChatPageEventFetchMuteState());
+        final channelId = channel.channelId;
+        if (channelId != null) {
+          await initLiveCollection(channelId);
+          addEvent(ChatPageEventChannelIdChanged(channelId));
+          addEvent(const ChatPageEventRefresh());
+          addEvent(const ChatPageEventFetchMuteState());
+          return;
+        }
+      } catch (e) {
+        AmityLog.error("Error creating conversation channel", e);
       }
+
+      _stopLoadingWatchdog();
+      emit(state.copyWith(
+        isFetching: false,
+        isLoadingMore: false,
+        hasNextPage: false,
+        hasPrevious: false,
+      ));
     });
 
     on<ChatPageReplyEvent>((event, emit) async {
@@ -581,9 +603,36 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     _connectivitySubscription.cancel();
 
     _jumpToMessageTimeoutTimer?.cancel();
+    _loadingWatchdogTimer?.cancel();
     liveCollection?.getStreamController().close();
     liveCollection?.dispose();
     return super.close();
+  }
+
+  void _startLoadingWatchdog() {
+    _loadingWatchdogTimer?.cancel();
+    _loadingWatchdogTimer = Timer(const Duration(seconds: 12), () {
+      if (isClosed) {
+        return;
+      }
+
+      final hasNoItems = state.messages.isEmpty;
+      if (state.isFetching && hasNoItems) {
+        AmityLog.debug(
+          "[ChatPage] Loading watchdog fired. Forcing idle. "
+          "channelId=${state.channelId}, "
+          "aroundMessageId=${state.aroundMessageId}, "
+          "messages=${state.messages.length}, "
+          "isConnected=${state.isConnected}",
+        );
+        addEvent(const ChatPageEventLoadingStateUpdated(isFetching: false));
+      }
+    });
+  }
+
+  void _stopLoadingWatchdog() {
+    _loadingWatchdogTimer?.cancel();
+    _loadingWatchdogTimer = null;
   }
 
   Future initLiveCollection(String channelId, {String? aroundMessageId}) async {
