@@ -21,6 +21,7 @@ import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
 import 'package:amity_uikit_beta_service/v4/utils/skeleton.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -515,14 +516,39 @@ class AmityChatPage extends NewBasePage {
                                     .add(const ChatPageRemoveReplyEvent());
                               },
                               onMessageCreated: () {
+                                final chatBloc = context.read<ChatPageBloc>();
+                                final hadNoMessages = state.messages
+                                    .where((item) => item.type == ChatItemType.message)
+                                    .isEmpty;
+
                                 context
                                     .read<ChatPageBloc>()
                                     .add(const ChatPageRemoveReplyEvent());
-                                state.scrollController.animateTo(
-                                  (state.useReverseUI && state.contentOverflowsScreen) ? 0.0 : state.scrollController.position.maxScrollExtent,
-                                  curve: Curves.easeOut,
-                                  duration: const Duration(milliseconds: 300),
-                                );
+                                if (state.scrollController.hasClients) {
+                                  state.scrollController.animateTo(
+                                    (state.useReverseUI && state.contentOverflowsScreen)
+                                        ? 0.0
+                                        : state.scrollController.position.maxScrollExtent,
+                                    curve: Curves.easeOut,
+                                    duration: const Duration(milliseconds: 300),
+                                  );
+                                }
+
+                                // Some production builds can miss the first message update
+                                // when a chat starts empty. Trigger one guarded refresh.
+                                if (hadNoMessages || kDebugMode) {
+                                  Future.delayed(const Duration(milliseconds: 500), () {
+                                    if (chatBloc.isClosed) {
+                                      return;
+                                    }
+                                    final stillNoMessages = chatBloc.state.messages
+                                        .where((item) => item.type == ChatItemType.message)
+                                        .isEmpty;
+                                    if (kDebugMode || stillNoMessages) {
+                                      chatBloc.add(const ChatPageEventRefresh());
+                                    }
+                                  });
+                                }
                               },
                             ),
                             enableMention: false,

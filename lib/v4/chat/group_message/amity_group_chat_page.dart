@@ -396,14 +396,37 @@ class AmityGroupChatPage extends NewBasePage {
                 .add(const GroupChatPageRemoveReplyEvent());
           },
           onMessageCreated: () {
+            final groupChatBloc = context.read<AmityGroupChatPageBloc>();
+            final hadNoMessages = state.messages
+                .where((item) => item.type == ChatItemType.message)
+                .isEmpty;
+
             context
                 .read<AmityGroupChatPageBloc>()
                 .add(const GroupChatPageRemoveReplyEvent());
-            state.scrollController.animateTo(
-              0.0,
-              curve: Curves.easeOut,
-              duration: const Duration(milliseconds: 300),
-            );
+            if (state.scrollController.hasClients) {
+              state.scrollController.animateTo(
+                0.0,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 300),
+              );
+            }
+
+            // Some production builds can miss the first message update
+            // when a chat starts empty. Trigger one guarded refresh.
+            if (hadNoMessages) {
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (groupChatBloc.isClosed) {
+                  return;
+                }
+                final stillNoMessages = groupChatBloc.state.messages
+                    .where((item) => item.type == ChatItemType.message)
+                    .isEmpty;
+                if (stillNoMessages) {
+                  groupChatBloc.add(GroupChatPageEventRefresh());
+                }
+              });
+            }
           },
         ),
         enableMention: true,
