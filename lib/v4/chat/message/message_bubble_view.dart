@@ -379,6 +379,10 @@ class MessageBubbleView extends NewBaseComponent {
   }
 
   void showReactionsBottomSheet(BuildContext context) {
+    if ((message.reactionCount ?? 0) <= 0) {
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

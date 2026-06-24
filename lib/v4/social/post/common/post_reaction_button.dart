@@ -35,6 +35,10 @@ class PostReactionButton extends StatelessWidget {
       package: 'amity_uikit_beta_service',
       width: 20,
       height: 20,
+      colorFilter: ColorFilter.mode(
+        theme.textPrimary,
+        BlendMode.srcIn,
+      )
     );
     if (post.myReactions?.isNotEmpty ?? false) {
       reactionIcon = post.myReactions!.first == 'like'
@@ -166,6 +170,10 @@ class PostReactionButton extends StatelessWidget {
               package: 'amity_uikit_beta_service',
               width: 20,
               height: 20,
+              colorFilter: ColorFilter.mode(
+                theme.textPrimary,
+                BlendMode.srcIn,
+              )
             ),
           );
   }

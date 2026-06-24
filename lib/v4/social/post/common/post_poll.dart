@@ -165,7 +165,7 @@ class _PostPollContentState extends State<PostPollContent> {
                   minimumSize: const Size(double.infinity, 40),
                   splashFactory: NoSplash.splashFactory,
                 ),
-                child: isVoting || kDebugMode
+                child: isVoting
                     ? Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: CircularProgressIndicator(

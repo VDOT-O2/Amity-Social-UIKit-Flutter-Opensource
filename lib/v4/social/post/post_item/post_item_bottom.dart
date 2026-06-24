@@ -54,6 +54,10 @@ class PostItemBottom extends NewBaseComponent {
   }
 
   void _showReactionsBottomSheet(BuildContext context) {
+    if ((post.reactionCount ?? 0) <= 0) {
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

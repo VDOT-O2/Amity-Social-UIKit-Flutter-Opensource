@@ -2,7 +2,6 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/reaction/reaction_list.dart';
-import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -66,6 +65,9 @@ class PostDetailInfo extends NewBaseComponent {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
+        if ((post.reactionCount ?? 0) <= 0) {
+          return;
+        }
         showReactionsBottomSheet();
       },
       child: Row(

@@ -20,7 +20,7 @@ class AmityCommentCreator extends BaseElement {
   final AmityComment? replyTo;
   final CommentCreatorAction action;
   final String? communityId;
-  AmityThemeColor? localTheme;
+  final AmityThemeColor? localTheme;
   AmityCommentCreator({
     Key? key,
     required this.referenceId,
@@ -229,6 +229,8 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                         toastBloc: context.read<AmityToastBloc>(),
                         context: context,
                       ));
+
+                  focusNode.unfocus();
                   controller.clear();
                 },
                 child: Container(

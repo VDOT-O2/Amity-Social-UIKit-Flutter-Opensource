@@ -724,12 +724,13 @@ class CommentItem extends BaseElement {
       children: [
         getReactionCount(reactionCount),
         const SizedBox(width: 4),
-        getReactionIcon(context, commentId, hasReactions, isReacting, hasMyReactions),
+        getReactionIcon(context, commentId, hasReactions, isReacting, hasMyReactions, reactionCount),
       ],
     );
   }
 
-  Widget getReactionIcon(BuildContext context, String commentId, bool hasReactions, bool isReacting, bool hasMyReactions) {
+  Widget getReactionIcon(BuildContext context, String commentId, bool hasReactions, bool isReacting, bool hasMyReactions,
+      [int reactionCount = 0]) {
     void showReactionsBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -775,6 +776,9 @@ class CommentItem extends BaseElement {
       return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
+            if (reactionCount <= 0) {
+              return;
+            }
             showReactionsBottomSheet();
           },
           child: Padding(
