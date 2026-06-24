@@ -8,6 +8,7 @@ import 'package:amity_uikit_beta_service/v4/core/ui/mention/mention_field.dart';
 import 'package:amity_uikit_beta_service/v4/core/user_avatar.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/bloc/comment_creator_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator_action.dart';
+import 'package:amity_uikit_beta_service/v4/social/comment/comment_list/bloc/comment_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -220,15 +221,36 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
+                  CommentListBloc? commentListBloc;
+                  try {
+                    commentListBloc = context.read<CommentListBloc>();
+                  } catch (_) {
+                    commentListBloc = null;
+                  }
+                  final initialCommentListSignature = commentListBloc != null
+                      ? _buildCommentListSignature(commentListBloc.state)
+                      : null;
+                  final toastBloc = context.read<AmityToastBloc>();
+
                   context.read<CommentCreatorBloc>().add(CommentCreatorCreated(
                         referenceId: referenceId,
                         referenceType: referenceType,
                         text: controller.text,
                         mentionMetadataList: controller.getAmityMentionMetadata(),
                         mentionUserIds: controller.getMentionUserIds(),
-                        toastBloc: context.read<AmityToastBloc>(),
+                        toastBloc: toastBloc,
                         context: context,
                       ));
+
+                  // Safeguard: refresh only when list did not move after submit.
+                  if (commentListBloc != null && initialCommentListSignature != null) {
+                    _refreshIfListDidNotUpdate(
+                      bloc: commentListBloc,
+                      toastBloc: toastBloc,
+                      baselineSignature: initialCommentListSignature,
+                      delay: const Duration(seconds: 2),
+                    );
+                  }
 
                   focusNode.unfocus();
                   controller.clear();
@@ -325,5 +347,29 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
         });
       });
     }
+  }
+
+  String _buildCommentListSignature(CommentListState state) {
+    final topCommentIds = state.comments
+        .take(5)
+        .map((comment) => comment.commentId ?? '')
+        .join('|');
+    return '${state.comments.length}|$topCommentIds';
+  }
+
+  void _refreshIfListDidNotUpdate({
+    required CommentListBloc bloc,
+    required AmityToastBloc toastBloc,
+    required String baselineSignature,
+    required Duration delay,
+  }) {
+    Future.delayed(delay, () {
+      if (!mounted) return;
+
+      final currentSignature = _buildCommentListSignature(bloc.state);
+      if (currentSignature == baselineSignature && !bloc.state.isFetching) {
+        bloc.add(CommentListEventRefresh(toastBloc: toastBloc));
+      }
+    });
   }
 }

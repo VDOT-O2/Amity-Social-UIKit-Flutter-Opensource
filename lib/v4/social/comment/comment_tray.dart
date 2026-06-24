@@ -5,8 +5,10 @@ import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator_action.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_item/comment_action.dart';
+import 'package:amity_uikit_beta_service/v4/social/comment/comment_list/bloc/comment_list_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_list/comment_list_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityCommentTrayComponent extends NewBaseComponent {
@@ -73,119 +75,123 @@ class _CommentTrayComponentState extends State<CommentTrayComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: widget.theme.backgroundColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20.0), // Adjust the radius value as needed
-          topRight: Radius.circular(20.0),
+    return BlocProvider(
+      create: (_) =>
+          CommentListBloc(widget.referenceId, widget.referenceType, null),
+      child: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+          color: widget.theme.backgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0), // Adjust the radius value as needed
+            topRight: Radius.circular(20.0),
+          ),
         ),
-      ),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
-        body: SizedBox(
-          height: double.infinity,
-          child: Column(
-            children: [
-              Expanded(
-                child: CustomScrollView(
-                  shrinkWrap: true,
-                  controller: widget.scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      title: const Text('Comments'),
-                      titleTextStyle: TextStyle(
-                        color: widget.theme.baseColor,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          body: SizedBox(
+            height: double.infinity,
+            child: Column(
+              children: [
+                Expanded(
+                  child: CustomScrollView(
+                    shrinkWrap: true,
+                    controller: widget.scrollController,
+                    slivers: [
+                      SliverAppBar(
+                        title: const Text('Comments'),
+                        titleTextStyle: TextStyle(
+                          color: widget.theme.baseColor,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      backgroundColor: widget.theme.backgroundColor,
-                      foregroundColor: Colors.white,
-                      pinned: true,
-                      automaticallyImplyLeading: false,
-                      centerTitle: true,
-                    ),
-                    SliverToBoxAdapter(
-                      child: getSectionDivider(widget.theme.baseColorShade4),
-                    ),
-                    SliverPadding(
-                      padding:
-                          const EdgeInsets.only(left: 12, right: 16, top: 7),
-                      sliver: AmityCommentListComponent(
-                        referenceId: widget.referenceId,
-                        referenceType: widget.referenceType,
-                        shouldAllowInteraction: widget.shouldAllowInteraction,
-                        parentScrollController: widget.scrollController,
-                        commentAction: CommentAction(
-                          onReply: (AmityComment? comment) {
-                            setState(
-                              () {
-                                replyToComment = comment;
-                              },
-                            );
-                          },
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
                         ),
+                        backgroundColor: widget.theme.backgroundColor,
+                        foregroundColor: Colors.white,
+                        pinned: true,
+                        automaticallyImplyLeading: false,
+                        centerTitle: true,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (widget.shouldAllowInteraction)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    children: [
-                      getSectionDivider(widget.theme.baseColorShade4),
-                      (widget.shouldAllowComments)
-                          ? AmityCommentCreator(
-                              referenceType: widget.referenceType,
-                              referenceId: widget.referenceId,
-                              replyTo: replyToComment,
-                              action: CommentCreatorAction(
-                                onDissmiss: () {
-                                  removeReplyToComment();
+                      SliverToBoxAdapter(
+                        child: getSectionDivider(widget.theme.baseColorShade4),
+                      ),
+                      SliverPadding(
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 16, top: 7),
+                        sliver: AmityCommentListComponent(
+                          referenceId: widget.referenceId,
+                          referenceType: widget.referenceType,
+                          shouldAllowInteraction: widget.shouldAllowInteraction,
+                          parentScrollController: widget.scrollController,
+                          commentAction: CommentAction(
+                            onReply: (AmityComment? comment) {
+                              setState(
+                                () {
+                                  replyToComment = comment;
                                 },
-                              ),
-                              communityId: widget.community?.communityId,
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/Icons/ic_lock_gray.svg',
-                                    package: 'amity_uikit_beta_service',
-                                    height: 16,
-                                  ),
-                                  const SizedBox(width: 16),
-                                  const Text(
-                                    "Comments are disabled for this story",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: AmityTextStyle.fontFamily,
-                                      color: Color(
-                                        0xff898E9E,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-            ],
+                if (widget.shouldAllowInteraction)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      children: [
+                        getSectionDivider(widget.theme.baseColorShade4),
+                        (widget.shouldAllowComments)
+                            ? AmityCommentCreator(
+                                referenceType: widget.referenceType,
+                                referenceId: widget.referenceId,
+                                replyTo: replyToComment,
+                                action: CommentCreatorAction(
+                                  onDissmiss: () {
+                                    removeReplyToComment();
+                                  },
+                                ),
+                                communityId: widget.community?.communityId,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/Icons/ic_lock_gray.svg',
+                                      package: 'amity_uikit_beta_service',
+                                      height: 16,
+                                    ),
+                                    const SizedBox(width: 16),
+                                    const Text(
+                                      "Comments are disabled for this story",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: AmityTextStyle.fontFamily,
+                                        color: Color(
+                                          0xff898E9E,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

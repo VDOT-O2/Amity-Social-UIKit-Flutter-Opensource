@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:developer' as dev;
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
@@ -10,7 +9,6 @@ import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bl
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../utils/amity_social_behaviour_helper.dart';
 import '../../../utils/user_image.dart';
@@ -55,6 +53,46 @@ class _PostPollContentState extends State<PostPollContent> {
 
   final ValueNotifier<List<int>> selectedIndicesNotifier = ValueNotifier([]);
 
+  void _applyPollStateFromModel(AmityPoll poll, {required bool consumeCreatorDetailFlag}) {
+    final shouldShowResultForCreator =
+        consumeCreatorDetailFlag &&
+            widget.style == AmityPostContentComponentStyle.detail &&
+            AmitySocialBehaviorHelper.showPollResultInDetailFirst;
+
+    isResultState = widget.post.feedType != AmityFeedType.REVIEWING &&
+        (poll.isVoted! || poll.isClose || shouldShowResultForCreator);
+
+    isExpanded = widget.style == AmityPostContentComponentStyle.detail ||
+        widget.post.feedType == AmityFeedType.REVIEWING;
+
+    if (shouldShowResultForCreator) {
+      AmitySocialBehaviorHelper.showPollResultInDetailFirst = false;
+    }
+  }
+
+  void _subscribeToPollUpdates() {
+    final pollData = widget.post.data as PollData;
+    subscription = pollData.live.getPoll().listen(
+      (poll) {
+        if (!mounted) return;
+        setState(() {
+          currentPoll = poll;
+
+          final newIsResultState =
+              widget.post.feedType != AmityFeedType.REVIEWING &&
+                  (poll.isVoted! || poll.isClose);
+
+          if (newIsResultState && newIsResultState != isResultState) {
+            isResultState = newIsResultState;
+          }
+        });
+      },
+      onError: (error) {
+        // ignore
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,43 +100,32 @@ class _PostPollContentState extends State<PostPollContent> {
     currentPoll = pollData.poll;
     final poll = currentPoll; // Accessing poll
     if (poll != null) {
-      // cache value before reset to prevent racing condition
-      final shouldShowResultForCreator =
-          widget.style == AmityPostContentComponentStyle.detail &&
-              AmitySocialBehaviorHelper.showPollResultInDetailFirst;
       setState(() {
-        isResultState = widget.post.feedType != AmityFeedType.REVIEWING &&
-            (poll.isVoted! || poll.isClose || shouldShowResultForCreator);
-
-        isExpanded = widget.style == AmityPostContentComponentStyle.detail ||
-            widget.post.feedType == AmityFeedType.REVIEWING;
-
-        // reset flag
-        if (shouldShowResultForCreator) {
-          AmitySocialBehaviorHelper.showPollResultInDetailFirst = false;
-        }
+        _applyPollStateFromModel(poll, consumeCreatorDetailFlag: true);
       });
     }
 
-    subscription = pollData.live.getPoll().listen(
-      (poll) {
-        setState(() {
-          // assign updated poll
-          currentPoll = poll;
+    _subscribeToPollUpdates();
+  }
 
-          final newIsResultState =
-              widget.post.feedType != AmityFeedType.REVIEWING &&
-                  (poll.isVoted! || poll.isClose);
+  @override
+  void didUpdateWidget(covariant PostPollContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-          // trust existing state if poll is not voted or closed
-          if (newIsResultState && newIsResultState != isResultState)
-            isResultState = newIsResultState;
-        });
-      },
-      onError: (error) {
-        // ignore
-      },
-    );
+    final oldPoll = (oldWidget.post.data as PollData).poll;
+    final newPoll = (widget.post.data as PollData).poll;
+
+    if (newPoll != null) {
+      setState(() {
+        currentPoll = newPoll;
+        _applyPollStateFromModel(newPoll, consumeCreatorDetailFlag: false);
+      });
+    }
+
+    if (oldPoll?.pollId != newPoll?.pollId) {
+      subscription.cancel();
+      _subscribeToPollUpdates();
+    }
   }
 
   @override

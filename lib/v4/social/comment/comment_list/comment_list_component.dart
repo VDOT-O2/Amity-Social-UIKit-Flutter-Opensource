@@ -26,6 +26,21 @@ class AmityCommentListComponent extends NewBaseComponent {
 
   @override
   Widget buildComponent(BuildContext context) {
+    CommentListBloc? existingBloc;
+    try {
+      existingBloc = context.read<CommentListBloc>();
+    } catch (_) {
+      existingBloc = null;
+    }
+
+    if (existingBloc != null) {
+      return CommentList(
+        scrollController: parentScrollController,
+        shouldAllowInteraction: shouldAllowInteraction,
+        commentAction: commentAction,
+      );
+    }
+
     return BlocProvider(
       create: (context) => CommentListBloc(referenceId, referenceType, null),
       child: CommentList(

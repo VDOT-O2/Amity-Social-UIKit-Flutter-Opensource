@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
@@ -7,6 +5,7 @@ import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_creator/comment_creator_action.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_item/comment_action.dart';
+import 'package:amity_uikit_beta_service/v4/social/comment/comment_list/bloc/comment_list_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/comment/comment_list/comment_list_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/amity_post_content_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/common/post_action.dart';
@@ -97,75 +96,78 @@ class AmityPostDetailPage extends NewBasePage {
       communityId = target.targetCommunityId;
      AmityLog.debug("communityId: $communityId");
     }
-    return Column(
-      children: [
-        Expanded(
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              SliverAppBar(
-                backgroundColor: theme.backgroundColor,
-                title: Text(context.l10n.general_post),
-                titleTextStyle: TextStyle(
-                  color: theme.baseColor,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
+    return BlocProvider(
+      create: (_) => CommentListBloc(postId, AmityCommentReferenceType.POST, null),
+      child: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: theme.backgroundColor,
+                  title: Text(context.l10n.general_post),
+                  titleTextStyle: TextStyle(
+                    color: theme.baseColor,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  pinned: true,
+                  centerTitle: true,
+                  iconTheme: IconThemeData(color: theme.baseColor),
                 ),
-                pinned: true,
-                centerTitle: true,
-                iconTheme: IconThemeData(color: theme.baseColor),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  child: renderPost(
-                    context: context,
-                    post: post,
-                    category: category,
-                    hideMenu: hideMenu,
-                    scrollController: scrollController,
+                SliverToBoxAdapter(
+                  child: Container(
+                    child: renderPost(
+                      context: context,
+                      post: post,
+                      category: category,
+                      hideMenu: hideMenu,
+                      scrollController: scrollController,
+                    ),
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.only(left: 12, right: 16, top: 7),
-                sliver: AmityCommentListComponent(
-                  referenceId: postId,
-                  referenceType: AmityCommentReferenceType.POST,
-                  shouldAllowInteraction: isJoinedCommunity,
-                  parentScrollController: scrollController,
-                  commentAction:
-                      CommentAction(onReply: (AmityComment? comment) {
-                    context
-                        .read<PostDetailBloc>()
-                        .add(PostDetailReplyComment(replyTo: comment));
-                  }),
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (!hideMenu) ...[
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              children: [
-                getSectionDivider(),
-                AmityCommentCreator(
-                  referenceId: postId,
-                  referenceType: AmityCommentReferenceType.POST,
-                  communityId: communityId,
-                  replyTo: replyTo,
-                  action: CommentCreatorAction(onDissmiss: () {
-                    context
-                        .read<PostDetailBloc>()
-                        .add(const PostDetailReplyComment(replyTo: null));
-                  }),
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: 12, right: 16, top: 7),
+                  sliver: AmityCommentListComponent(
+                    referenceId: postId,
+                    referenceType: AmityCommentReferenceType.POST,
+                    shouldAllowInteraction: isJoinedCommunity,
+                    parentScrollController: scrollController,
+                    commentAction:
+                        CommentAction(onReply: (AmityComment? comment) {
+                      context
+                          .read<PostDetailBloc>()
+                          .add(PostDetailReplyComment(replyTo: comment));
+                    }),
+                  ),
                 ),
               ],
             ),
           ),
+          if (!hideMenu) ...[
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: [
+                  getSectionDivider(),
+                  AmityCommentCreator(
+                    referenceId: postId,
+                    referenceType: AmityCommentReferenceType.POST,
+                    communityId: communityId,
+                    replyTo: replyTo,
+                    action: CommentCreatorAction(onDissmiss: () {
+                      context
+                          .read<PostDetailBloc>()
+                          .add(const PostDetailReplyComment(replyTo: null));
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 
