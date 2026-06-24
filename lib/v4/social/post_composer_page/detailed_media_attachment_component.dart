@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AmityDetailedMediaAttachmentComponent extends NewBaseComponent {
-  ImagePicker imagePicker = ImagePicker();
+  final ImagePicker imagePicker = ImagePicker();
   final Function()? onCameraTap;
   final Function()? onImageTap;
   final Function()? onVideoTap;
@@ -25,27 +25,28 @@ class AmityDetailedMediaAttachmentComponent extends NewBaseComponent {
     required String title,
     required Function()? onTap,
   }) {
-
-    
-    return ListTile(
-      leading: SvgPicture.asset(
-        assetPath,
-        package: 'amity_uikit_beta_service',
-        width: 32,
-        height: 32,
-      ),
-      title: Transform.translate(
-        offset: const Offset(-5, 0),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: theme.baseColor,
+    return Material(
+      color: theme.backgroundColor,
+      child: ListTile(
+        leading: SvgPicture.asset(
+          assetPath,
+          package: 'amity_uikit_beta_service',
+          width: 32,
+          height: 32,
+        ),
+        title: Transform.translate(
+          offset: const Offset(-5, 0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: theme.baseColor,
+            ),
           ),
         ),
+        onTap: onTap,
       ),
-      onTap: onTap,
     );
   }
 

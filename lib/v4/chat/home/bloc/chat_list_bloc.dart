@@ -14,6 +14,9 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   ChatListType chatListType;
   List<AmityChannelType> channelTypes;
   AmityToastBloc toastBloc;
+  final Set<String> _archivedChannelIdsCache = <String>{};
+  DateTime? _archivedChannelIdsLastFetchedAt;
+  static const Duration _archivedChannelIdsCacheTtl = Duration(seconds: 15);
 
   late final LiveCollectionStream<AmityChannel> channelLiveCollection;
 
@@ -31,8 +34,10 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
           .getLiveCollection();
     }
 
-    on<ChatListEventChannelsUpdated>((event, emit) {
-      final channelIds = event.channels
+    on<ChatListEventChannelsUpdated>((event, emit) async {
+      final filteredChannels = await _applyArchiveSafetyGuard(event.channels);
+
+      final channelIds = filteredChannels
           .where(
               (channel) => !state.channelMembers.containsKey(channel.channelId))
           .map((e) => e.channelId ?? "")
@@ -42,11 +47,11 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       addEvent(ChatListEventFetchMembers(channelIds: channelIds));
 
       // Calculate if there are any unread messages
-      final hasUnreadMessages = event.channels
+      final hasUnreadMessages = filteredChannels
           .any((channel) => (channel.unreadCount ?? 0) > 0);
 
       emit(state.copyWith(
-        channels: event.channels,
+        channels: filteredChannels,
         hasUnreadMessages: hasUnreadMessages,
       ));
     });
@@ -99,6 +104,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       try {
         await AmityChatClient.newChannelRepository()
             .archiveChannel(event.channelId);
+        _archivedChannelIdsCache.add(event.channelId);
         toastBloc.add(AmityToastShort(
             message: event.successMessage, icon: AmityToastIcon.success));
       } catch (error) {
@@ -123,6 +129,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       try {
         await AmityChatClient.newChannelRepository()
             .unarchiveChannel(event.channelId);
+        _archivedChannelIdsCache.remove(event.channelId);
         toastBloc.add(AmityToastShort(
             message: event.successMessage, icon: AmityToastIcon.success));
       } catch (error) {
@@ -162,5 +169,53 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         (settings.isEnabled ?? true) && (chatModuleSettings?.isEnabled ?? true);
     addEvent(ChatListPushNotificationEvent(
         isPushNotificationEnabled: isPushNotificationEnabled));
+  }
+
+  Future<List<AmityChannel>> _applyArchiveSafetyGuard(List<AmityChannel> channels) async {
+    if (channels.isEmpty) {
+      return channels;
+    }
+
+    final archivedIds = await _getArchivedChannelIdsSafe();
+    if (archivedIds.isEmpty) {
+      return channels;
+    }
+
+    if (chatListType == ChatListType.ARCHIVED) {
+      return channels.where((channel) {
+        final channelId = channel.channelId;
+        return channelId != null && archivedIds.contains(channelId);
+      }).toList();
+    }
+
+    return channels.where((channel) {
+      final channelId = channel.channelId;
+      return channelId == null || !archivedIds.contains(channelId);
+    }).toList();
+  }
+
+  Future<Set<String>> _getArchivedChannelIdsSafe() async {
+    final shouldUseCache =
+        _archivedChannelIdsCache.isNotEmpty &&
+        _archivedChannelIdsLastFetchedAt != null &&
+        DateTime.now().difference(_archivedChannelIdsLastFetchedAt!) <
+            _archivedChannelIdsCacheTtl;
+
+    if (shouldUseCache) {
+      return _archivedChannelIdsCache;
+    }
+
+    try {
+      final archivedIds =
+          await AmityChatClient.newChannelRepository().getArchivedChannelIds();
+      _archivedChannelIdsCache
+        ..clear()
+        ..addAll(archivedIds);
+      _archivedChannelIdsLastFetchedAt = DateTime.now();
+    } catch (_) {
+      // Best-effort guard: keep using current query results when ids are unavailable.
+    }
+
+    return _archivedChannelIdsCache;
   }
 }
