@@ -539,7 +539,7 @@ class AmityGroupChatPageBloc
 
   void _startLoadingWatchdog() {
     _loadingWatchdogTimer?.cancel();
-    _loadingWatchdogTimer = Timer(const Duration(seconds: 12), () {
+    _loadingWatchdogTimer = Timer(const Duration(seconds: 8), () {
       if (isClosed) {
         return;
       }
@@ -551,7 +551,9 @@ class AmityGroupChatPageBloc
           "channelId=${state.channelId}, "
           "aroundMessageId=${state.aroundMessageId}, "
           "messages=${state.messages.length}, "
-          "isConnected=${state.isConnected}",
+          "isConnected=${state.isConnected}, "
+          "hasNextPage=${liveCollection?.hasNextPage()}, "
+          "hasPreviousPage=${liveCollection?.hasPreviousPage()}",
         );
         addEvent(const GroupChatPageEventLoadingStateUpdated(isFetching: false));
       }
@@ -586,6 +588,22 @@ class AmityGroupChatPageBloc
       final lastMessageText = event.isNotEmpty && event.first.data is MessageTextData
           ? (event.first.data as MessageTextData).text
           : "N/A";
+
+      final hasNextPage = liveCollection?.hasNextPage();
+      final hasPreviousPage = liveCollection?.hasPreviousPage();
+
+      if (event.isEmpty) {
+        AmityLog.debug(
+          "[GroupChatPage] Empty snapshot. isFetching=${state.isFetching}, "
+          "hasNextPage=$hasNextPage, hasPreviousPage=$hasPreviousPage, "
+          "aroundMessageId=${state.aroundMessageId}",
+        );
+
+        // Terminal empty state: no items and no more pages in either direction.
+        if (state.isFetching && hasNextPage == false && hasPreviousPage == false) {
+          addEvent(const GroupChatPageEventLoadingStateUpdated(isFetching: false));
+        }
+      }
 
       AmityLog.debug("GroupChatPageEventChanged: $lastMessageText (${event.length} total)");
 

@@ -51,11 +51,17 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
     on<ChatPageEventRefresh>((event, emit) async {
       AmityLog.debug("ChatPageEventRefresh triggered");
+      _lastMessagesFingerprint = null;
       emit(state
           .copyWith(messages: const [], isFetching: true, isLoadingMore: false, hasNextPage: true, hasPrevious: false));
       _startLoadingWatchdog();
       try {
-        liveCollection?.reset();
+        await liveCollection?.reset();
+
+        // Explicitly trigger first page load. Some SDK states may not fetch immediately after reset.
+        if (liveCollection?.hasNextPage() == true) {
+          await liveCollection?.loadNext();
+        }
       } catch (e) {
         AmityLog.error("Error refreshing chat page", e);
         _stopLoadingWatchdog();
@@ -611,7 +617,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
   void _startLoadingWatchdog() {
     _loadingWatchdogTimer?.cancel();
-    _loadingWatchdogTimer = Timer(const Duration(seconds: 12), () {
+    _loadingWatchdogTimer = Timer(const Duration(seconds: 8), () {
       if (isClosed) {
         return;
       }
@@ -623,7 +629,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           "channelId=${state.channelId}, "
           "aroundMessageId=${state.aroundMessageId}, "
           "messages=${state.messages.length}, "
-          "isConnected=${state.isConnected}",
+          "isConnected=${state.isConnected}, "
+          "hasNextPage=${liveCollection?.hasNextPage()}, "
+          "hasPreviousPage=${liveCollection?.hasPreviousPage()}",
         );
         addEvent(const ChatPageEventLoadingStateUpdated(isFetching: false));
       }
@@ -637,6 +645,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
   Future initLiveCollection(String channelId, {String? aroundMessageId}) async {
     AmityLog.debug("[ChatPage] Initializing live collection for channelId=$channelId, aroundMessageId=$aroundMessageId");
+    _lastMessagesFingerprint = null;
 
     if (liveCollection != null) {
       liveCollection?.getStreamController().close();
@@ -674,9 +683,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       }
 
       final messages = result.data;
+      final hasNextPage = messagesLiveCollection.hasNextPage();
+      final hasPreviousPage = messagesLiveCollection.hasPreviousPage();
 
       if (messages.isEmpty) {
-        AmityLog.debug("[ChatPage] ChatPageEventChanged: Received empty message list");
+        AmityLog.debug(
+          "[ChatPage] Empty snapshot. isFetching=${result.isFetching}, "
+          "hasNextPage=$hasNextPage, hasPreviousPage=$hasPreviousPage, "
+          "aroundMessageId=$aroundMessageId",
+        );
+
+        // Terminal empty state: no items and no more pages in either direction.
+        // Some SDK snapshots can keep isFetching=true here, causing a stuck loading state.
+        if (result.isFetching && hasNextPage == false && hasPreviousPage == false) {
+          addEvent(const ChatPageEventLoadingStateUpdated(isFetching: false));
+        }
       }
 
       final lastMessageText =
