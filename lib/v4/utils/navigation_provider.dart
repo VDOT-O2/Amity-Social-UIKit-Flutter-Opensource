@@ -2,6 +2,8 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/chat/add_group_member/amity_add_group_member_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/create/channel_create_conversation_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/createGroup/ui/amity_select_group_member_page.dart';
+import 'package:amity_uikit_beta_service/v4/chat/group_message/amity_group_chat_page.dart';
+import 'package:amity_uikit_beta_service/v4/chat/message/chat_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/notification_preference/notification_preference_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_creation/community_setup_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_setting/notification_setting/community_notification_setting_page.dart';
@@ -18,12 +20,45 @@ enum AmityNavigationEvent {
   showCommunityNotificationPreferences,
   showPostDetail,
   showUserProfile,
+  showChat,
   showCreateChat,
   showAddGroupMembers,
   showChatNotificationPreferences,
 }
 
+final RouteObserver<PageRoute<dynamic>> navigationRouteObserver = RouteObserver<PageRoute<dynamic>>();
+
 class NavigationProvider extends ChangeNotifier {
+  String? _activeChannelId;
+
+  String? get activeChannelId => _activeChannelId;
+
+  bool isActiveChannel(String? channelId) {
+    return channelId != null && channelId.isNotEmpty && _activeChannelId == channelId;
+  }
+
+  void setActiveChannelId(String? channelId) {
+    if (_activeChannelId == channelId) {
+      return;
+    }
+
+    _activeChannelId = channelId;
+    notifyListeners();
+  }
+
+  void clearActiveChannelId({String? channelId}) {
+    if (channelId != null && _activeChannelId != channelId) {
+      return;
+    }
+
+    if (_activeChannelId == null) {
+      return;
+    }
+
+    _activeChannelId = null;
+    notifyListeners();
+  }
+
   Future<void> handleNavigation(BuildContext context, {required AmityNavigationEvent event, Map<String, dynamic>? params}) async {
     switch (event) {
       case AmityNavigationEvent.showCommunity:
@@ -89,6 +124,35 @@ class NavigationProvider extends ChangeNotifier {
           );
         }
         return;
+      case AmityNavigationEvent.showChat:
+        {
+          final channelId = params?['channelId'] as String?;
+          final userId = params?['userId'] as String?;
+          final displayName = params?['displayName'] as String?;
+          final avatarUrl = params?['avatarUrl'] as String?;
+          final isGroupChat = params?['isGroupChat'] as bool? ?? false;
+
+          if (isGroupChat) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => AmityGroupChatPage(
+                        channelId: channelId ?? "",
+                      )),
+            );
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AmityChatPage(
+                  key: Key("${channelId ?? ""}_${userId ?? ""}"),
+                  channelId: channelId,
+                  userId: userId ?? "",
+                  userDisplayName: displayName ?? "",
+                  avatarUrl: avatarUrl ?? "",
+                ),
+              ),
+            );
+          }
+        } return;
       case AmityNavigationEvent.showAddGroupMembers:
         {
           final channel = params?['channel'] as AmityChannel;

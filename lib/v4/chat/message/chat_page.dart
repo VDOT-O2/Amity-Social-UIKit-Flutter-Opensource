@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/v4/chat/message/bloc/chat_page_bloc.dar
 import 'package:amity_uikit_beta_service/v4/chat/message/components/amity_conversation_chat_user_action_component.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message_composer/message_composer.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message_composer/message_composer_action.dart';
+import 'package:amity_uikit_beta_service/v4/chat/common/active_channel_route_scope.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/config_repository.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
@@ -30,7 +31,6 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 part 'widgets/chat_page_helpers.dart';
 
-// Page for showing one-on-one chat messages
 // ignore: must_be_immutable
 class AmityChatPage extends NewBasePage {
   static double toastBottomPadding = 56;
@@ -69,7 +69,9 @@ class AmityChatPage extends NewBasePage {
           bounceAnimator?.animateItem(0);
         };
       },
-      child: Stack(
+      child: ActiveChannelRouteScope(
+        channelId: channelId,
+        child: Stack(
         children: [
           BlocProvider(
             key: Key("${channelId ?? ""}_${userId ?? ""}"),
@@ -566,6 +568,7 @@ class AmityChatPage extends NewBasePage {
           AmityToast(pageId: pageId, elementId: "toast"),
         ],
       ),
+      ),
     );
   }
 
@@ -623,5 +626,8 @@ class AmityChatPage extends NewBasePage {
         bloc.add(const ChatPageClearBounceEvent());
       }
     }
+
   }
+
 }
+

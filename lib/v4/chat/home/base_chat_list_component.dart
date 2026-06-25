@@ -17,6 +17,7 @@ import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:amity_uikit_beta_service/v4/utils/date_time_extension.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -101,40 +102,30 @@ class BaseChatListComponent extends NewBaseComponent {
 
                     return GestureDetector(
                         behavior: HitTestBehavior.translucent,
-                        onTap: () {
+                        onTap: () async {
                           if (channel.amityChannelType == AmityChannelType.COMMUNITY) {
-                            Navigator.of(context)
-                                .push(
-                              MaterialPageRoute(
-                                  builder: (context) => AmityGroupChatPage(
-                                        channelId: channel.channelId ?? "",
-                                      )),
-                            )
-                                .then((value) {
-                              context.read<AmityToastBloc>().add(AmityToastDismiss());
-                            });
+                             await context.read<NavigationProvider>().handleNavigation(context,
+                                event: AmityNavigationEvent.showChat, params: {
+                                  'channelId': channel.channelId ?? "",
+                                  'isGroupChat': true});
                           } else {
                             final channelId = channel.channelId;
                             final userId = channelMember?.userId;
                             final displayName = channelMember?.user?.displayName;
                             final avatarUrl = channelMember?.user?.avatarUrl;
 
-                            Navigator.of(context)
-                                .push(
-                              MaterialPageRoute(
-                                builder: (context) => AmityChatPage(
-                                  key: Key("${channelId ?? ""}_${userId ?? ""}"),
-                                  channelId: channelId,
-                                  userId: userId ?? "",
-                                  userDisplayName: displayName ?? "",
-                                  avatarUrl: avatarUrl ?? "",
-                                ),
-                              ),
-                            )
-                                .then((value) {
-                              context.read<AmityToastBloc>().add(AmityToastDismiss());
-                            });
+                            await context.read<NavigationProvider>().handleNavigation(context,
+                                event: AmityNavigationEvent.showChat, params: {
+                                  'channelId': channel.channelId ?? "",
+                                  'userId': channelMember?.userId ?? "",
+                                  'displayName': channelMember?.user?.displayName ?? "",
+                                  'avatarUrl': channelMember?.user?.avatarUrl ?? "",
+                                  'isGroupChat': false});
                           }
+                          if (!context.mounted) {
+                              return;
+                          }
+                          context.read<AmityToastBloc>().add(AmityToastDismiss());
                         },
                         child: index == 0 ? Padding(padding: const EdgeInsets.only(top: 16), child: listItem) : listItem);
                   },

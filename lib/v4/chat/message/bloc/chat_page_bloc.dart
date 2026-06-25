@@ -317,7 +317,19 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
     on<ChatPageEventCreateNewChannel>((event, emit) async {
       try {
-        final channel = await AmityChatClient.newChannelRepository()
+        final channelRepository = AmityChatClient.newChannelRepository();
+
+        // Capture archived ids before create() to detect when SDK returns
+        // an existing archived conversation instead of a new one.
+        Set<String> archivedChannelIds = <String>{};
+        try {
+          archivedChannelIds =
+              (await channelRepository.getArchivedChannelIds()).toSet();
+        } catch (_) {
+          // Best effort only. We can still proceed with create/open flow.
+        }
+
+        final channel = await channelRepository
             .createChannel()
             .conversationType()
             .withUserId(event.userId)
@@ -325,6 +337,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
         final channelId = channel.channelId;
         if (channelId != null) {
+          if (archivedChannelIds.contains(channelId)) {
+            try {
+              await channelRepository.unarchiveChannel(channelId);
+              toastBloc.add(AmityToastShort(
+                message: _context.l10n.toast_chat_unarchived,
+                icon: AmityToastIcon.success,
+              ));
+            } catch (_) {
+              toastBloc.add(AmityToastShort(
+                message: _context.l10n.toast_chat_unarchive_error,
+                icon: AmityToastIcon.warning,
+              ));
+            }
+          }
+
           await initLiveCollection(channelId);
           addEvent(ChatPageEventChannelIdChanged(channelId));
           addEvent(const ChatPageEventRefresh());
