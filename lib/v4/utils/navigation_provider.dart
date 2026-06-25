@@ -43,7 +43,6 @@ class NavigationProvider extends ChangeNotifier {
     }
 
     _activeChannelId = channelId;
-    notifyListeners();
   }
 
   void clearActiveChannelId({String? channelId}) {
@@ -56,7 +55,6 @@ class NavigationProvider extends ChangeNotifier {
     }
 
     _activeChannelId = null;
-    notifyListeners();
   }
 
   Future<void> handleNavigation(BuildContext context, {required AmityNavigationEvent event, Map<String, dynamic>? params}) async {
