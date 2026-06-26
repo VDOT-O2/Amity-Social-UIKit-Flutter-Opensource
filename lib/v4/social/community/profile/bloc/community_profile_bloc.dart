@@ -14,6 +14,10 @@ part 'community_profile_events.dart';
 part 'community_profile_state.dart';
 
 class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileState> {
+  static const double _collapseStartOffset = 0;
+  static const double _collapseEndOffset = 188;
+  static const double _progressEpsilon = 0.01;
+
   final AmityDebugLogController debugLogController = AmityDebugLogController(maxHistory: 100);
   StreamSubscription<dynamic>? _communitySubscription;
   VoidCallback? _scrollListener;
@@ -55,7 +59,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
     });
 
     on<CommunityProfileEventExpanded>((event, emit) async {
-      emit(state.copyWith(isExpanded: true));
+      emit(state.copyWith(isExpanded: true, collapseProgress: 0));
       _log(
         action: 'CommunityProfileEventExpanded',
         message: 'Profile header expanded',
@@ -63,11 +67,24 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
     });
 
     on<CommunityProfileEventCollapsed>((event, emit) async {
-      emit(state.copyWith(isExpanded: false));
+      emit(state.copyWith(isExpanded: false, collapseProgress: 1));
       _log(
         action: 'CommunityProfileEventCollapsed',
         message: 'Profile header collapsed',
       );
+    });
+
+    on<CommunityProfileEventScrollProgressChanged>((event, emit) async {
+      final nextProgress = event.progress.clamp(0.0, 1.0);
+      final currentProgress = state.collapseProgress;
+      if ((nextProgress - currentProgress).abs() < _progressEpsilon) {
+        return;
+      }
+
+      emit(state.copyWith(
+        collapseProgress: nextProgress,
+        isExpanded: nextProgress < 1.0,
+      ));
     });
 
     on<CommunityProfileEventGetPendingPosts>((event, emit) async {
@@ -110,7 +127,7 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
     });
 
     on<CommunityProfileEventTabSelected>((event, emit) async {
-      emit(state.copyWith(selectedIndex: event.tab, isExpanded: true));
+      emit(state.copyWith(selectedIndex: event.tab, isExpanded: true, collapseProgress: 0));
       _log(
         action: 'CommunityProfileEventTabSelected',
         message: 'Tab selected: ${event.tab.name}',
@@ -204,13 +221,13 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
 
       AmityLog.debug("CommunityProfileBloc listening to community updates for communityId: $communityId");
       _scrollListener = () {
-        if (state.scrollController.hasClients && state.scrollController.offset > 330 && state.isExpanded) {
-          AmityLog.debug("Scroll offset: ${state.scrollController.offset}, collapsing header");
-          addEvent(CommunityProfileEventCollapsed());
-        } else if (state.scrollController.hasClients && state.scrollController.offset <= 330 && !state.isExpanded) {
-          AmityLog.debug("Scroll offset: ${state.scrollController.offset}, expanding header");
-          addEvent(CommunityProfileEventExpanded());
+        if (!state.scrollController.hasClients) {
+          return;
         }
+
+        final offset = state.scrollController.offset;
+        final normalized = ((offset - _collapseStartOffset) / (_collapseEndOffset - _collapseStartOffset)).clamp(0.0, 1.0);
+        addEvent(CommunityProfileEventScrollProgressChanged(progress: normalized));
       };
       scrollController.addListener(_scrollListener!);
 

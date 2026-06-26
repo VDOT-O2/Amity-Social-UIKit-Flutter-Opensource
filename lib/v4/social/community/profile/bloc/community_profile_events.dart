@@ -29,6 +29,15 @@ class CommunityProfileEventExpanded extends CommunityProfileEvent { }
 
 class CommunityProfileEventCollapsed extends CommunityProfileEvent { }
 
+class CommunityProfileEventScrollProgressChanged extends CommunityProfileEvent {
+  final double progress;
+
+  const CommunityProfileEventScrollProgressChanged({required this.progress});
+
+  @override
+  List<Object> get props => [progress];
+}
+
 class CommunityProfileEventJoining extends CommunityProfileEvent {
   final String communityId;
 

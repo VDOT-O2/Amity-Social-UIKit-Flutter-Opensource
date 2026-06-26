@@ -2,12 +2,8 @@ import 'dart:ui';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
-import 'package:amity_uikit_beta_service/v4/social/community/community_setting/community_setting_page.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/component/community_header_component.dart';
-import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
-import 'package:amity_uikit_beta_service/view/UIKit/social/community_setting/setting_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class AmityCommunityCoverView extends BaseElement {
   final AmityCommunity? community;
@@ -21,74 +17,14 @@ class AmityCommunityCoverView extends BaseElement {
 
   @override
   Widget buildElement(BuildContext context) {
+    final statusBarInset = MediaQuery.paddingOf(context).top;
+
     switch (style) {
       case AmityCommunityHeaderStyle.EXPANDED:
-        return Container(
-          width: double.infinity,
-          height: 188,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              renderAvatarImage(),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(top: 60, left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () => {Navigator.pop(context)},
-                      child: Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            "assets/Icons/amity_ic_back_button.svg",
-                            package: 'amity_uikit_beta_service',
-                            height: 18,
-                            width: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Flexible(flex: 1, child: Container()),
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () => {
-                        if (community != null)
-                          {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context2) => AmityCommunitySettingPage(community: community!)))
-                          }
-                      },
-                      child: Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            "assets/Icons/amity_ic_post_item_option.svg",
-                            package: 'amity_uikit_beta_service',
-                            height: 18,
-                            width: 18,
-                            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+        return SizedBox.expand(
+          child: Padding(
+            padding: EdgeInsets.only(top: statusBarInset),
+            child: renderAvatarImage(),
           ),
         );
       case AmityCommunityHeaderStyle.COLLAPSE:

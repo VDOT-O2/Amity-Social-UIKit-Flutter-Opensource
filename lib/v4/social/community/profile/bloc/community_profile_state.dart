@@ -8,6 +8,7 @@ class CommunityProfileState extends Equatable {
     this.community,
     required this.scrollController,
     this.isExpanded = true,
+    this.collapseProgress = 0.0,
     this.pendingPostCount = 0,
     this.selectedIndex = CommunityProfileTabIndex.feed,
     this.isJoined = true,
@@ -20,6 +21,7 @@ class CommunityProfileState extends Equatable {
   final AmityCommunity? community;
   final ScrollController scrollController;
   final bool isExpanded;
+  final double collapseProgress;
   final int pendingPostCount;
   final CommunityProfileTabIndex selectedIndex;
   final bool isJoined;
@@ -28,13 +30,26 @@ class CommunityProfileState extends Equatable {
   final bool isDetailExpanded;
 
   @override
-  List<Object?> get props => [communityId, community, scrollController, isExpanded, pendingPostCount, selectedIndex, isJoined, isModerator, canManageStory, isDetailExpanded];
+  List<Object?> get props => [
+        communityId,
+        community,
+        scrollController,
+        isExpanded,
+        collapseProgress,
+        pendingPostCount,
+        selectedIndex,
+        isJoined,
+        isModerator,
+        canManageStory,
+        isDetailExpanded
+      ];
 
   CommunityProfileState copyWith({
     String? communityId,
     AmityCommunity? community,
     ScrollController? scrollController,
     bool? isExpanded,
+    double? collapseProgress,
     int? pendingPostCount,
     CommunityProfileTabIndex? selectedIndex,
     bool? isJoined,
@@ -47,6 +62,7 @@ class CommunityProfileState extends Equatable {
       community: community ?? this.community,
       scrollController: scrollController ?? this.scrollController,
       isExpanded: isExpanded ?? this.isExpanded,
+      collapseProgress: collapseProgress ?? this.collapseProgress,
       pendingPostCount: pendingPostCount ?? this.pendingPostCount,
       selectedIndex: selectedIndex ?? this.selectedIndex,
       isJoined: isJoined ?? this.isJoined,

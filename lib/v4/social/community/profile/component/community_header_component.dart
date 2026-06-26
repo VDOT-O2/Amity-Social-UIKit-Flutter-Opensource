@@ -2,7 +2,6 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/bloc/community_profile_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/element/community_categories.dart';
-import 'package:amity_uikit_beta_service/v4/social/community/profile/element/community_cover_view.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/element/community_info_view.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/profile/element/community_profile_title.dart';
 import 'package:amity_uikit_beta_service/v4/utils/shimmer_widget.dart';
@@ -34,9 +33,6 @@ class AmityCommunityHeaderComponent extends NewBaseComponent {
         ? CommunityProfileHeaderSkeleton()
         : Column(
             children: [
-              AmityCommunityCoverView(
-                  community: community,
-                  style: AmityCommunityHeaderStyle.EXPANDED),
               Container(
                 color: theme.backgroundColor,
                 width: double.infinity,
@@ -114,11 +110,6 @@ class AmityCommunityHeaderComponent extends NewBaseComponent {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                height: 188,
-                decoration: BoxDecoration(color: theme.baseColorShade4),
-              ),
               Padding(
                 padding: const EdgeInsets.only(left: 16, top: 16),
                 child: Container(

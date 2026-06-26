@@ -2,7 +2,6 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
-import 'package:amity_uikit_beta_service/v4/core/ui/amity_debug_log_component.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/bottom_sheet_menu.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_feed/community_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_image_feed_component.dart';
@@ -23,14 +22,11 @@ import 'package:amity_uikit_beta_service/v4/social/story/target/amity_story_tab_
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider_widget.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../post_poll_composer_page/post_poll_composer_page.dart';
-
-const _kToolbarHeight = 56.0;
 
 class AmityCommunityProfilePage extends NewBasePage {
   final String communityId;
@@ -518,128 +514,145 @@ class AmityCommunityProfilePage extends NewBasePage {
   }
 
   Widget _buildAppBar(BuildContext context, CommunityProfileState state) {
-    final topInset = MediaQuery.paddingOf(context).top;
-    final appBarHeight = topInset + _kToolbarHeight;
+    final progress = state.collapseProgress.clamp(0.0, 1.0);
+    final coverOpacity = (1 - (progress * 2)).clamp(0.0, 1.0);
+    final isExpandedAtTop = progress < 0.05;
+    final iconBackground = isExpandedAtTop ? Colors.black.withOpacity(0.5) : Colors.transparent;
+    final iconBorderColor = isExpandedAtTop ? Colors.white.withOpacity(0.6) : Colors.transparent;
+    final iconColor = isExpandedAtTop ? Colors.white : theme.textPrimary;
+    final appBarBackgroundColor = Color.lerp(Colors.transparent, theme.backgroundSubtle, progress) ?? theme.backgroundSubtle;
 
-    return !state.isExpanded
-        ? SliverAppBar(
-            floating: false,
-            pinned: true,
-            stretch: true,
-            elevation: 0,
-            leadingWidth: 48,
-            backgroundColor: theme.backgroundSubtle,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => {Navigator.pop(context)},
-                child: SizedBox(
-                  height: 32,
+    return SliverAppBar(
+      floating: false,
+      pinned: true,
+      stretch: true,
+      expandedHeight: 188,
+      elevation: 0,
+      leadingWidth: 48,
+      backgroundColor: appBarBackgroundColor,
+      surfaceTintColor: appBarBackgroundColor,
+      flexibleSpace: state.community == null
+          ? null
+          : Stack(
+              fit: StackFit.expand,
+              children: [
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 140),
+                  curve: Curves.easeOut,
+                  opacity: coverOpacity,
+                  child: AmityCommunityCoverView(
+                    community: state.community,
+                    style: AmityCommunityHeaderStyle.EXPANDED,
+                  ),
+                ),
+                IgnorePointer(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 140),
+                    curve: Curves.easeOut,
+                    color: theme.backgroundSubtle.withOpacity(progress),
+                  ),
+                ),
+              ],
+            ),
+      
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => Navigator.pop(context),
+          child: SizedBox(
+            height: 32,
+            width: 32,
+            child: Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 140),
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: iconBackground,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: iconBorderColor),
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    "assets/Icons/amity_ic_back_button.svg",
+                    package: 'amity_uikit_beta_service',
+                    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      titleSpacing: 0,
+      title: AnimatedOpacity(
+        opacity: progress,
+        duration: const Duration(milliseconds: 140),
+        curve: Curves.easeOut,
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                flex: 1,
+                fit: FlexFit.loose,
+                child: Text(
+                  state.community?.displayName ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: theme.textPrimary,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              if (state.community?.isOfficial == true)
+                Container(width: 28, height: 28, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement()),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              if (state.community != null) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)));
+              }
+            },
+            child: Container(
+              height: 32,
+              width: 32,
+              child: Center(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 140),
                   width: 32,
-                  // decoration: BoxDecoration(
-                  //   color: Colors.black.withOpacity(0.5),
-                  //   shape: BoxShape.circle,
-                  // ),
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: iconBackground,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: iconBorderColor),
+                  ),
                   child: Center(
                     child: SvgPicture.asset(
-                      "assets/Icons/amity_ic_back_button.svg",
+                      "assets/Icons/amity_ic_post_item_option.svg",
                       package: 'amity_uikit_beta_service',
-                      colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
-                      // height: 18,
-                      // width: 18,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                   ),
                 ),
               ),
             ),
-            title: SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // if (state.community?.isPublic == false)
-                  //   Container(
-                  //     width: 28,
-                  //     height: 28,
-                  //     margin: const EdgeInsets.only(top: 1),
-                  //     child: AmityPrivateBadgeElement(
-                  //       colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
-                  //     ),
-                  //   ),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.loose,
-                    child: Text(
-                      state.community?.displayName ?? "",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: theme.textPrimary,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  if (state.community?.isOfficial == true)
-                    Container(width: 28, height: 28, margin: const EdgeInsets.only(top: 2), child: AmityOfficialBadgeElement()),
-                ],
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => {
-                    if (state.community != null)
-                      {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)))
-                      }
-                  },
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    // decoration: BoxDecoration(
-                    //   color: Colors.black.withOpacity(0.5),
-                    //   shape: BoxShape.circle,
-                    // ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        "assets/Icons/amity_ic_post_item_option.svg",
-                        package: 'amity_uikit_beta_service',
-                        // height: 18,
-                        // width: 18,
-                        colorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            // flexibleSpace: Column(
-            //   children: [
-            //     SizedBox(
-            //       width: double.infinity,
-            //       height: appBarHeight,
-            //       child: (state.community != null)
-            //           ? Stack(
-            //               fit: StackFit.expand,
-            //               children: [
-            //                 // AmityCommunityCoverView(
-            //                 //   community: state.community!,
-            //                 //   style: AmityCommunityHeaderStyle.COLLAPSE,
-            //                 // ),
-            //               ],
-            //             )
-            //           : const SizedBox(),
-            //     ),
-            //   ],
-            // ),
-          )
-        : SliverToBoxAdapter(child: Container());
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildHeader(BuildContext context, CommunityProfileState state) {
