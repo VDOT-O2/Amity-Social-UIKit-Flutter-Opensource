@@ -9,6 +9,14 @@ part 'amity_create_group_state.dart';
 class AmityCreateGroupCubit extends Cubit<AmityCreateGroupState> {
   AmityCreateGroupCubit() : super(const AmityCreateGroupState());
 
+  static const List<String> _existingChannelErrorMarkers = [
+    'already exists',
+    'already existed',
+    'duplicate',
+    'conflict',
+    '409',
+  ];
+
   void updateGroupName(String name) {
     emit(state.copyWith(groupName: name));
   }
@@ -76,10 +84,7 @@ class AmityCreateGroupCubit extends Cubit<AmityCreateGroupState> {
   }) async {
     final completer = Completer<void>();
 
-    AmityCoreClient.newFileRepository()
-        .uploadImage(imageFile)
-        .stream
-        .listen((amityUploadResult) {
+    AmityCoreClient.newFileRepository().uploadImage(imageFile).stream.listen((amityUploadResult) {
       amityUploadResult.when(
         progress: (uploadInfo, cancelToken) {
           // Progress is handled, but we don't emit state changes for progress
@@ -91,10 +96,7 @@ class AmityCreateGroupCubit extends Cubit<AmityCreateGroupState> {
                 .communityType()
                 .withDisplayName(groupName)
                 .isPublic(isPublic)
-                .userIds(users
-                    .where((e) => e.userId != null)
-                    .map((e) => e.userId!)
-                    .toList())
+                .userIds(users.where((e) => e.userId != null).map((e) => e.userId!).toList())
                 .avatar(file)
                 .create();
 
@@ -104,12 +106,26 @@ class AmityCreateGroupCubit extends Cubit<AmityCreateGroupState> {
             ));
             completer.complete();
           } catch (e) {
+            if (_isExistingChannelError(e)) {
+              try {
+                final channel = await _unarchiveExistingCommunityChannel(users);
+                if (channel != null) {
+                  emit(state.copyWith(
+                    status: CreateGroupStatus.success,
+                    createdChannel: channel,
+                  ));
+                  completer.complete();
+                  return;
+                }
+              } catch (_) {
+                // Fall through to original error handling.
+              }
+            }
             completer.completeError(e);
           }
         },
         error: (error) {
-          final Map<String, dynamic> errorData =
-              error.data as Map<String, dynamic>;
+          final Map<String, dynamic> errorData = error.data as Map<String, dynamic>;
           final int uploadErrorCode = errorData["detail"]["error"]["code"];
 
           String errorTitle;
@@ -140,19 +156,105 @@ class AmityCreateGroupCubit extends Cubit<AmityCreateGroupState> {
     required bool isPublic,
     required List<AmityUser> users,
   }) async {
-    final channel = await AmityChatClient.newChannelRepository()
-        .createChannel()
-        .communityType()
-        .withDisplayName(groupName)
-        .isPublic(isPublic)
-        .userIds(
-            users.where((e) => e.userId != null).map((e) => e.userId!).toList())
-        .create();
+    AmityChannel channel;
+
+    try {
+      channel = await AmityChatClient.newChannelRepository()
+          .createChannel()
+          .communityType()
+          .withDisplayName(groupName)
+          .isPublic(isPublic)
+          .userIds(users.where((e) => e.userId != null).map((e) => e.userId!).toList())
+          .create();
+    } catch (e) {
+      if (_isExistingChannelError(e)) {
+        final existingChannel = await _unarchiveExistingCommunityChannel(users);
+        if (existingChannel != null) {
+          channel = existingChannel;
+        } else {
+          rethrow;
+        }
+      } else {
+        rethrow;
+      }
+    }
 
     emit(state.copyWith(
       status: CreateGroupStatus.success,
       createdChannel: channel,
     ));
+  }
+
+  bool _isExistingChannelError(Object error) {
+    final text = error.toString().toLowerCase();
+    return _existingChannelErrorMarkers.any(text.contains);
+  }
+
+  Future<AmityChannel?> _unarchiveExistingCommunityChannel(List<AmityUser> users) async {
+    final repository = AmityChatClient.newChannelRepository();
+    final archivedChannelIds = await repository.getArchivedChannelIds();
+    if (archivedChannelIds.isEmpty) {
+      return null;
+    }
+
+    final targetMemberIds = _targetMemberIds(users);
+    if (targetMemberIds.isEmpty) {
+      return null;
+    }
+
+    for (final channelId in archivedChannelIds) {
+      final channel = await _tryGetChannel(channelId);
+      if (channel == null || channel.amityChannelType != AmityChannelType.COMMUNITY) {
+        continue;
+      }
+
+      final memberIds = await _getMemberIdsFromCache(channelId);
+      if (memberIds.isEmpty) {
+        continue;
+      }
+
+      if (_isSameMemberSet(memberIds, targetMemberIds)) {
+        await repository.unarchiveChannel(channelId);
+        return await _tryGetChannel(channelId) ?? channel;
+      }
+    }
+
+    return null;
+  }
+
+  Set<String> _targetMemberIds(List<AmityUser> users) {
+    final memberIds = users.where((user) => user.userId != null && user.userId!.isNotEmpty).map((user) => user.userId!).toSet();
+
+    final currentUserId = AmityCoreClient.getUserId();
+    if (currentUserId.isNotEmpty) {
+      memberIds.add(currentUserId);
+    }
+
+    return memberIds;
+  }
+
+  Future<Set<String>> _getMemberIdsFromCache(String channelId) async {
+    try {
+      final members = await AmityChatClient.newChannelRepository().membership(channelId).getMembersFromCache();
+      return members.where((member) => member?.userId != null && member!.userId!.isNotEmpty).map((member) => member!.userId!).toSet();
+    } catch (_) {
+      return <String>{};
+    }
+  }
+
+  Future<AmityChannel?> _tryGetChannel(String channelId) async {
+    try {
+      return await AmityChatClient.newChannelRepository().getChannel(channelId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  bool _isSameMemberSet(Set<String> left, Set<String> right) {
+    if (left.length != right.length) {
+      return false;
+    }
+    return left.containsAll(right);
   }
 
   // Helper method to generate display name from member names
