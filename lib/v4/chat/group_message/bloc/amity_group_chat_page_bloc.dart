@@ -642,18 +642,25 @@ class AmityGroupChatPageBloc
       return 'count:0|fetch:$isFetching';
     }
 
-    final first = messages.first;
-    final last = messages.last;
-
     String pack(AmityMessage message) {
       final id = message.messageId ?? message.uniqueId ?? '';
       final createdAt = message.createdAt?.millisecondsSinceEpoch ?? 0;
+      final editedAt = message.editedAt?.millisecondsSinceEpoch ?? 0;
       final segment = message.channelSegment ?? -1;
       final syncState = message.syncState?.index ?? -1;
-      return '$id:$createdAt:$segment:$syncState';
+      final reactionCount = message.reactionCount ?? 0;
+      final hasMyReactions = message.myReactions?.join(',') ?? '';
+      final reactionMap = message.reactions?.reactions;
+      final reactions = reactionMap == null
+          ? ''
+          : (reactionMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+              .map((entry) => '${entry.key}:${entry.value}')
+              .join(',');
+      final isDeleted = message.isDeleted == true ? 1 : 0;
+      return '$id:$createdAt:$editedAt:$segment:$syncState:$reactionCount:$hasMyReactions:$reactions:$isDeleted';
     }
 
-    return 'count:${messages.length}|fetch:$isFetching|first:${pack(first)}|last:${pack(last)}';
+    return 'count:${messages.length}|fetch:$isFetching|messages:${messages.map(pack).join('|')}';
   }
 
   // Helper method to load member roles and muted status

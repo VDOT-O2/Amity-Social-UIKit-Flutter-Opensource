@@ -442,14 +442,14 @@ class AmityChatPage extends NewBasePage {
 
                                           // Some production builds can miss the first message update
                                           // when a chat starts empty. Trigger one guarded refresh.
-                                          if (hadNoMessages || kDebugMode) {
+                                          if (hadNoMessages) {
                                             Future.delayed(const Duration(milliseconds: 500), () {
                                               if (chatBloc.isClosed) {
                                                 return;
                                               }
                                               final stillNoMessages =
                                                   chatBloc.state.messages.where((item) => item.type == ChatItemType.message).isEmpty;
-                                              if (kDebugMode || stillNoMessages) {
+                                              if (stillNoMessages) {
                                                 chatBloc.add(const ChatPageEventRefresh());
                                               }
                                             });

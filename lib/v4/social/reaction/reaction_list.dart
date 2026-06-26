@@ -437,7 +437,7 @@ class AmityReactionList extends NewBaseComponent {
   Widget reactionRow(BuildContext context, AmityReaction reaction) {
     final isCurrentUser = reaction.creator?.userId == AmityCoreClient.getUserId();
 
-    final isLike = reaction.reactionName == "like";
+    final isPostLike = reaction.reactionName == "like" && referenceType == AmityReactionReferenceType.POST;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -472,11 +472,11 @@ class AmityReactionList extends NewBaseComponent {
               ),
             ),
             SvgPicture.asset(
-              isLike ? 'assets/Icons/amity_ic_post_quick_reaction.svg' : configProvider.getReaction(reaction.reactionName ?? "").imagePath,
+              isPostLike ? 'assets/Icons/amity_ic_post_quick_reaction.svg' : configProvider.getReaction(reaction.reactionName ?? "").imagePath,
               package: 'amity_uikit_beta_service',
               width: 24,
               height: 24,
-              colorFilter: isLike
+              colorFilter: isPostLike
                   ? ColorFilter.mode(
                       theme.vdotGreen,
                       BlendMode.srcIn,
