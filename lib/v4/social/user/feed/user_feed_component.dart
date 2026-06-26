@@ -164,7 +164,7 @@ class UserFeedComponent extends NewBaseComponent {
         (amityPost.isDeleted ?? false)) {
       return Container();
     } else {
-      var uniqueKey = UniqueKey();
+      final postContentKey = ValueKey('user_feed_post_${amityPost.postId ?? index}');
       return VisibilityDetector(
         key: Key(amityPost.postId ?? ''),
         onVisibilityChanged: (VisibilityInfo info) {
@@ -179,7 +179,7 @@ class UserFeedComponent extends NewBaseComponent {
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
                 category: AmityPostCategory.general,
-                key: uniqueKey,
+                key: postContentKey,
                 hideTarget: true,
                 hideMenu: false,
                 action: AmityPostAction(

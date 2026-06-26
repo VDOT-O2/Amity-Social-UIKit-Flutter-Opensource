@@ -155,7 +155,7 @@ class CommunityPinComponent extends NewBaseComponent {
         (amityPost.isDeleted ?? false)) {
       return Container();
     } else {
-      var uniqueKey = UniqueKey();
+      final postContentKey = ValueKey('community_pin_post_${amityPost.postId ?? index}');
       return VisibilityDetector(
         key: Key(amityPost.postId ?? ''),
         onVisibilityChanged: (VisibilityInfo info) {
@@ -170,7 +170,7 @@ class CommunityPinComponent extends NewBaseComponent {
             AmityPostContentComponent(
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
-                key: uniqueKey,
+              key: postContentKey,
                 category:
                     (state.pins.map((e) => e.postId).contains(amityPost.postId))
                         ? AmityPostCategory.announcementAndPin
@@ -197,9 +197,9 @@ class CommunityPinComponent extends NewBaseComponent {
         (state.announcements.map((e) => e.postId).contains(amityPost.postId))) {
       return Container();
     } else {
-      var uniqueKey = UniqueKey();
+      final postContentKey = ValueKey('community_pin_post_${amityPost.postId ?? index}');
       return VisibilityDetector(
-        key: Key(amityPost.postId ?? uniqueKey.toString()),
+        key: Key(amityPost.postId ?? index.toString()),
         onVisibilityChanged: (VisibilityInfo info) {
           final visiblePercentage = info.visibleFraction * 100;
           if (visiblePercentage > 60) {
@@ -212,7 +212,7 @@ class CommunityPinComponent extends NewBaseComponent {
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
                 category: AmityPostCategory.pin,
-                key: uniqueKey,
+                key: postContentKey,
                 hideTarget: true,
                 action: AmityPostAction(
                   onAddReaction: (String) {},

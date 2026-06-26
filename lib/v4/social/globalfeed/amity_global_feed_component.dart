@@ -86,7 +86,7 @@ class AmityGlobalFeedComponent extends NewBaseComponent {
                               (amityPost.isDeleted ?? false)) {
                             return Container();
                           } else {
-                            var uniqueKey = UniqueKey();
+                            final postContentKey = ValueKey('global_feed_post_${amityPost.postId ?? index}');
                             return VisibilityDetector(
                               key: Key(amityPost.postId ?? ''),
                               onVisibilityChanged: (VisibilityInfo info) {
@@ -107,7 +107,7 @@ class AmityGlobalFeedComponent extends NewBaseComponent {
                                               .contains(amityPost.postId))
                                           ? AmityPostCategory.globalFeatured
                                           : AmityPostCategory.general,
-                                      key: uniqueKey,
+                                      key: postContentKey,
                                       hideTarget: false,
                                       action: AmityPostAction(
                                         onAddReaction: (String) {},

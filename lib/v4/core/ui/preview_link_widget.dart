@@ -26,6 +26,7 @@ class PreviewLinkWidget extends StatefulWidget {
 class _PreviewLinkWidgetState extends State<PreviewLinkWidget> {
   Metadata? _metadata;
   String? _url;
+  bool _invalidUrl = false;
   bool _isLoading = true;
   final ProcessedTextCache _textCache = ProcessedTextCache();
 
@@ -39,18 +40,49 @@ class _PreviewLinkWidgetState extends State<PreviewLinkWidget> {
       // Hacky: If it is not, then we will wait for the cache to be updated by the background process in Expandable Text
       final urlFromCache = extractUrlFromCache();
       if (urlFromCache != null) {
-        _url = urlFromCache;
-        _fetchMetadataInBackground(_url!);
+        _handleResolvedUrl(urlFromCache);
       } else {
         Future.delayed(const Duration(milliseconds: 150), () {
-          _url = extractUrlFromCache();
+          final delayedUrl = extractUrlFromCache();
+          if (!mounted) {
+            return;
+          }
 
-          if (_url != null) {
-            _fetchMetadataInBackground(_url!);
+          if (delayedUrl != null) {
+            setState(() {
+              _handleResolvedUrl(delayedUrl);
+            });
           }
         });
       }
     }
+  }
+
+  void _handleResolvedUrl(String rawUrl) {
+    final normalizedUrl = _normalizeUrl(rawUrl);
+    if (normalizedUrl == null || !AnyLinkPreview.isValidLink(normalizedUrl)) {
+      _invalidUrl = true;
+      _isLoading = false;
+      _url = null;
+      return;
+    }
+
+    _invalidUrl = false;
+    _url = normalizedUrl;
+    _fetchMetadataInBackground(normalizedUrl);
+  }
+
+  String? _normalizeUrl(String rawUrl) {
+    final trimmed = rawUrl.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+
+    return 'https://$trimmed';
   }
 
   String? extractUrlFromCache() {
@@ -74,24 +106,30 @@ class _PreviewLinkWidgetState extends State<PreviewLinkWidget> {
 
   Future<void> _fetchMetadataInBackground(String url) async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      String link = url;
-      if (!url.startsWith("http")) {
-        link = "https://$url";
-      }
-      final metadata = await AnyLinkPreview.getMetadata(link: link);
-      if (mounted) {
-        setState(() {
-          _metadata = metadata;
-          _isLoading = false;
-        });
+      try {
+        final metadata = await AnyLinkPreview.getMetadata(link: url);
+        if (mounted) {
+          setState(() {
+            _metadata = metadata;
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        debugPrint('Error fetching metadata: $e');
+        if (mounted) {
+          setState(() {
+            _invalidUrl = true;
+            _isLoading = false;
+          });
+        }
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_url == null) {
-      return Container();
+    if (_invalidUrl || _url == null) {
+      return const SizedBox.shrink();
     }
 
     if (_isLoading && _metadata == null) {

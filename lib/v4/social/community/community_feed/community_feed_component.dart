@@ -202,7 +202,7 @@ class CommunityFeedComponent extends NewBaseComponent {
         (amityPost.isDeleted ?? false)) {
       return Container();
     } else {
-      final uniqueKey = UniqueKey();
+      final postContentKey = ValueKey('community_feed_post_${amityPost.postId ?? index}');
       return VisibilityDetector(
         key: Key(amityPost.postId ?? ''),
         onVisibilityChanged: (VisibilityInfo info) {
@@ -217,7 +217,7 @@ class CommunityFeedComponent extends NewBaseComponent {
             AmityPostContentComponent(
                 style: AmityPostContentComponentStyle.feed,
                 post: amityPost,
-                key: uniqueKey,
+              key: postContentKey,
                 category: (state.pins.map((e) => e.postId).contains(amityPost.postId))
                     ? AmityPostCategory.announcementAndPin
                     : AmityPostCategory.announcement,
@@ -244,7 +244,7 @@ class CommunityFeedComponent extends NewBaseComponent {
         (state.announcements.map((e) => e.postId).contains(amityPost.postId))) {
       return Container();
     } else {
-      var uniqueKey = UniqueKey();
+      final postContentKey = ValueKey('community_feed_post_${amityPost.postId ?? index}');
       return VisibilityDetector(
         key: Key(amityPost.postId ?? ''),
         onVisibilityChanged: (VisibilityInfo info) {
@@ -261,7 +261,7 @@ class CommunityFeedComponent extends NewBaseComponent {
                 category: (state.pins.map((e) => e.postId).contains(amityPost.postId))
                     ? AmityPostCategory.pin
                     : AmityPostCategory.general,
-                key: uniqueKey,
+              key: postContentKey,
                 hideTarget: true,
                 hideMenu: !state.isJoined,
                 action: AmityPostAction(
