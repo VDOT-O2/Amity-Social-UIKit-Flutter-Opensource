@@ -16,6 +16,7 @@ import 'package:amity_uikit_beta_service/v4/core/ui/animation/bounce_animator.da
 import 'package:amity_uikit_beta_service/v4/core/ui/animation/simple_ticker_provider.dart';
 import 'package:amity_uikit_beta_service/v4/core/user_avatar.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/v4/utils/navigation_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,305 +57,307 @@ class AmityGroupChatPage extends NewBasePage {
           bounceAnimator?.animateItem(0);
         };
       },
-      child: Stack(
-        children: [
-          BlocProvider(
-            key: Key("$channelId"),
-            create: (context) => AmityGroupChatPageBloc(
-                channelId, context.read<AmityToastBloc>(),
-                jumpToMessageId: jumpToMessageId),
-            child: BlocListener<AmityGroupChatPageBloc, GroupChatPageState>(
-              listener: (context, state) {
-                // Listen for bounceTargetIndex changes and trigger bounce animation
-                if (state.bounceTargetIndex != null && bounceAnimator != null) {
-                  bounceAnimator!.animateItem(state.bounceTargetIndex!);
-                }
-              },
-              child: BlocBuilder<AmityGroupChatPageBloc, GroupChatPageState>(
-                key: Key("$channelId"),
-                builder: (context, state) {
-                  if (state is GroupChatPageStateInitial && !isJustCreated) {
-                    context.read<AmityToastBloc>().add(AmityToastLoading(
-                        message: context.l10n.chat_loading,
-                        icon: AmityToastIcon.loading,
-                        bottomPadding: toastBottomPadding));
+      child:_GroupChatPageRouteScope(
+        channelId: channelId, 
+        child: Stack(
+          children: [
+            BlocProvider(
+              key: Key(channelId),
+              create: (context) => AmityGroupChatPageBloc(
+                  channelId, context.read<AmityToastBloc>(),
+                  jumpToMessageId: jumpToMessageId),
+              child: BlocListener<AmityGroupChatPageBloc, GroupChatPageState>(
+                listener: (context, state) {
+                  // Listen for bounceTargetIndex changes and trigger bounce animation
+                  if (state.bounceTargetIndex != null && bounceAnimator != null) {
+                    bounceAnimator!.animateItem(state.bounceTargetIndex!);
                   }
-                  if (!state.isFetching &&
-                      state is! GroupChatPageStateInitial) {
-                    context
-                        .read<AmityToastBloc>()
-                        .add(AmityToastDismissIfLoading());
-                    _handleToastDismissal(context, state);
-                  }
+                },
+                child: BlocBuilder<AmityGroupChatPageBloc, GroupChatPageState>(
+                  key: Key("$channelId"),
+                  builder: (context, state) {
+                    if (state is GroupChatPageStateInitial && !isJustCreated) {
+                      context.read<AmityToastBloc>().add(AmityToastLoading(
+                          message: context.l10n.chat_loading,
+                          icon: AmityToastIcon.loading,
+                          bottomPadding: toastBottomPadding));
+                    }
+                    if (!state.isFetching &&
+                        state is! GroupChatPageStateInitial) {
+                      context
+                          .read<AmityToastBloc>()
+                          .add(AmityToastDismissIfLoading());
+                      _handleToastDismissal(context, state);
+                    }
 
-                  final List<GlobalKey> itemKeys = List.generate(
-                      state.messages.length, (index) => GlobalKey());
+                    final List<GlobalKey> itemKeys = List.generate(
+                        state.messages.length, (index) => GlobalKey());
 
-                  final isScrollable = state.scrollController.hasClients &&
-                      state.scrollController.position.maxScrollExtent > 0;
+                    final isScrollable = state.scrollController.hasClients &&
+                        state.scrollController.position.maxScrollExtent > 0;
 
-                  final newMessage = state.newMessage;
-                  return Scaffold(
-                    appBar: AppBar(
-                      titleSpacing: -5,
-                      surfaceTintColor: theme.backgroundColor,
-                      leading: IconButton(
-                        icon: SvgPicture.asset(
-                          "assets/Icons/amity_ic_back_button.svg",
-                          package: 'amity_uikit_beta_service',
-                          color: theme.baseColor,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      title: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () async {
-                          final channel = state.channel;
-                          if (channel != null) {
-                            final updatedChannel = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AmityGroupSettingPage(
-                                  channel: channel,
-                                  isModerator: state.isModerator,
-                                ),
-                              ),
-                            );
-
-                            if (updatedChannel is AmityChannel) {
-                              context.read<AmityGroupChatPageBloc>().add(
-                                  GroupChatPageHeaderEventChanged(
-                                      channel: updatedChannel));
-                            }
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            AmityChannelAvatar.withChannel(
-                              channel: state.channel,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(state.channelDisplayName ?? "",
-                                      style: AmityTextStyle.titleBold(
-                                          theme.baseColor)),
-                                  Visibility(
-                                    visible: !state.isConnected,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const CupertinoActivityIndicator(
-                                          radius: 8,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          context.l10n.chat_waiting_for_network,
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: theme.baseColorShade1,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                        ),
-                      ),
-                      backgroundColor: theme.backgroundColor,
-                      elevation: 0,
-                      bottom: PreferredSize(
-                        preferredSize: const Size.fromHeight(0),
-                        child: Container(
-                          height: 1,
-                          color: theme.baseColorShade4,
-                        ),
-                      ),
-                    ),
-                    body: Stack(
-                      children: [
-                        Container(
-                          color: theme.backgroundColor,
-                          child: Column(
-                            children: [
-                          Visibility(
-                            visible: state.isLoadingMore &&
-                                state.messages.isNotEmpty && state.useReverseUI,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0),
-                              width: 24.0,
-                              height: 24.0,
-                              child: const CupertinoActivityIndicator(),
-                            ),
+                    final newMessage = state.newMessage;
+                    return Scaffold(
+                      appBar: AppBar(
+                        titleSpacing: -5,
+                        surfaceTintColor: theme.backgroundColor,
+                        leading: IconButton(
+                          icon: SvgPicture.asset(
+                            "assets/Icons/amity_ic_back_button.svg",
+                            package: 'amity_uikit_beta_service',
+                            color: theme.baseColor,
                           ),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                LayoutBuilder(builder: (context, constraints) {
-                                  final firstItem = state.messages.isNotEmpty
-                                      ? state.messages.first.message
-                                      : null;
-                                  if (firstItem != null) {
-                                    context.read<AmityGroupChatPageBloc>().add(
-                                        GroupChatPageEventMarkReadMessage(
-                                            message: firstItem));
-                                  }
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        title: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            final channel = state.channel;
+                            if (channel != null) {
+                              final updatedChannel = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AmityGroupSettingPage(
+                                    channel: channel,
+                                    isModerator: state.isModerator,
+                                  ),
+                                ),
+                              );
 
-                                  // After layout, detect first overflow and update stable state
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    if (!state.contentOverflowsScreen &&
-                                        state.scrollController.hasClients &&
-                                        state.scrollController.position.maxScrollExtent > 0) {
-                                      context.read<AmityGroupChatPageBloc>().add(const GroupChatPageContentOverflowChanged());
-                                    }
-                                  });
-
-                                  final shouldUseReverse =
-                                      state.useReverseUI && state.contentOverflowsScreen;
-
-                                  return ListView.builder(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    controller: state.scrollController,
-                                    reverse: shouldUseReverse,
-                                    cacheExtent: 1000,
-                                    itemCount: state.messages.length,
-                                    itemBuilder: (context, index) {
-                                      ChatItem item;
-                                      if (shouldUseReverse) {
-                                        item = state.messages[index];
-                                      } else {
-                                        final messageIndex =
-                                            state.messages.length - 1 - index;
-                                        item = state.messages[messageIndex];
-                                      }
-                                      final message = item.message;
-                                      if (message != null) {
-                                        if (message.data is MessageVideoData &&
-                                            message.syncState !=
-                                                AmityMessageSyncState.SYNCED &&
-                                            !state.localThumbnails.containsKey(
-                                                message.uniqueId)) {
-                                          try {
-                                            final filePath = (message.data
-                                                    as MessageVideoData)
-                                                .getVideo()
-                                                .getFilePath;
-                                            if (filePath != null) {
-                                              context
-                                                  .read<
-                                                      AmityGroupChatPageBloc>()
-                                                  .add(
-                                                      GroupChatPageEventFetchLocalVideoThumbnail(
-                                                          uniqueId:
-                                                              message.uniqueId!,
-                                                          videoPath: filePath));
-                                            }
-                                          } catch (e) {}
-                                        } else if (message.data
-                                                is MessageVideoData &&
-                                            message.syncState ==
-                                                AmityMessageSyncState.SYNCED &&
-                                            !state.localThumbnails.containsKey(
-                                                message.uniqueId) &&
-                                            (message.data as MessageVideoData)
-                                                    .thumbnailImageFile ==
-                                                null) {
-                                          try {
-                                            final filePath = (message.data
-                                                    as MessageVideoData)
-                                                .getVideo()
-                                                .fileProperties
-                                                .fileUrl;
-                                            if (filePath != null) {
-                                              context
-                                                  .read<
-                                                      AmityGroupChatPageBloc>()
-                                                  .add(
-                                                      GroupChatPageEventFetchLocalVideoThumbnail(
-                                                          uniqueId:
-                                                              message.uniqueId!,
-                                                          videoPath: filePath));
-                                            }
-                                          } catch (e) {}
-                                        }
-                                        return _buildMessageWithAnimation(
-                                            context, message, index, state, itemKeys);
-                                      } else {
-                                        return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 4.0,
-                                                horizontal: 8.0,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: theme.backgroundColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.1),
-                                                    blurRadius: 4.0,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Text(
-                                                item.date ?? "",
-                                                style: TextStyle(
-                                                    color:
-                                                        theme.baseColorShade1,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
+                              if (updatedChannel is AmityChannel) {
+                                context.read<AmityGroupChatPageBloc>().add(
+                                    GroupChatPageHeaderEventChanged(
+                                        channel: updatedChannel));
+                              }
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              AmityChannelAvatar.withChannel(
+                                channel: state.channel,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(state.channelDisplayName ?? "",
+                                        style: AmityTextStyle.titleBold(
+                                            theme.baseColor)),
+                                    Visibility(
+                                      visible: !state.isConnected,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const CupertinoActivityIndicator(
+                                            radius: 8,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            context.l10n.chat_waiting_for_network,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: theme.baseColorShade1,
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                }),
-                                if (newMessage != null)
-                                  _buildNewMessageNotification(
-                                      context, state, newMessage),
-                                if (state.showScrollButton &&
-                                    isScrollable &&
-                                    newMessage == null)
-                                  _buildScrollToLatestButton(
-                                      state, isScrollable)
-                              ],
-                            ),
-                          ),
-                          _buildMessageComposer(context, state),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                },
+                        backgroundColor: theme.backgroundColor,
+                        elevation: 0,
+                        bottom: PreferredSize(
+                          preferredSize: const Size.fromHeight(0),
+                          child: Container(
+                            height: 1,
+                            color: theme.baseColorShade4,
+                          ),
+                        ),
+                      ),
+                      body: Stack(
+                        children: [
+                          Container(
+                            color: theme.backgroundColor,
+                            child: Column(
+                              children: [
+                            Visibility(
+                              visible: state.isLoadingMore &&
+                                  state.messages.isNotEmpty && state.useReverseUI,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                width: 24.0,
+                                height: 24.0,
+                                child: const CupertinoActivityIndicator(),
+                              ),
+                            ),
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  LayoutBuilder(builder: (context, constraints) {
+                                    final firstItem = state.messages.isNotEmpty
+                                        ? state.messages.first.message
+                                        : null;
+                                    if (firstItem != null) {
+                                      context.read<AmityGroupChatPageBloc>().add(
+                                          GroupChatPageEventMarkReadMessage(
+                                              message: firstItem));
+                                    }
+
+                                    // After layout, detect first overflow and update stable state
+                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      if (!state.contentOverflowsScreen &&
+                                          state.scrollController.hasClients &&
+                                          state.scrollController.position.maxScrollExtent > 0) {
+                                        context.read<AmityGroupChatPageBloc>().add(const GroupChatPageContentOverflowChanged());
+                                      }
+                                    });
+
+                                    final shouldUseReverse =
+                                        state.useReverseUI && state.contentOverflowsScreen;
+
+                                    return ListView.builder(
+                                      padding: const EdgeInsets.only(bottom: 8),
+                                      controller: state.scrollController,
+                                      reverse: shouldUseReverse,
+                                      cacheExtent: 1000,
+                                      itemCount: state.messages.length,
+                                      itemBuilder: (context, index) {
+                                        ChatItem item;
+                                        if (shouldUseReverse) {
+                                          item = state.messages[index];
+                                        } else {
+                                          final messageIndex =
+                                              state.messages.length - 1 - index;
+                                          item = state.messages[messageIndex];
+                                        }
+                                        final message = item.message;
+                                        if (message != null) {
+                                          if (message.data is MessageVideoData &&
+                                              message.syncState !=
+                                                  AmityMessageSyncState.SYNCED &&
+                                              !state.localThumbnails.containsKey(
+                                                  message.uniqueId)) {
+                                            try {
+                                              final filePath = (message.data
+                                                      as MessageVideoData)
+                                                  .getVideo()
+                                                  .getFilePath;
+                                              if (filePath != null) {
+                                                context
+                                                    .read<
+                                                        AmityGroupChatPageBloc>()
+                                                    .add(
+                                                        GroupChatPageEventFetchLocalVideoThumbnail(
+                                                            uniqueId:
+                                                                message.uniqueId!,
+                                                            videoPath: filePath));
+                                              }
+                                            } catch (e) {}
+                                          } else if (message.data
+                                                  is MessageVideoData &&
+                                              message.syncState ==
+                                                  AmityMessageSyncState.SYNCED &&
+                                              !state.localThumbnails.containsKey(
+                                                  message.uniqueId) &&
+                                              (message.data as MessageVideoData)
+                                                      .thumbnailImageFile ==
+                                                  null) {
+                                            try {
+                                              final filePath = (message.data
+                                                      as MessageVideoData)
+                                                  .getVideo()
+                                                  .fileProperties
+                                                  .fileUrl;
+                                              if (filePath != null) {
+                                                context
+                                                    .read<
+                                                        AmityGroupChatPageBloc>()
+                                                    .add(
+                                                        GroupChatPageEventFetchLocalVideoThumbnail(
+                                                            uniqueId:
+                                                                message.uniqueId!,
+                                                            videoPath: filePath));
+                                              }
+                                            } catch (e) {}
+                                          }
+                                          return _buildMessageWithAnimation(
+                                              context, message, index, state, itemKeys);
+                                        } else {
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
+                                                  horizontal: 8.0,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: theme.backgroundColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.1),
+                                                      blurRadius: 4.0,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Text(
+                                                  item.date ?? "",
+                                                  style: TextStyle(
+                                                      color:
+                                                          theme.baseColorShade1,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }),
+                                  if (newMessage != null)
+                                    _buildNewMessageNotification(
+                                        context, state, newMessage),
+                                  if (state.showScrollButton &&
+                                      isScrollable &&
+                                      newMessage == null)
+                                    _buildScrollToLatestButton(
+                                        state, isScrollable)
+                                ],
+                              ),
+                            ),
+                            _buildMessageComposer(context, state),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+    ));
   }
 
   Widget _buildMessageComposer(BuildContext context, GroupChatPageState state) {
@@ -661,5 +664,82 @@ class AmityGroupChatPage extends NewBasePage {
         );
       },
     );
+  }
+}
+
+
+class _GroupChatPageRouteScope extends StatefulWidget {
+  const _GroupChatPageRouteScope({required this.channelId, required this.child});
+
+  final String? channelId;
+  final Widget child;
+
+  @override
+  State<_GroupChatPageRouteScope> createState() => _GroupChatPageRouteScopeState();
+}
+
+class _GroupChatPageRouteScopeState extends State<_GroupChatPageRouteScope> with RouteAware {
+  NavigationProvider? _navigationProvider;
+  PageRoute<dynamic>? _route;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _navigationProvider ??= context.read<NavigationProvider>();
+
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic> && route != _route) {
+      _route = route;
+      navigationRouteObserver.subscribe(this, route);
+      _setActiveChannel();
+    }
+  }
+
+  @override
+  void didPush() {
+    _setActiveChannel();
+  }
+
+  @override
+  void didPopNext() {
+    _setActiveChannel();
+  }
+
+  @override
+  void didPushNext() {
+    _clearActiveChannel();
+  }
+
+  void _setActiveChannel() {
+    final channelId = widget.channelId;
+    if (channelId == null || channelId.isEmpty) {
+      return;
+    }
+
+    _navigationProvider?.setActiveChannelId(channelId);
+  }
+
+  void _clearActiveChannel() {
+    final channelId = widget.channelId;
+    if (channelId == null || channelId.isEmpty) {
+      return;
+    }
+
+    _navigationProvider?.clearActiveChannelId(channelId: channelId);
+  }
+
+  @override
+  void dispose() {
+    if (_route != null) {
+      navigationRouteObserver.unsubscribe(this);
+    }
+    _clearActiveChannel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
