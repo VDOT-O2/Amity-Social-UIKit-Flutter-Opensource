@@ -3,6 +3,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/ui/bottom_sheet_menu.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_feed/community_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_image_feed_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/community/community_media_feed/community_video_feed_component.dart';
@@ -37,7 +38,17 @@ class AmityCommunityProfilePage extends NewBasePage {
   @override
   Widget buildPage(BuildContext context) {
     return BlocProvider(
-        create: (context) => CommunityProfileBloc(communityId, _scrollController),
+        create: (context) {
+          // Do not depend on inherited widgets (e.g., MediaQuery) inside provider create.
+          final view = WidgetsBinding.instance.platformDispatcher.views.first;
+          final devicePixelRatio = view.devicePixelRatio;
+          final logicalWidth = view.physicalSize.width / devicePixelRatio;
+
+          final expandedHeight = logicalWidth / kAmityCommunityPhotoRatio;
+          final collapseEndOffset = (expandedHeight - kToolbarHeight).clamp(1.0, double.infinity);
+
+          return CommunityProfileBloc(communityId, _scrollController, collapseEndOffset);
+        },
         child: Builder(builder: (context) {
           return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
@@ -515,7 +526,7 @@ class AmityCommunityProfilePage extends NewBasePage {
 
   Widget _buildAppBar(BuildContext context, CommunityProfileState state) {
     final progress = state.collapseProgress.clamp(0.0, 1.0);
-    final coverOpacity = (1 - (progress * 3.0)).clamp(0.0, 1.0);
+    final coverOpacity = (1 - progress).clamp(0.0, 1.0);
     final isExpandedAtTop = progress < 0.05;
     final iconBackground = isExpandedAtTop ? Colors.black.withOpacity(0.5) : Colors.transparent;
     final iconBorderColor = isExpandedAtTop ? Colors.white.withOpacity(0.6) : Colors.transparent;
@@ -524,6 +535,8 @@ class AmityCommunityProfilePage extends NewBasePage {
     final mediaQuery = MediaQuery.of(context);
     final expandedHeight = mediaQuery.size.width / kAmityCommunityPhotoRatio;
 
+    AmityLog.debug("progress: ${state.collapseProgress}, coverOpacity: $coverOpacity");
+    
     return SliverAppBar(
       floating: false,
       pinned: true,

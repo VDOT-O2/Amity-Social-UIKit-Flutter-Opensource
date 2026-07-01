@@ -15,8 +15,10 @@ part 'community_profile_state.dart';
 
 class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileState> {
   static const double _collapseStartOffset = 0;
-  static const double _collapseEndOffset = 188;
   static const double _progressEpsilon = 0.01;
+  static const double _minCollapseRange = 1.0;
+
+  final double _collapseEndOffset;
 
   final AmityDebugLogController debugLogController = AmityDebugLogController(maxHistory: 100);
   StreamSubscription<dynamic>? _communitySubscription;
@@ -30,7 +32,9 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
   CommunityProfileBloc(
     String communityId,
     ScrollController scrollController,
-  ) : super(CommunityProfileState(
+    double collapseEndOffset,
+  ) : _collapseEndOffset = collapseEndOffset,
+        super(CommunityProfileState(
           communityId: communityId,
           scrollController: scrollController,
         )) {
@@ -48,14 +52,11 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         snapshot: state.toString(),
       );
 
-      if (event.community != null) {
-        final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check() ?? false;
+        final isModerator = AmityCoreClient.hasPermission(AmityPermission.EDIT_COMMUNITY).atCommunity(communityId).check();
         final canManageStory =
-            AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check() ??
-                false;
+          AmityCoreClient.hasPermission(AmityPermission.MANAGE_COMMUNITY_STORY).atCommunity(event.community.communityId!).check();
         emit(state.copyWith(
-            community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
-      }
+          community: event.community, isJoined: event.community.isJoined, isModerator: isModerator, canManageStory: canManageStory));
     });
 
     on<CommunityProfileEventExpanded>((event, emit) async {
@@ -226,7 +227,8 @@ class CommunityProfileBloc extends Bloc<CommunityProfileEvent, CommunityProfileS
         }
 
         final offset = state.scrollController.offset;
-        final normalized = ((offset - _collapseStartOffset) / (_collapseEndOffset - _collapseStartOffset)).clamp(0.0, 1.0);
+        final collapseRange = (_collapseEndOffset - _collapseStartOffset).clamp(_minCollapseRange, double.infinity);
+        final normalized = ((offset - _collapseStartOffset) / collapseRange).clamp(0.0, 1.0);
         addEvent(CommunityProfileEventScrollProgressChanged(progress: normalized));
       };
       scrollController.addListener(_scrollListener!);
