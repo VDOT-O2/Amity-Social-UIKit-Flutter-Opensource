@@ -515,18 +515,20 @@ class AmityCommunityProfilePage extends NewBasePage {
 
   Widget _buildAppBar(BuildContext context, CommunityProfileState state) {
     final progress = state.collapseProgress.clamp(0.0, 1.0);
-    final coverOpacity = (1 - (progress * 2)).clamp(0.0, 1.0);
+    final coverOpacity = (1 - (progress * 3.0)).clamp(0.0, 1.0);
     final isExpandedAtTop = progress < 0.05;
     final iconBackground = isExpandedAtTop ? Colors.black.withOpacity(0.5) : Colors.transparent;
     final iconBorderColor = isExpandedAtTop ? Colors.white.withOpacity(0.6) : Colors.transparent;
     final iconColor = isExpandedAtTop ? Colors.white : theme.textPrimary;
     final appBarBackgroundColor = Color.lerp(Colors.transparent, theme.backgroundSubtle, progress) ?? theme.backgroundSubtle;
+    final mediaQuery = MediaQuery.of(context);
+    final expandedHeight = mediaQuery.size.width / kAmityCommunityPhotoRatio;
 
     return SliverAppBar(
       floating: false,
       pinned: true,
       stretch: true,
-      expandedHeight: 188,
+      expandedHeight: expandedHeight,
       elevation: 0,
       leadingWidth: 48,
       backgroundColor: appBarBackgroundColor,

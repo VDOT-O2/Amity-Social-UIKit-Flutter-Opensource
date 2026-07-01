@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const kAmityCommunityPhotoRecommendedSize = Size(1600, 600);
+const kAmityCommunityPhotoRatio = 1600 / 600;
+
 class AmityTheme {
   final Color brandPrimary;
   final Color background;
