@@ -11,6 +11,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+const _publicGroupApprovalStatusMetadataKey = 'publicGroupApprovalStatus';
+const _publicGroupInReviewStatus = 'in_review';
+
 Widget communityList(
   BuildContext context,
   ScrollController scrollController,
@@ -64,6 +67,7 @@ Widget communityList(
 Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeColor theme, {bool isUnseen = false}) {
   var categoriesName = community.categories?.map((category) => category?.name).toList();
   var hasCommunityImage = (community.avatarImage?.fileUrl?.isNotEmpty ?? false);
+  final isInReview = _isCommunityInReview(community);
 
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
@@ -114,6 +118,24 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                       height: 20,
                       child: AmityOfficialBadgeElement(),
                     ),
+                  if (isInReview) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: theme.highlightColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'In Review',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: theme.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(width: 16),
                 ],
               ),
@@ -163,6 +185,16 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
       ],
     ),
   );
+}
+
+bool _isCommunityInReview(AmityCommunity community) {
+  final metadata = community.metadata;
+  if (metadata == null) {
+    return false;
+  }
+
+  final status = metadata[_publicGroupApprovalStatusMetadataKey]?.toString().trim().toLowerCase();
+  return status == _publicGroupInReviewStatus;
 }
 
 Widget communitySkeletonList(AmityThemeColor theme, ConfigProvider configProvider) {
