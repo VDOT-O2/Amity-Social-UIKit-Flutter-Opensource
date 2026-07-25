@@ -87,7 +87,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
             width: 80,
             height: 80,
             child: CommunityImageAvatarElement(
-                avatarUrl: UrlBuilder.appendParam(community.avatarImage?.fileUrl, name: 'size', value: 'medium'),
+                avatarUrl: community.avatarImage?.getUrl(AmityImageSize.LARGE),
                 placeHolderPath: hasCommunityImage ? "" : "assets/Icons/amity_ic_community_avatar_placeholder_rectangle.svg",
                 placeHolderColorFilter: ColorFilter.mode(theme.textPrimary, BlendMode.srcIn),
                 elementId: AmityMyCommunityElement.communityAvatar.stringValue),
