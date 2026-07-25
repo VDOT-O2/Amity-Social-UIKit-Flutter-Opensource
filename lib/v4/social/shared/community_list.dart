@@ -118,24 +118,24 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                       height: 20,
                       child: AmityOfficialBadgeElement(),
                     ),
-                  if (isInReview) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: theme.highlightColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'In Review',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: theme.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ],
+                  // if (isInReview) ...[
+                  //   const SizedBox(width: 8),
+                  //   Container(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  //     decoration: BoxDecoration(
+                  //       color: theme.highlightColor,
+                  //       borderRadius: BorderRadius.circular(12),
+                  //     ),
+                  //     child: Text(
+                  //       'In Review',
+                  //       style: TextStyle(
+                  //         fontSize: 11,
+                  //         fontWeight: FontWeight.w600,
+                  //         color: theme.textPrimary,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ],
                   const SizedBox(width: 16),
                 ],
               ),
@@ -166,7 +166,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (!(community.isPublic ?? false)) ...[
+                    if (!(community.isPublic ?? false) && !isInReview) ...[
                       Container(
                         width: 20,
                         height: 20,

@@ -194,7 +194,7 @@ class CommunityMemberCountElement extends BaseElement {
   @override
   Widget buildElement(BuildContext context) {
     return Text(
-      '${memberCount?.formattedCompactString()} ${context.l10n.community_members.toLowerCase()}',
+      context.l10n.community_members_count(memberCount ?? 0),
       style: TextStyle(
         color: color ?? theme.textPrimary,
         fontWeight: FontWeight.w500,
