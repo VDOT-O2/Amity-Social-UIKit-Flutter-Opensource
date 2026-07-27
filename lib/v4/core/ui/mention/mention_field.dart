@@ -135,6 +135,8 @@ class MentionTextField extends StatefulWidget {
     this.onTapOutside,
     this.cursorColor,
     this.enableMention = true,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   }) : super(key: key);
 
   final AmityThemeColor theme;
@@ -165,6 +167,8 @@ class MentionTextField extends StatefulWidget {
       onTapOutside; // Called when user taps outside the text field
   final Color? cursorColor; // Color of the text cursor
   final bool enableMention; // Enable/disable mention functionality
+  final bool autocorrect; // Enable/disable autocorrect
+  final bool enableSuggestions; // Enable/disable keyboard suggestions/autocomplete
 
   @override
   State<MentionTextField> createState() => _MentionTextFieldState();
@@ -1128,6 +1132,8 @@ class _MentionTextFieldState extends State<MentionTextField>
       focusNode: _focusNode,
       scrollController: widget.scrollController,
       keyboardType: widget.keyboardType,
+      autocorrect: widget.autocorrect,
+      enableSuggestions: widget.enableSuggestions,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
       enabled: widget.enabled,

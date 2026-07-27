@@ -26,22 +26,55 @@ class PostItemBloc extends Bloc<PostItemEvent, PostItemState> {
     });
 
     on<AddReactionToPost>((event, emit) async {
-      AmityPost post = event.post;
-      emit(state.copyWith(isReacting: true));
-      if (post.myReactions?.isNotEmpty ?? false) {
-        await post.react().removeReaction(post.myReactions!.first);
+      final post = state.post;
+      final previousReactionCount = post.reactionCount;
+      final previousMyReactions = post.myReactions?.toList();
+
+      _applyOptimisticReaction(post, event.reactionType, isAdding: true);
+      emit(state.copyWith(post: post, isReacting: true));
+
+      try {
+        await _syncReaction(
+          post: post,
+          reactionType: event.reactionType,
+          isAdding: true,
+          previousMyReactions: previousMyReactions,
+        );
+      } catch (_) {
+        _restoreOptimisticReaction(
+          post: post,
+          previousReactionCount: previousReactionCount,
+          previousMyReactions: previousMyReactions,
+        );
       }
-      await post.react().addReaction(event.reactionType);
-      emit(state.copyWith(isReacting: false));
+
+      emit(state.copyWith(post: post, isReacting: false));
     });
 
     on<RemoveReactionToPost>((event, emit) async {
-      AmityPost post = event.post;
-      emit(state.copyWith(isReacting: true));
-      if (post.myReactions?.isNotEmpty ?? false) {
-        await post.react().removeReaction(event.reactionType);
+      final post = state.post;
+      final previousReactionCount = post.reactionCount;
+      final previousMyReactions = post.myReactions?.toList();
+
+      _applyOptimisticReaction(post, event.reactionType, isAdding: false);
+      emit(state.copyWith(post: post, isReacting: true));
+
+      try {
+        await _syncReaction(
+          post: post,
+          reactionType: event.reactionType,
+          isAdding: false,
+          previousMyReactions: previousMyReactions,
+        );
+      } catch (_) {
+        _restoreOptimisticReaction(
+          post: post,
+          previousReactionCount: previousReactionCount,
+          previousMyReactions: previousMyReactions,
+        );
       }
-      emit(state.copyWith(isReacting: false));
+
+      emit(state.copyWith(post: post, isReacting: false));
     });
 
     on<PostItemFlag>((event, emit) async {
@@ -78,5 +111,60 @@ class PostItemBloc extends Bloc<PostItemEvent, PostItemState> {
       AmityPost post = event.post;
       emit(state.copyWith(post: post));
     });
+  }
+
+  void _applyOptimisticReaction(
+    AmityPost post,
+    String reactionType, {
+    required bool isAdding,
+  }) {
+    final reactions = List<String>.from(post.myReactions ?? const []);
+    var reactionCount = post.reactionCount ?? 0;
+
+    if (isAdding) {
+      if (reactions.isNotEmpty) {
+        reactionCount = reactionCount > 0 ? reactionCount - 1 : 0;
+      }
+      reactions
+        ..clear()
+        ..add(reactionType);
+      reactionCount++;
+    } else {
+      if (reactions.isNotEmpty) {
+        reactionCount = reactionCount > 0 ? reactionCount - 1 : 0;
+      }
+      reactions.clear();
+    }
+
+    post.myReactions = reactions;
+    post.reactionCount = reactionCount;
+  }
+
+  Future<void> _syncReaction({
+    required AmityPost post,
+    required String reactionType,
+    required bool isAdding,
+    required List<String>? previousMyReactions,
+  }) async {
+    if (isAdding) {
+      if (previousMyReactions?.isNotEmpty ?? false) {
+        await post.react().removeReaction(previousMyReactions!.first);
+      }
+      await post.react().addReaction(reactionType);
+      return;
+    }
+
+    if (previousMyReactions?.isNotEmpty ?? false) {
+      await post.react().removeReaction(previousMyReactions!.first);
+    }
+  }
+
+  void _restoreOptimisticReaction({
+    required AmityPost post,
+    required int? previousReactionCount,
+    required List<String>? previousMyReactions,
+  }) {
+    post.reactionCount = previousReactionCount;
+    post.myReactions = previousMyReactions?.toList();
   }
 }

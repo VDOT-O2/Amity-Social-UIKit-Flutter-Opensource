@@ -44,6 +44,11 @@ class PostItemBottom extends NewBaseComponent {
               showLabel: hideReactionCount,
               isOptimisticUi: isOptimisticUi,
               onReactionLabelTap: () {
+                if ((post.reactionCount ?? 0) == 0) {
+                  action.onAddReaction("like");
+                  return;
+                }
+                
                 _showReactionsBottomSheet(context);
               },
             ))),
@@ -54,10 +59,6 @@ class PostItemBottom extends NewBaseComponent {
   }
 
   void _showReactionsBottomSheet(BuildContext context) {
-    if ((post.reactionCount ?? 0) <= 0) {
-      return;
-    }
-
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

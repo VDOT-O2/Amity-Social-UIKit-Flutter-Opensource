@@ -515,6 +515,10 @@ Future<List<Map<String, dynamic>>> processTextInBackground(
 
   // Add URL matches
   for (final Match match in urlRegExp.allMatches(data.text)) {
+    if (_isEmailDomainMatch(data.text, match)) {
+      continue;
+    }
+
     entities.add({
       'type': 'url',
       'index': match.start,
@@ -547,6 +551,34 @@ Future<List<Map<String, dynamic>>> processTextInBackground(
   entities.sort((a, b) => a['index'].compareTo(b['index']));
 
   return entities;
+}
+
+bool _isEmailDomainMatch(String source, Match match) {
+  if (match.start <= 0) {
+    return false;
+  }
+
+  final int atIndex = match.start - 1;
+  if (source.codeUnitAt(atIndex) != 64) {
+    return false;
+  }
+
+  // Ensure there is a valid local-part before '@' so we only skip true emails.
+  final RegExp localPartChar = RegExp(r'[A-Za-z0-9._%+-]');
+  int cursor = atIndex - 1;
+  bool hasLocalPart = false;
+
+  while (cursor >= 0) {
+    final String char = source[cursor];
+    if (!localPartChar.hasMatch(char)) {
+      break;
+    }
+
+    hasLocalPart = true;
+    cursor--;
+  }
+
+  return hasLocalPart;
 }
 
 class TextProcessingData {
