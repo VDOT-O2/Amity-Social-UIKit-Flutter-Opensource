@@ -2,6 +2,7 @@ import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
+import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/rotating_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +26,7 @@ class _AmityToastState extends State<AmityToast> {
   late final AmityThemeColor theme;
   late final ConfigProvider configProvider;
   late final AmityUIConfig uiConfig;
-
-  bool isToastVisible = false;
+  Key? _lastHandledToastKey;
 
   @override
   void didChangeDependencies() {
@@ -39,64 +39,83 @@ class _AmityToastState extends State<AmityToast> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AmityToastBloc, AmityToastState>(
-        builder: (context, state) {
-      return renderToast(context, state);
-    });
+    return BlocListener<AmityToastBloc, AmityToastState>(
+      listenWhen: (previous, current) => previous != current,
+      listener: (context, state) {
+        _handleToastState(context, state);
+      },
+      child: const SizedBox.shrink(),
+    );
   }
 
-  Widget renderToast(BuildContext context, AmityToastState state) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return; // Check if widget is still mounted
+  void _handleToastState(BuildContext context, AmityToastState state) {
+    if (!mounted) {
+      AmityLog.debug('ToastUI: ignoring state because widget is not mounted');
+      return;
+    }
 
-      if (state.style == AmityToastStyle.short && !isToastVisible) {
-        ScaffoldMessenger.of(context)
-          ..clearSnackBars()
-          ..showSnackBar(SnackBar(
-            content: renderToastContent(
-                message: state.message,
-                icon: state.icon,
-                bottomPadding: state.bottomPadding),
-            elevation: 0,
-            backgroundColor: const Color(0x00000000),
-            onVisible: () => Future.delayed(const Duration(seconds: 3), () {
-              // Safely access the context by checking if widget is still mounted
-              if (mounted) {
-                try {
-                  context.read<AmityToastBloc>().add(AmityToastDismiss());
-                } catch (e) {
-                  // Widget might be disposed, ignore the error
-                }
-              }
-            }),
-          ));
+    AmityLog.debug(
+        'ToastUI: handling state style=${state.style}, key=${state.key}, messageLength=${state.message.length}, padding=${state.bottomPadding}');
 
-        isToastVisible = true;
-      } else if (state.style == AmityToastStyle.loading) {
-        if (isToastVisible) {
-          // If a toast is already visible, do not show another one
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) {
+      AmityLog.warn('ToastUI: ScaffoldMessenger not found in context, cannot render toast');
+      return;
+    }
+
+    if (state.style == AmityToastStyle.hidden) {
+      AmityLog.debug('ToastUI: remove current snack bar immediately');
+      messenger.removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+      _lastHandledToastKey = null;
+      return;
+    }
+
+    if (state.style != AmityToastStyle.short &&
+        state.style != AmityToastStyle.loading) {
+      AmityLog.debug('ToastUI: style ${state.style} not handled by snackbar renderer');
+      return;
+    }
+
+    if (state.key != null && state.key == _lastHandledToastKey) {
+      AmityLog.debug('ToastUI: skipping duplicate state for key=${state.key}');
+      return;
+    }
+    _lastHandledToastKey = state.key;
+
+    final snackBar = SnackBar(
+      content: renderToastContent(
+        message: state.message,
+        icon: state.icon,
+        bottomPadding: state.bottomPadding,
+      ),
+      elevation: 0,
+      backgroundColor: const Color(0x00000000),
+      duration: state.style == AmityToastStyle.loading
+          ? const Duration(days: 1)
+          : const Duration(seconds: 3),
+    );
+
+    messenger.removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+    messenger.showSnackBar(snackBar);
+    AmityLog.debug('ToastUI: showSnackBar called for style=${state.style}, key=${state.key}');
+
+    if (state.style == AmityToastStyle.short) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (!mounted) {
           return;
         }
-
-        ScaffoldMessenger.of(context)
-          ..clearSnackBars()
-          ..showSnackBar(SnackBar(
-            content: renderToastContent(
-                message: state.message,
-                icon: state.icon,
-                bottomPadding: state.bottomPadding),
-            elevation: 0,
-            backgroundColor: const Color(0x00000000),
-            duration: const Duration(days: 1),
-          ));
-
-        isToastVisible = true;
-      } else {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        isToastVisible = false;
-      }
-    });
-    return Container();
+        final bloc = context.read<AmityToastBloc>();
+        final blocState = bloc.state;
+        if (blocState.style == AmityToastStyle.short &&
+            blocState.key == state.key) {
+          AmityLog.debug('ToastUI: auto-dismissing short toast for key=${state.key}');
+          bloc.add(AmityToastDismiss());
+        } else {
+          AmityLog.debug(
+              'ToastUI: skip auto-dismiss because bloc moved to style=${blocState.style}, key=${blocState.key}');
+        }
+      });
+    }
   }
 
   Widget renderToastContent(

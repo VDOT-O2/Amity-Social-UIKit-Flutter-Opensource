@@ -218,6 +218,7 @@ class AmityPostComposerPage extends NewBasePage {
                         },
                         mediaType: selectedMediaType),
                   ),
+                  AmityToast(pageId: pageId, elementId: 'toast'),
                 ],
               ),
             );
@@ -414,6 +415,46 @@ class AmityPostComposerPage extends NewBasePage {
         lower.endsWith('.webm');
   }
 
+  List<String> _extractUrls(String text) {
+    final urlRegex = RegExp(r'(https?:\/\/[^\s]+|www\.[^\s]+)', caseSensitive: false);
+    return urlRegex.allMatches(text).map((m) => m.group(0) ?? '').where((u) => u.isNotEmpty).toList();
+  }
+
+  List<String> _extractDomainLikeTokens(String text) {
+    final domainLikeRegex = RegExp(
+      r'\b(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?:\/[^\s]*)?\b',
+      caseSensitive: false,
+    );
+    return domainLikeRegex
+        .allMatches(text)
+        .map((m) => m.group(0) ?? '')
+        .where((u) => u.isNotEmpty)
+        .toList();
+  }
+
+  void _logCreatePostOptions({
+    required String text,
+    required List<String> urls,
+    required List<String> domainLikeTokens,
+    required List<String> mentionUserIds,
+    required dynamic mentionMetadataJson,
+  }) {
+    final mediaType = selectedMediaType?.name ?? 'none';
+    final hasMedia = selectedFiles.isNotEmpty;
+    final uploadedCount = selectedFiles.values.where((f) => f.isUploaded == true).length;
+    final errorCount = selectedFiles.values.where((f) => f.isError == true).length;
+
+    AmityLog.debug(
+      'PostComposerCreateOptions: mode=${options.mode}, targetType=${options.targetType}, targetId=${options.targetId}, '
+      'communityId=${options.community?.communityId}, mediaType=$mediaType, selectedFiles=${selectedFiles.length}, '
+      'uploadedFiles=$uploadedCount, erroredFiles=$errorCount, hasMedia=$hasMedia, textLength=${text.length}, '
+      'containsUrl=${urls.isNotEmpty}, urlCount=${urls.length}, urls=$urls, '
+      'containsDomainLike=${domainLikeTokens.isNotEmpty}, domainLikeCount=${domainLikeTokens.length}, domainLikeTokens=$domainLikeTokens, '
+      'mentionUserCount=${mentionUserIds.length}, '
+      'mentionMetadata=$mentionMetadataJson, appName=$appName',
+    );
+  }
+
 
   void _initializeController(BuildContext context) {
     if (options.mode == AmityPostComposerMode.edit && options.post?.data is TextData) {
@@ -435,6 +476,7 @@ class AmityPostComposerPage extends NewBasePage {
   void handleClose(BuildContext context) {
     // Prevent closing while post is being created
     if (isPosting) {
+      AmityLog.debug('PostComposer: handleClose ignored because isPosting=true');
       return;
     }
 
@@ -604,8 +646,33 @@ class AmityPostComposerPage extends NewBasePage {
 
   void _createPost(BuildContext context) {
     final targetId = options.targetId;
+    final currentText = textController.text.trim();
+    final extractedUrls = _extractUrls(currentText);
+    final domainLikeTokens = _extractDomainLikeTokens(currentText);
 
     context.read<AmityToastBloc>().add(AmityToastLoading(message: context.l10n.general_posting, icon: AmityToastIcon.loading));
+    AmityLog.debug(
+      'PostComposer: create post started, showing loading toast (containsUrl=${extractedUrls.isNotEmpty}, urls=$extractedUrls, containsDomainLike=${domainLikeTokens.isNotEmpty}, domainLikeTokens=$domainLikeTokens)');
+    AmityLog.debug('PostComposer: payload text="$currentText"');
+
+    var isCreatePostHandled = false;
+    const createPostWatchdogTimeout = Duration(seconds: 20);
+    final postRequestWatchdog = Timer(createPostWatchdogTimeout, () {
+      if (isCreatePostHandled || !context.mounted) {
+        return;
+      }
+
+      AmityLog.warn(
+          'PostComposer: create post watchdog timeout after ${createPostWatchdogTimeout.inSeconds} seconds');
+      isPosting = false;
+      context.read<AmityToastBloc>().add(AmityToastDismiss());
+      Future.microtask(() {
+        if (!context.mounted) {
+          return;
+        }
+        _showToast(context, context.l10n.error_create_post, AmityToastIcon.warning);
+      });
+    });
 
     var targetBuilder = AmitySocialClient.newPostRepository().createPost();
 
@@ -626,60 +693,72 @@ class AmityPostComposerPage extends NewBasePage {
           AmityVideo video = AmityVideo(amityVideo.value.fileInfo!.getFileProperties!);
           videos.add(video);
         }
-        postCreatorBuilder = dataTypeSelector.video(videos).text(textController.text);
+        postCreatorBuilder = dataTypeSelector.video(videos).text(currentText);
       } else {
         List<AmityImage> images = [];
         var imageList = selectedFiles.entries;
         for (var image in imageList) {
           images.add(AmityImage(image.value.fileInfo!.getFileProperties!));
         }
-        postCreatorBuilder = dataTypeSelector.image(images).text(textController.text);
+        postCreatorBuilder = dataTypeSelector.image(images).text(currentText);
       }
     } else {
-      postCreatorBuilder = dataTypeSelector.text(textController.text);
+      postCreatorBuilder = dataTypeSelector.text(currentText);
     }
     final mentionMetadataList = textController.getAmityMentionMetadata();
     final mentionUserIds = textController.getMentionUserIds();
     final mentionMetadataJson = AmityMentionMetadataCreator(mentionMetadataList).create();
 
-    AmityLog.debug(
-        "Creating post with text: ${textController.text}, mentionUserIds: $mentionUserIds, mentionMetadata: $mentionMetadataJson, selectedFiles count: ${selectedFiles.length}");
+    _logCreatePostOptions(
+      text: currentText,
+      urls: extractedUrls,
+      domainLikeTokens: domainLikeTokens,
+      mentionUserIds: mentionUserIds,
+      mentionMetadataJson: mentionMetadataJson,
+    );
 
-    postCreatorBuilder.mentionUsers(mentionUserIds).metadata(mentionMetadataJson).post().then((post) async {
+    AmityLog.debug(
+      "Creating post with text: $currentText, mentionUserIds: $mentionUserIds, mentionMetadata: $mentionMetadataJson, selectedFiles count: ${selectedFiles.length}");
+
+    postCreatorBuilder
+        .mentionUsers(mentionUserIds)
+        .metadata(mentionMetadataJson)
+      .post()
+        .then((post) async {
+      isCreatePostHandled = true;
+      postRequestWatchdog.cancel();
+      AmityLog.debug('PostComposer: create post succeeded with postId=${post.postId}');
       await Future.delayed(const Duration(milliseconds: 500)); // Small delay to ensure update is processed
       if (!context.mounted) {
+        AmityLog.debug('PostComposer: context unmounted before handling create post success');
         return;
       }
 
       _onPostSuccess(context, post);
     }).onError((error, stackTrace) {
+      isCreatePostHandled = true;
+      postRequestWatchdog.cancel();
+      if (error is TimeoutException) {
+        AmityLog.warn('PostComposer: create post timed out');
+      }
+      AmityLog.error('PostComposer: create post failed', error, stackTrace: stackTrace);
       if (!context.mounted) {
         return;
       }
 
       // Re-enable button on error to allow retry
       isPosting = false;
-
-      // Dismiss the loading toast first, then show the error toast in a new
-      // event loop tick. This is necessary because Flutter batches BlocBuilder
-      // setState calls within the same tick — if we dispatch Dismiss + Short
-      // synchronously, the widget only rebuilds once (with the Short state)
-      // while isToastVisible is still true, so the !isToastVisible guard
-      // blocks the error toast from showing.
       context.read<AmityToastBloc>().add(AmityToastDismiss());
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (!context.mounted) return;
-        if (error is AmityException) {
-          if (error.isAmityErrorWithCode(AmityErrorCode.BAN_WORD_FOUND)) {
-            _showToast(context, context.l10n.error_post_ban_word_found, AmityToastIcon.warning);
-            return;
-          } else if (error.isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
-            _showToast(context, context.l10n.error_post_link_not_allowed, AmityToastIcon.warning);
-            return;
-          }
+      if (error is AmityException) {
+        if (error.isAmityErrorWithCode(AmityErrorCode.BAN_WORD_FOUND)) {
+          _showToast(context, context.l10n.error_post_ban_word_found, AmityToastIcon.warning);
+          return;
+        } else if (error.isAmityErrorWithCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
+          _showToast(context, context.l10n.error_post_link_not_allowed, AmityToastIcon.warning);
+          return;
         }
-        _showToast(context, context.l10n.error_create_post, AmityToastIcon.warning);
-      });
+      }
+      _showToast(context, context.l10n.error_create_post, AmityToastIcon.warning);
     });
   }
 
@@ -730,6 +809,7 @@ class AmityPostComposerPage extends NewBasePage {
   }
 
   void _showToast(BuildContext context, String message, AmityToastIcon icon) {
+    AmityLog.debug('PostComposer: dispatching AmityToastShort (icon: $icon, length: ${message.length})');
     context.read<AmityToastBloc>().add(AmityToastShort(message: message, icon: icon));
   }
 }
