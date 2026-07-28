@@ -52,7 +52,7 @@ class AmityCommunityProfilePage extends NewBasePage {
         child: Builder(builder: (context) {
           return BlocBuilder<CommunityProfileBloc, CommunityProfileState>(builder: (context, state) {
             final featureConfig = configProvider.getFeatureConfig();
-            final bgColor = theme.isLight ? theme.borderSubtle : theme.surfaceRaised;
+            final bgColor = theme.backgroundColor;
             final mediaQuery = MediaQuery.of(context);
             final bottomInset = mediaQuery.viewPadding.bottom > mediaQuery.systemGestureInsets.bottom
                 ? mediaQuery.viewPadding.bottom
@@ -534,8 +534,6 @@ class AmityCommunityProfilePage extends NewBasePage {
     final appBarBackgroundColor = Color.lerp(Colors.transparent, theme.backgroundSubtle, progress) ?? theme.backgroundSubtle;
     final mediaQuery = MediaQuery.of(context);
     final expandedHeight = mediaQuery.size.width / kAmityCommunityPhotoRatio;
-
-    AmityLog.debug("progress: ${state.collapseProgress}, coverOpacity: $coverOpacity");
     
     return SliverAppBar(
       floating: false,

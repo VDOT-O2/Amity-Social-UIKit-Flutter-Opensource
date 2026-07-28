@@ -30,16 +30,14 @@ class PostReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var reactionIcon = SvgPicture.asset(
-      'assets/Icons/amity_ic_post_quick_reaction.svg',
-      package: 'amity_uikit_beta_service',
-      width: 20,
-      height: 20,
-      colorFilter: ColorFilter.mode(
-        theme.textPrimary,
-        BlendMode.srcIn,
-      )
-    );
+    var reactionIcon = SvgPicture.asset('assets/Icons/amity_ic_post_quick_reaction.svg',
+        package: 'amity_uikit_beta_service',
+        width: 20,
+        height: 20,
+        colorFilter: ColorFilter.mode(
+          theme.textPrimary,
+          BlendMode.srcIn,
+        ));
     if (post.myReactions?.isNotEmpty ?? false) {
       reactionIcon = post.myReactions!.first == 'like'
           ? SvgPicture.asset(
@@ -88,24 +86,22 @@ class PostReactionButton extends StatelessWidget {
             child: (isReacting && isOptimisticUi)
                 ? Container(
                     alignment: Alignment.center,
-                    width: 20,
-                    height: 20,
+                    width: 40,
+                    height: 40,
                     child: loadingIndicator(context, !(post.myReactions?.isNotEmpty ?? false)))
                 : Container(
                     alignment: Alignment.center,
-                    width: 20,
-                    height: 20,
+                    width: 40,
+                    height: 40,
+                    padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.only(bottom: 4),
                     child: reactionIcon,
                   ),
           ),
-          const SizedBox(width: 8),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: onReactionLabelTap,
-            child: (isReacting && isOptimisticUi)
-                ? getReactingLabel(context, post, showLabel)
-                : getReactionLabel(context, post, showLabel),
+            child: (isReacting && isOptimisticUi) ? getReactingLabel(context, post, showLabel) : getReactionLabel(context, post, showLabel),
           ),
         ],
       ),
@@ -114,7 +110,7 @@ class PostReactionButton extends StatelessWidget {
 
   Widget getReactionLabel(BuildContext context, AmityPost post, bool showLabel) {
     final appTheme = Provider.of<ConfigProvider>(context).getTheme(null, null);
-    var text = showLabel ?  context.l10n.post_like :  context.l10n.post_like_count(post.reactionCount ?? 0);
+    var text = showLabel ? context.l10n.post_like : context.l10n.post_like_count(post.reactionCount ?? 0);
 
     return Text(
       text,
@@ -135,8 +131,8 @@ class PostReactionButton extends StatelessWidget {
     } else {
       count--;
     }
-    var text = showLabel ?  context.l10n.post_like :  context.l10n.post_like_count(count);
-    
+    var text = showLabel ? context.l10n.post_like : context.l10n.post_like_count(count);
+
     return Text(
       text,
       style: TextStyle(
@@ -165,16 +161,14 @@ class PostReactionButton extends StatelessWidget {
         : Container(
             alignment: Alignment.center,
             height: 44,
-            child: SvgPicture.asset(
-              'assets/Icons/amity_ic_post_quick_reaction.svg',
-              package: 'amity_uikit_beta_service',
-              width: 20,
-              height: 20,
-              colorFilter: ColorFilter.mode(
-                theme.textPrimary,
-                BlendMode.srcIn,
-              )
-            ),
+            child: SvgPicture.asset('assets/Icons/amity_ic_post_quick_reaction.svg',
+                package: 'amity_uikit_beta_service',
+                width: 20,
+                height: 20,
+                colorFilter: ColorFilter.mode(
+                  theme.textPrimary,
+                  BlendMode.srcIn,
+                )),
           );
   }
 }

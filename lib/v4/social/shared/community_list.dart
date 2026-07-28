@@ -68,7 +68,9 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
   var categoriesName = community.categories?.map((category) => category?.name).toList();
   var hasCommunityImage = (community.avatarImage?.fileUrl?.isNotEmpty ?? false);
   final isInReview = _isCommunityInReview(community);
-
+  final isOfficial = community.isOfficial ?? false;
+  final isPrivateCoachGroup = !(community.isPublic ?? false) && !isInReview && !isOfficial;
+  
   return GestureDetector(
     behavior: HitTestBehavior.translucent,
     onTap: () {
@@ -112,30 +114,13 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (community.isOfficial ?? true)
+                  if (isOfficial) ...[
                     SizedBox(
                       width: 20,
                       height: 20,
                       child: AmityOfficialBadgeElement(),
                     ),
-                  // if (isInReview) ...[
-                  //   const SizedBox(width: 8),
-                  //   Container(
-                  //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  //     decoration: BoxDecoration(
-                  //       color: theme.highlightColor,
-                  //       borderRadius: BorderRadius.circular(12),
-                  //     ),
-                  //     child: Text(
-                  //       'In Review',
-                  //       style: TextStyle(
-                  //         fontSize: 11,
-                  //         fontWeight: FontWeight.w600,
-                  //         color: theme.textPrimary,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ],
+                  ],
                   const SizedBox(width: 16),
                 ],
               ),
@@ -166,7 +151,7 @@ Widget communityRow(BuildContext context, AmityCommunity community, AmityThemeCo
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (!(community.isPublic ?? false) && !isInReview) ...[
+                    if (isPrivateCoachGroup) ...[
                       Container(
                         width: 20,
                         height: 20,
