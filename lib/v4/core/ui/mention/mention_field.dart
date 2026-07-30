@@ -388,8 +388,7 @@ class _MentionTextFieldState extends State<MentionTextField>
 
     // Determine which search mode to use
     final bool useChannelSearch = widget.channelId != null;
-    final bool useCommunitySearch =
-        widget.communityId != null && !_communityIsPublic;
+    final bool useCommunitySearch = widget.communityId != null;
 
     // === CHANNEL MODE ===
     if (useChannelSearch) {
