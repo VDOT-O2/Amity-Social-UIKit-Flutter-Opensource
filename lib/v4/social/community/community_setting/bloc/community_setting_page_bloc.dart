@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
@@ -13,8 +15,23 @@ part 'community_setting_page_state.dart';
 class CommunitySettingPageBloc extends Bloc<CommunitySettingPageEvent, CommunitySettingPageState> {
   final AmityCommunity _community;
   late AmityCommunityNotification _communityNotification;
+  late StreamSubscription<AmityCommunity> _communityStream;
+
+  // Kept in sync with the live community stream so that pages we navigate to
+  // (Edit Profile, Post Permission, ...) always receive up-to-date data,
+  // rather than the snapshot this bloc was originally constructed with.
+  late AmityCommunity community;
 
   CommunitySettingPageBloc(this._community) : super(CommunitySettingPageState()) {
+    community = _community;
+
+    _communityStream = AmitySocialClient.newCommunityRepository()
+        .live
+        .getCommunity(_community.communityId ?? '')
+        .listen((updatedCommunity) {
+      community = updatedCommunity;
+    });
+
     bool hasCommunityEditPermission = _community.hasPermission(AmityPermission.EDIT_COMMUNITY);
 
     // Check if the user has permission to edit the profile
@@ -77,5 +94,11 @@ class CommunitySettingPageBloc extends Bloc<CommunitySettingPageEvent, Community
         event.onFailure();
       });
     });
+  }
+
+  @override
+  Future<void> close() {
+    _communityStream.cancel();
+    return super.close();
   }
 }

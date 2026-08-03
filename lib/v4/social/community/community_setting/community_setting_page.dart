@@ -177,9 +177,10 @@ class AmityCommunitySettingPage extends NewBasePage {
   }
 
   void _goToEditProfilePage(BuildContext context) {
+    final latestCommunity = context.read<CommunitySettingPageBloc>().community;
     context
         .read<NavigationProvider>()
-        .handleNavigation(context, event: AmityNavigationEvent.showCommunityEdit, params: {'mode': EditMode(community)});
+        .handleNavigation(context, event: AmityNavigationEvent.showCommunityEdit, params: {'mode': EditMode(latestCommunity)});
   }
 
   void _goToCommunityMemberPage(BuildContext context) {
@@ -196,9 +197,9 @@ class AmityCommunitySettingPage extends NewBasePage {
   }
 
   void _goToPostPermissionSettingPage(BuildContext context) {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //     builder: (context) => PostReviewPage(community: community)));
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AmityCommunityPostPermissionPage(community: community)));
+    final latestCommunity = context.read<CommunitySettingPageBloc>().community;
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AmityCommunityPostPermissionPage(community: latestCommunity)));
   }
 
   void _goToStoryCommentSettingPage(BuildContext context) {
