@@ -257,6 +257,7 @@ class AmityCreateChatMenuComponent extends NewBaseComponent {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
+                  settings: RouteSettings(name: AmitySearchChannelPage.routeName),
                   fullscreenDialog: true,
                   builder: (context) => AmitySearchChannelPage(),
                 ),
@@ -294,6 +295,7 @@ class AmityCreateChatMenuComponent extends NewBaseComponent {
               if (result == 1) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmityChannelCreateConversationPage.routeName),
                       fullscreenDialog: true,
                       builder: (context) =>
                           AmityChannelCreateConversationPage()),
@@ -301,6 +303,7 @@ class AmityCreateChatMenuComponent extends NewBaseComponent {
               } else if (result == 2) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmitySelectGroupMemberPage.routeName),
                       fullscreenDialog: true,
                       builder: (context) => AmitySelectGroupMemberPage()),
                 );
@@ -387,6 +390,7 @@ class AmityChatMenuComponent extends NewBaseComponent {
               if (result == 1) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmityArchivedChatPage.routeName),
                       fullscreenDialog: true,
                       builder: (context) => AmityArchivedChatPage()),
                 );

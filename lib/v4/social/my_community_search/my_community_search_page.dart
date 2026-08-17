@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmityMyCommunitiesSearchPage extends NewBasePage {
+  static const String routeName = '/social/my-communities-search-page';
   AmityMyCommunitiesSearchPage({Key? key, String? pageId})
       : super(key: key, pageId: 'social_global_search_page');
 

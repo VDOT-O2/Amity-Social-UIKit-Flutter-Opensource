@@ -155,6 +155,7 @@ extension PostComposerView on AmityPostComposerPage {
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  settings: RouteSettings(name: SingleVideoPlayer.routeName),
                   builder: (context) => SingleVideoPlayer(
                     initialIndex: 0,
                     filePath: file.key,
@@ -179,6 +180,7 @@ extension PostComposerView on AmityPostComposerPage {
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  settings: RouteSettings(name: SingleVideoPlayer.routeName),
                   builder: (context) => SingleVideoPlayer(
                     initialIndex: 0,
                     filePath: null,

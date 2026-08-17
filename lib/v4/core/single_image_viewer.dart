@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SingleImagePostViewer extends StatelessWidget {
+  static const String routeName = '/social/single-image-post-viewer';
   final AmityPost post;
   final AmityThemeColor theme;
 

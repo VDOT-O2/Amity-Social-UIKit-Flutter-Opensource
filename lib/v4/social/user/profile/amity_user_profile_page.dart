@@ -25,6 +25,7 @@ import 'bloc/user_profile_bloc.dart';
 import 'component/user_profile_tab.dart';
 
 class AmityUserProfilePage extends NewBasePage {
+  static const String routeName = '/social/user-profile-page';
   final String userId;
 
   AmityUserProfilePage({super.key, required this.userId})
@@ -199,6 +200,7 @@ class AmityUserProfilePage extends NewBasePage {
               targetType: AmityPostTargetType.USER);
 
           Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: AmityPostComposerPage.routeName),
             fullscreenDialog: true,
             builder: (context) => AmityPostComposerPage(
               options: createOptions,
@@ -214,6 +216,7 @@ class AmityUserProfilePage extends NewBasePage {
           Navigator.of(context).pop();
 
           Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: AmityPollPostComposerPage.routeName),
             fullscreenDialog: true,
             builder: (context) => AmityPollPostComposerPage(
               targetId: AmityCoreClient.getUserId(),
@@ -251,6 +254,7 @@ class AmityUserProfilePage extends NewBasePage {
 
           Navigator.of(context).push(
             MaterialPageRoute(
+              settings: RouteSettings(name: AmityEditUserProfilePage.routeName),
               builder: (context) {
                 return AmityEditUserProfilePage(
                   userId: userId,

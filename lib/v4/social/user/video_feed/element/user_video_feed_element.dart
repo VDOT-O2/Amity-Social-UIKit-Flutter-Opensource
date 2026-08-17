@@ -36,6 +36,7 @@ class _UserVideoFeedElementState extends State<UserVideoFeedElement> {
           Navigator.push(
             context,
             MaterialPageRoute(
+              settings: RouteSettings(name: VideoPostPlayerPager.routeName),
               builder: (context) => VideoPostPlayerPager(
                 posts: [widget.post],
                 initialIndex: 0,

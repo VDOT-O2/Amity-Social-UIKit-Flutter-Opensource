@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AmityPostDetailPage extends NewBasePage {
+  static const String routeName = '/social/post-detail-page';
   final String postId;
   final AmityPost? post;
   final AmityPostCategory category;

@@ -23,6 +23,7 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryDraftPage extends NewBasePage {
+  static const String routeName = '/social/story-draft-page';
   final AmityStoryMediaType mediaType;
   final String targetId;
   final AmityStoryTargetType targetType;

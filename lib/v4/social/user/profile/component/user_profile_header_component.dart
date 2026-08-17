@@ -73,6 +73,7 @@ class AmityUserProfileHeaderComponent extends NewBaseComponent {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
+                                    settings: RouteSettings(name: AmityImageViewer.routeName),
                                     fullscreenDialog: true,
                                     builder: (context) => AmityImageViewer(
                                       imageUrl: "$avatarUrl?size=large",
@@ -190,6 +191,7 @@ class AmityUserProfileHeaderComponent extends NewBaseComponent {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
+                                settings: RouteSettings(name: AmityUserPendingFollowRequestsPage.routeName),
                                 builder: (context) =>
                                     AmityUserPendingFollowRequestsPage(
                                   actionCallback: () {
@@ -520,6 +522,7 @@ class AmityUserProfileHeaderComponent extends NewBaseComponent {
   ) {
     Navigator.of(context).push(
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityUserRelationshipPage.routeName),
         builder: (context) => AmityUserRelationshipPage(
             userId: user?.userId ?? "", selectedTab: selectedTab),
       ),

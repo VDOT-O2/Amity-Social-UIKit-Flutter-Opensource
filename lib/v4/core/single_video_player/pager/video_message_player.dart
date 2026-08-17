@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class VideoMessagePlayer extends StatelessWidget with ChangeNotifier {
+  static const String routeName = '/social/video-message-player';
   final AmityMessage message;
   final Function onDelete;
 

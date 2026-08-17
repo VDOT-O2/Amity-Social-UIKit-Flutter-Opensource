@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmityCommunityStoriesNotificationSettingPage extends NewBasePage {
+  static const String routeName = '/social/community-stories-notification-setting-page';
   AmityCommunityStoriesNotificationSettingPage(
       {super.key, required this.community, this.notificationSettings})
       : super(pageId: 'community_stories_notification_page');

@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityCommunitiesByCategoryPage extends NewBasePage {
+  static const String routeName = '/social/communities-by-category-page';
   final AmityCommunityCategory category;
   final ScrollController _scrollController = ScrollController();
 
@@ -195,6 +196,7 @@ class AmityCommunitiesByCategoryPage extends NewBasePage {
   void _goToCommunityProfilePage(
       BuildContext context, AmityCommunity community) {
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
       builder: (context) => AmityCommunityProfilePage(
         communityId: community.communityId ?? '',
       ),

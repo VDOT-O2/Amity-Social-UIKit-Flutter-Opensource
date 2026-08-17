@@ -11,6 +11,7 @@ class AmityMessageBubbleBehavior {
       Navigator.push(
         context,
         MaterialPageRoute(
+          settings: RouteSettings(name: AmityImageViewer.routeName),
           builder: (context) => AmityImageViewer(
             imageUrl: "$avatarUrl?size=large",
           ),

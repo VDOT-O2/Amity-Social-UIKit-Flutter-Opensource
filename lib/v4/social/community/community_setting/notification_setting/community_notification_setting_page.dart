@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityCommunityNotificationSettingPage extends NewBasePage {
+  static const String routeName = '/social/community-notification-setting-page';
   AmityCommunityNotificationSettingPage(
       {super.key, required this.community, this.notificationSettings})
       : super(pageId: 'community_setting_page');
@@ -166,18 +167,21 @@ class AmityCommunityNotificationSettingPage extends NewBasePage {
 
   void _goToPostSettingPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunityPostsNotificationSettingPage.routeName),
         builder: (context) => AmityCommunityPostsNotificationSettingPage(
             community: community, notificationSettings: notificationSettings)));
   }
 
   void _goToCommentSettingPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunityCommentsNotificationSettingPage.routeName),
         builder: (context) => AmityCommunityCommentsNotificationSettingPage(
             community: community, notificationSettings: notificationSettings)));
   }
 
   void _goToStorySettingPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunityStoriesNotificationSettingPage.routeName),
         builder: (context) => AmityCommunityStoriesNotificationSettingPage(
             community: community, notificationSettings: notificationSettings)));
   }

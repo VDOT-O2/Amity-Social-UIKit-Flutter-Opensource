@@ -15,6 +15,7 @@ import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
 class AmityCommunityMembershipPage extends NewBasePage {
+  static const String routeName = '/social/community-membership-page';
   late AmityCommunity community;
   final ScrollController _memberScrollController = ScrollController();
   final ScrollController _moderatorScrollController = ScrollController();
@@ -403,6 +404,7 @@ class AmityCommunityMembershipPage extends NewBasePage {
 
   void _goToAddMemberPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunityAddMemberPage.routeName),
         fullscreenDialog: true,
         builder: (_) => AmityCommunityAddMemberPage(
             users: [],

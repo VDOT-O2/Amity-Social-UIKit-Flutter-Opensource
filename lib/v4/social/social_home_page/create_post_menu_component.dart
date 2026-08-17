@@ -45,6 +45,7 @@ class AmityCreatePostMenuComponent extends NewBaseComponent {
               if (result == 1) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmityPostTargetSelectionPage.routeName),
                     fullscreenDialog: true,
                     builder: (context) => PopScope(
                       canPop: true,
@@ -57,6 +58,7 @@ class AmityCreatePostMenuComponent extends NewBaseComponent {
               if (result == 2) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmityStoryTargetSelectionPage.routeName),
                     builder: (context) => const Scaffold(
                       body: AmityStoryTargetSelectionPage(),
                     ),
@@ -67,6 +69,7 @@ class AmityCreatePostMenuComponent extends NewBaseComponent {
               if (result == 3) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: AmityPostPollTargetSelectionPage.routeName),
                     builder: (context) => Scaffold(
                       body: AmityPostPollTargetSelectionPage(),
                     ),

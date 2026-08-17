@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'amity_view_community_story_page.dart';
 
 class AmityViewStoryPage extends NewBasePage {
+  static const String routeName = '/social/view-story-page';
   final AmityViewStoryPageType type;
   final List<AmityStoryTarget>? targets;
   final AmityStoryTarget? selectedTarget;

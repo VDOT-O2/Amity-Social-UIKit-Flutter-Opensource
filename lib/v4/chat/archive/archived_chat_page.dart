@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityArchivedChatPage extends NewBasePage {
+  static const String routeName = '/social/archived-chat-page';
   AmityArchivedChatPage({super.key}) : super(pageId: 'archived_chat_page');
 
   @override

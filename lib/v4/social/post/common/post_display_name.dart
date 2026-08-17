@@ -134,6 +134,7 @@ class PostDisplayName extends StatelessWidget {
       onTap = () {
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
             builder: (context) => AmityCommunityProfilePage(communityId: target.targetCommunityId!),
           ),
         );

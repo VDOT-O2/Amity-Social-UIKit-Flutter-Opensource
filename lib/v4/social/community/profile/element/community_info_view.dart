@@ -51,6 +51,7 @@ class AmityCommunityInfoView extends BaseElement {
           onTap: () => {
             Navigator.of(context).push(
               MaterialPageRoute(
+                settings: RouteSettings(name: AmityCommunityMembershipPage.routeName),
                 builder: (context) => AmityCommunityMembershipPage(community: community),
               ),
             ),

@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityUserPendingFollowRequestsPage extends NewBasePage {
+  static const String routeName = '/social/user-pending-follow-requests-page';
   // User Profile Page determines pending requests count using FollowInfo object which is not a live object.
   // So we need to refetch pending requests count in Profile page, when we perform accept / decline action in this page.
   final Function? actionCallback;

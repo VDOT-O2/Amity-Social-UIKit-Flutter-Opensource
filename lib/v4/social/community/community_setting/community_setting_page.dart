@@ -17,6 +17,7 @@ import 'bloc/community_setting_page_bloc.dart';
 
 // ignore: must_be_immutable
 class AmityCommunitySettingPage extends NewBasePage {
+  static const String routeName = '/social/community-setting-page';
   AmityCommunitySettingPage({super.key, required this.community}) : super(pageId: 'community_setting_page');
 
   late AmityCommunity community;
@@ -185,7 +186,7 @@ class AmityCommunitySettingPage extends NewBasePage {
 
   void _goToCommunityMemberPage(BuildContext context) {
     if (community.communityId != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AmityCommunityMembershipPage(community: community)));
+      Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: AmityCommunityMembershipPage.routeName), builder: (context) => AmityCommunityMembershipPage(community: community)));
     }
   }
 
@@ -199,10 +200,10 @@ class AmityCommunitySettingPage extends NewBasePage {
   void _goToPostPermissionSettingPage(BuildContext context) {
     final latestCommunity = context.read<CommunitySettingPageBloc>().community;
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => AmityCommunityPostPermissionPage(community: latestCommunity)));
+        .push(MaterialPageRoute(settings: RouteSettings(name: AmityCommunityPostPermissionPage.routeName), builder: (context) => AmityCommunityPostPermissionPage(community: latestCommunity)));
   }
 
   void _goToStoryCommentSettingPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AmityCommunityStorySettingPage(community: community)));
+    Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: AmityCommunityStorySettingPage.routeName), builder: (context) => AmityCommunityStorySettingPage(community: community)));
   }
 }

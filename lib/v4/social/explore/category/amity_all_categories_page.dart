@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityAllCategoriesPage extends NewBasePage {
+  static const String routeName = '/social/all-categories-page';
   final _scrollController = ScrollController();
 
   AmityAllCategoriesPage({super.key})
@@ -121,6 +122,7 @@ class AmityAllCategoriesPage extends NewBasePage {
     }
     
     Navigator.of(context).push(MaterialPageRoute(
+      settings: RouteSettings(name: AmityCommunitiesByCategoryPage.routeName),
         builder: (context) => AmityCommunitiesByCategoryPage(category: category.category!)));
   }
 }

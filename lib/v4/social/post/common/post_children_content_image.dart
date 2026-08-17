@@ -51,6 +51,7 @@ class PostContentImage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
+                settings: RouteSettings(name: ImagePostViewer.routeName),
                 builder: (context) => ImagePostViewer(
                   posts: posts,
                   initialIndex: 0,
@@ -75,6 +76,7 @@ class PostContentImage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  settings: RouteSettings(name: ImagePostViewer.routeName),
                   builder: (context) => ImagePostViewer(
                     posts: posts,
                     initialIndex: 0,
@@ -94,6 +96,7 @@ class PostContentImage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  settings: RouteSettings(name: ImagePostViewer.routeName),
                   builder: (context) => ImagePostViewer(
                     posts: posts,
                     initialIndex: 1,
@@ -122,6 +125,7 @@ class PostContentImage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: RouteSettings(name: ImagePostViewer.routeName),
                     builder: (context) => ImagePostViewer(
                       posts: posts,
                       initialIndex: 0,
@@ -144,6 +148,7 @@ class PostContentImage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: ImagePostViewer.routeName),
                           builder: (context) => ImagePostViewer(
                             posts: posts,
                             initialIndex: 1,
@@ -162,6 +167,7 @@ class PostContentImage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: ImagePostViewer.routeName),
                           builder: (context) => ImagePostViewer(
                             posts: posts,
                             initialIndex: 2,
@@ -193,6 +199,7 @@ class PostContentImage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: RouteSettings(name: ImagePostViewer.routeName),
                     builder: (context) => ImagePostViewer(
                       posts: posts,
                       initialIndex: 0,
@@ -214,6 +221,7 @@ class PostContentImage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: ImagePostViewer.routeName),
                           builder: (context) => ImagePostViewer(
                             posts: posts,
                             initialIndex: 1,
@@ -236,6 +244,7 @@ class PostContentImage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: ImagePostViewer.routeName),
                           builder: (context) => ImagePostViewer(
                             posts: posts,
                             initialIndex: 2,
@@ -256,6 +265,7 @@ class PostContentImage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: ImagePostViewer.routeName),
                           builder: (context) => ImagePostViewer(
                             posts: posts,
                             initialIndex: 3,
@@ -297,6 +307,7 @@ class PostContentImage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: ImagePostViewer.routeName),
                       builder: (context) => ImagePostViewer(
                         posts: posts,
                         initialIndex: 0,
@@ -318,6 +329,7 @@ class PostContentImage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: ImagePostViewer.routeName),
                             builder: (context) => ImagePostViewer(
                               posts: posts,
                               initialIndex: 1,
@@ -341,6 +353,7 @@ class PostContentImage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: ImagePostViewer.routeName),
                             builder: (context) => ImagePostViewer(
                               posts: posts,
                               initialIndex: 2,
@@ -361,6 +374,7 @@ class PostContentImage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: ImagePostViewer.routeName),
                             builder: (context) => ImagePostViewer(
                               posts: posts,
                               initialIndex: 3,

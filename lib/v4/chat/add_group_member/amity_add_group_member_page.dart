@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'amity_add_group_member_cubit.dart';
 
 class AmityAddGroupMemberPage extends NewBasePage {
+  static const String routeName = '/social/add-group-member-page';
   AmityAddGroupMemberPage({
     Key? key,
     required this.channel,

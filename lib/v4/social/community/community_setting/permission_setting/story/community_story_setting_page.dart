@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmityCommunityStorySettingPage extends NewBasePage {
+  static const String routeName = '/social/community-story-setting-page';
   AmityCommunityStorySettingPage({super.key, required this.community})
       : super(pageId: 'community_story_setting_page');
 

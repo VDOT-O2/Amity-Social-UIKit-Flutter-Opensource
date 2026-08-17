@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 enum AmityUserRelationshipPageTab { follower, following }
 
 class AmityUserRelationshipPage extends NewBasePage {
+  static const String routeName = '/social/user-relationship-page';
   final String userId;
   AmityUserRelationshipPageTab selectedTab;
 

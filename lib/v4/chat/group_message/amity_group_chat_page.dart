@@ -28,6 +28,7 @@ part 'widgets/group_chat_page_helpers.dart';
 // Page for showing group chat messages
 // ignore: must_be_immutable
 class AmityGroupChatPage extends NewBasePage {
+  static const String routeName = '/social/group-chat-page';
   static double toastBottomPadding = 56;
 
   final String channelId;
@@ -119,6 +120,7 @@ class AmityGroupChatPage extends NewBasePage {
                               final updatedChannel = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                  settings: RouteSettings(name: AmityGroupSettingPage.routeName),
                                   builder: (context) => AmityGroupSettingPage(
                                     channel: channel,
                                     isModerator: state.isModerator,
@@ -561,6 +563,7 @@ class AmityGroupChatPage extends NewBasePage {
             Navigator.push(
               context,
               MaterialPageRoute(
+                settings: RouteSettings(name: FullTextScreen.routeName),
                 builder: (context) => FullTextScreen(
                   fullText: text,
                   displayName: (!isReplied)
@@ -632,6 +635,7 @@ class AmityGroupChatPage extends NewBasePage {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: FullTextScreen.routeName),
                       builder: (context) => FullTextScreen(
                         fullText: text,
                         displayName: (!isReplied)

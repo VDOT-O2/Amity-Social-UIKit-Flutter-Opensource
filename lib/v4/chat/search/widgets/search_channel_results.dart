@@ -61,6 +61,7 @@ class SearchChannelResults extends StatelessWidget {
 
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: RouteSettings(name: AmityChatPage.routeName),
             builder: (context) => AmityChatPage(
               key: Key("${channel.channelId ?? ""}_$userId"),
               channelId: channel.channelId,
@@ -90,6 +91,7 @@ class SearchChannelResults extends StatelessWidget {
 
           Navigator.of(context).push(
             MaterialPageRoute(
+              settings: RouteSettings(name: AmityChatPage.routeName),
               builder: (context) => AmityChatPage(
                 key: Key("${channel.channelId ?? ""}_$userId"),
                 channelId: channel.channelId,
@@ -103,6 +105,7 @@ class SearchChannelResults extends StatelessWidget {
         }).catchError((error) {
           Navigator.of(context).push(
             MaterialPageRoute(
+              settings: RouteSettings(name: AmityChatPage.routeName),
               builder: (context) => AmityChatPage(
                 channelId: channel.channelId,
                 jumpToMessageId: jumpToMessageId,
@@ -115,6 +118,7 @@ class SearchChannelResults extends StatelessWidget {
       // Navigate to group chat
       Navigator.of(context).push(
         MaterialPageRoute(
+          settings: RouteSettings(name: AmityGroupChatPage.routeName),
           builder: (context) => AmityGroupChatPage(
             channelId: channel.channelId!,
             jumpToMessageId: jumpToMessageId,

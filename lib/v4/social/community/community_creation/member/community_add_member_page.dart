@@ -13,6 +13,7 @@ import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 
 // ignore: must_be_immutable
 class AmityCommunityAddMemberPage extends NewBasePage {
+  static const String routeName = '/social/community-add-member-page';
   final TextEditingController _textcontroller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final Debouncer _debouncer = Debouncer(milliseconds: 300);

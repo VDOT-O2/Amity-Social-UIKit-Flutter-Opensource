@@ -452,6 +452,7 @@ class AmityMessageComposer extends NewBaseComponent {
           Navigator.push(
             context,
             MaterialPageRoute(
+              settings: RouteSettings(name: FullTextScreen.routeName),
               builder: (context) => FullTextScreen(
                 fullText: parentTextMessage,
                 displayName: context.l10n.message_replied_message,
@@ -464,6 +465,7 @@ class AmityMessageComposer extends NewBaseComponent {
           Navigator.push(
             context,
             MaterialPageRoute(
+              settings: RouteSettings(name: AmityImageViewer.routeName),
               builder: (context) => AmityImageViewer(
                 imageUrl: image?.getUrl(AmityImageSize.LARGE) ?? "",
                 showDeleteButton: message.userId == AmityCoreClient.getUserId(),
@@ -478,6 +480,7 @@ class AmityMessageComposer extends NewBaseComponent {
           Navigator.push(
             context,
             MaterialPageRoute(
+              settings: RouteSettings(name: VideoMessagePlayer.routeName),
               builder: (context) => VideoMessagePlayer(
                 message: message,
                 onDelete: () {},

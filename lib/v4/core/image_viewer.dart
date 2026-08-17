@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ImagePostViewer extends StatefulWidget {
+  static const String routeName = '/social/image-post-viewer';
   final List<AmityPost> posts;
   final int initialIndex;
 

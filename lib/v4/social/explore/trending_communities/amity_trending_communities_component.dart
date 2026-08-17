@@ -82,6 +82,7 @@ class AmityTrendingCommunitiesView extends StatelessWidget {
                   community: entry.value,
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
+                      settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
                       builder: (context) => AmityCommunityProfilePage(
                         communityId: entry.value.communityId!,
                       ),

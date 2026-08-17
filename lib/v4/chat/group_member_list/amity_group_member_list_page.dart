@@ -22,6 +22,7 @@ part 'amity_group_member_list_state.dart';
 part 'amity_group_member_list_cubit.dart';
 
 class AmityGroupMemberListPage extends NewBasePage {
+  static const String routeName = '/social/group-member-list-page';
   final AmityChannel channel;
 
   AmityGroupMemberListPage({

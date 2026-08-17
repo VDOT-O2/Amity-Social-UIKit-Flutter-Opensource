@@ -121,6 +121,7 @@ extension ParentMessageWidget on MessageBubbleView {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: AmityImageViewer.routeName),
                       builder: (context) => AmityImageViewer(
                         imageUrl: image?.getUrl(AmityImageSize.LARGE) ?? "",
                         showDeleteButton:
@@ -139,6 +140,7 @@ extension ParentMessageWidget on MessageBubbleView {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: VideoMessagePlayer.routeName),
                       builder: (context) => VideoMessagePlayer(
                         message: parentMessage,
                         onDelete: () {

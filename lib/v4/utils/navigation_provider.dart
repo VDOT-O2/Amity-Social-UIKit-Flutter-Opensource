@@ -63,6 +63,7 @@ class NavigationProvider extends ChangeNotifier {
         var communityId = params?['communityId'] as String;
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: const RouteSettings(name: AmityCommunityProfilePage.routeName),
             builder: (context) => AmityCommunityProfilePage(communityId: communityId),
           ),
         );
@@ -70,7 +71,10 @@ class NavigationProvider extends ChangeNotifier {
       case AmityNavigationEvent.showCommunityEdit:
         // Default implementation does not handle this event
         var mode = params?['mode'] as EditMode;
-        Navigator.of(context).push(MaterialPageRoute(fullscreenDialog: true, builder: (context) => AmityCommunitySetupPage(mode: mode)));
+        Navigator.of(context).push(MaterialPageRoute(
+            settings: const RouteSettings(name: AmityCommunitySetupPage.routeName),
+            fullscreenDialog: true,
+            builder: (context) => AmityCommunitySetupPage(mode: mode)));
         return;
       case AmityNavigationEvent.showCommunityNotificationPreferences:
         {
@@ -79,6 +83,7 @@ class NavigationProvider extends ChangeNotifier {
           await Navigator.push(
             context,
             MaterialPageRoute(
+                settings: const RouteSettings(name: AmityCommunityNotificationSettingPage.routeName),
                 builder: (context) =>
                     AmityCommunityNotificationSettingPage(community: community, notificationSettings: state.notificationSettings)),
           );
@@ -91,6 +96,7 @@ class NavigationProvider extends ChangeNotifier {
         var action = params?['action'] as AmityPostAction?;
 
         Navigator.of(context).push(MaterialPageRoute(
+          settings: const RouteSettings(name: AmityPostDetailPage.routeName),
           builder: (context) => AmityPostDetailPage(
             postId: postId,
             category: category,
@@ -104,6 +110,7 @@ class NavigationProvider extends ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
+            settings: const RouteSettings(name: AmityUserProfilePage.routeName),
             builder: (context) => AmityUserProfilePage(
               userId: userId,
             ),
@@ -114,11 +121,15 @@ class NavigationProvider extends ChangeNotifier {
         final isGroupChat = params?['isGroupChat'] as bool? ?? false;
         if (isGroupChat) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AmitySelectGroupMemberPage()),
+            MaterialPageRoute(
+                settings: const RouteSettings(name: AmitySelectGroupMemberPage.routeName),
+                builder: (context) => AmitySelectGroupMemberPage()),
           );
         } else {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AmityChannelCreateConversationPage()),
+            MaterialPageRoute(
+                settings: const RouteSettings(name: AmityChannelCreateConversationPage.routeName),
+                builder: (context) => AmityChannelCreateConversationPage()),
           );
         }
         return;
@@ -133,6 +144,7 @@ class NavigationProvider extends ChangeNotifier {
           if (isGroupChat) {
             Navigator.of(context).push(
               MaterialPageRoute(
+                  settings: const RouteSettings(name: AmityGroupChatPage.routeName),
                   builder: (context) => AmityGroupChatPage(
                         channelId: channelId ?? "",
                       )),
@@ -140,6 +152,7 @@ class NavigationProvider extends ChangeNotifier {
           } else {
             Navigator.of(context).push(
               MaterialPageRoute(
+                settings: const RouteSettings(name: AmityChatPage.routeName),
                 builder: (context) => AmityChatPage(
                   key: Key("${channelId ?? ""}_${userId ?? ""}"),
                   channelId: channelId,
@@ -150,13 +163,15 @@ class NavigationProvider extends ChangeNotifier {
               ),
             );
           }
-        } return;
+        }
+        return;
       case AmityNavigationEvent.showAddGroupMembers:
         {
           final channel = params?['channel'] as AmityChannel;
 
           Navigator.of(context).push(
             MaterialPageRoute(
+              settings: const RouteSettings(name: AmityAddGroupMemberPage.routeName),
               builder: (context) => AmityAddGroupMemberPage(channel: channel),
             ),
           );
@@ -169,6 +184,7 @@ class NavigationProvider extends ChangeNotifier {
           await Navigator.push<Map<String, dynamic>>(
             context,
             MaterialPageRoute(
+              settings: const RouteSettings(name: AmityGroupNotificationPreferencePage.routeName),
               builder: (context) => AmityGroupNotificationPreferencePage(
                 channel: channel,
               ),

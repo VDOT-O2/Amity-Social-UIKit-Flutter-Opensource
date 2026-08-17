@@ -15,6 +15,7 @@ enum PostNotificationSetting { everyone, onlyModerator, off }
 
 // ignore: must_be_immutable
 class AmityCommunityPostsNotificationSettingPage extends NewBasePage {
+  static const String routeName = '/social/community-posts-notification-setting-page';
   AmityCommunityPostsNotificationSettingPage(
       {super.key, required this.community, this.notificationSettings})
       : super(pageId: 'community_posts_notification_page');

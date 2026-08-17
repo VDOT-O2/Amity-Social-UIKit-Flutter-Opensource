@@ -21,6 +21,7 @@ part 'amity_edit_group_profile_cubit.dart';
 part 'amity_edit_group_profile_state.dart';
 
 class AmityEditGroupProfilePage extends NewBasePage {
+  static const String routeName = '/social/edit-group-profile-page';
   final AmityChannel channel;
 
   AmityEditGroupProfilePage({Key? key, required this.channel}) : super(key: key, pageId: 'edit_group_profile_page');
@@ -402,6 +403,7 @@ class AmityEditGroupProfilePage extends NewBasePage {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPostCameraScreen.routeName),
         fullscreenDialog: true,
         builder: (_) => AmityPostCameraScreen(
           selectedType: FileType.image,

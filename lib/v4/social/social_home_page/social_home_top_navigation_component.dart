@@ -66,6 +66,7 @@ class AmitySocialHomeTopNavigationComponent extends NewBaseComponent {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              settings: RouteSettings(name: AmityCommunitySetupPage.routeName),
                 fullscreenDialog: true,
                 builder: (context) =>
                     AmityCommunitySetupPage(mode: const CreateMode()))),

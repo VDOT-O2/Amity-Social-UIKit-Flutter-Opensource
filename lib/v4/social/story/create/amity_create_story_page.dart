@@ -50,6 +50,7 @@ class AmityCreateStoryPage extends NewBasePage {
                           AmityStoryMediaType mediaType = AmityStoryMediaTypeImage(file: image);
                           Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: RouteSettings(name: StoryDraftPage.routeName),
                               builder: (context) => MultiBlocProvider(
                                 providers: [
                                   BlocProvider(create: (context) => StoryDraftBloc()),
@@ -72,6 +73,7 @@ class AmityCreateStoryPage extends NewBasePage {
                           );
                           Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: RouteSettings(name: StoryDraftPage.routeName),
                               builder: (context) => MultiBlocProvider(
                                 providers: [
                                   BlocProvider(create: (context) => StoryDraftBloc()),

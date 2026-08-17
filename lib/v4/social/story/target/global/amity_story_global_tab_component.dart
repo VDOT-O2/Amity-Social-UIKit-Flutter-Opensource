@@ -92,6 +92,7 @@ class _AmityStoryGlobalTabBuilderState extends State<AmityStoryGlobalTabBuilder>
                     onClick: (targetId, storyTarget) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
+                          settings: RouteSettings(name: AmityViewStoryPage.routeName),
                           builder: (BuildContext context) {
                             return AmityViewStoryPage(
                               targets: state.storyTargets,

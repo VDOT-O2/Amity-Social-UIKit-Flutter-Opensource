@@ -27,6 +27,7 @@ import '../../core/ui/mention/mention_text_editing_controller.dart';
 
 // ignore: must_be_immutable
 class AmityPostComposerPage extends NewBasePage {
+  static const String routeName = '/social/post-composer-page';
   final AmityPostComposerOptions options;
   final MentionTextEditingController textController = MentionTextEditingController();
   final void Function(bool shouldPopCaller)? onPopRequested;

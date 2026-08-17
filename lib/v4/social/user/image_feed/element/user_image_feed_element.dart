@@ -23,6 +23,7 @@ class UserImageFeedElement extends BaseElement {
             Navigator.push(
               context,
               MaterialPageRoute(
+                settings: RouteSettings(name: SingleImagePostViewer.routeName),
                 builder: (context) => SingleImagePostViewer(
                   post: post,
                   theme: theme

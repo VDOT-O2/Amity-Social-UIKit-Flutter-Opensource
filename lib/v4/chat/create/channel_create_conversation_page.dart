@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityChannelCreateConversationPage extends NewBasePage {
+  static const String routeName = '/social/channel-create-conversation-page';
   AmityChannelCreateConversationPage({Key? key})
       : super(key: key, pageId: 'create_conversation_page');
   final ScrollController scrollController = ScrollController();
@@ -126,6 +127,7 @@ class AmityChannelCreateConversationPage extends NewBasePage {
             },
             onTap: (user) {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
+                settings: RouteSettings(name: AmityChatPage.routeName),
                 builder: (context) => AmityChatPage(
                   key: Key("${user.userId}"),
                   userId: user.userId,

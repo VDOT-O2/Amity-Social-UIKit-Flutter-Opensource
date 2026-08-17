@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 
 class AmityCommunityPostPermissionPage extends NewBasePage {
+  static const String routeName = '/social/community-post-permission-page';
   AmityCommunityPostPermissionPage({super.key, required this.community})
       : super(pageId: 'community_posts_notification_page');
 

@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityPostPollTargetSelectionPage extends NewBasePage {
+  static const String routeName = '/social/post-poll-target-selection-page';
   AmityPostPollTargetSelectionPage({Key? key})
       : super(key: key, pageId: 'select_post_poll_target_page');
   final ScrollController scrollController = ScrollController();

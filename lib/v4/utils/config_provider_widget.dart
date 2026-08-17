@@ -40,6 +40,7 @@ class NewsFeedComponentConfigProviderWidget extends StatelessWidget {
 }
 
 class CreateStoryConfigProviderWidget extends StatelessWidget {
+  static const String routeName = '/social/create-story-config-provider-widget';
   final String pageId;
   final AmityStoryTargetType targetType;
   final String targetId;

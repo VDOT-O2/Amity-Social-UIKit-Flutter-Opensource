@@ -20,6 +20,7 @@ import 'dart:io';
 import 'package:amity_uikit_beta_service/v4/chat/createGroup/ui/amity_select_group_member_page.dart';
 
 class AmityCreateGroupChatPage extends NewBasePage {
+  static const String routeName = '/social/create-group-chat-page';
   // Add the new required parameter
   final List<AmityUser> selectedUsers;
   // Add callback for user removal
@@ -64,6 +65,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
+                  settings: RouteSettings(name: AmityGroupChatPage.routeName),
                   builder: (context) => AmityGroupChatPage(
                     channelId: state.createdChannel!.channelId ?? '',
                     isJustCreated: true,
@@ -549,6 +551,7 @@ class AmityCreateGroupChatPage extends NewBasePage {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPostCameraScreen.routeName),
         fullscreenDialog: true,
         builder: (_) => AmityPostCameraScreen(
           selectedType: FileType.image,

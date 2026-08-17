@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class SingleVideoPlayer extends StatelessWidget with ChangeNotifier {
+  static const String routeName = '/social/single-video-player';
   final int initialIndex;
   final String? filePath;
   final String? fileUrl;

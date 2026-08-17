@@ -145,6 +145,7 @@ class AmityCommunityCategoriesComponent extends NewBaseComponent {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityAllCategoriesPage.routeName),
         builder: (context) => AmityAllCategoriesPage(),
       ),
     );
@@ -155,6 +156,7 @@ class AmityCommunityCategoriesComponent extends NewBaseComponent {
     Navigator.push(
         context,
         MaterialPageRoute(
+          settings: RouteSettings(name: AmityCommunitiesByCategoryPage.routeName),
             builder: (context) =>
                 AmityCommunitiesByCategoryPage(category: category)));
   }

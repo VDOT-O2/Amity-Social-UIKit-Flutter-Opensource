@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AmityEditUserProfilePage extends NewBasePage {
+  static const String routeName = '/social/edit-user-profile-page';
   final String userId;
 
   // Once profile is edited, it should be reflected in user profile page.

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmitySocialGlobalSearchPage extends NewBasePage {
+  static const String routeName = '/social/social-global-search-page';
   AmitySocialGlobalSearchPage({Key? key, String? pageId})
       : super(key: key, pageId: 'social_global_search_page');
   var textcontroller = TextEditingController();

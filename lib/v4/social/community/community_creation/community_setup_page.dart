@@ -38,6 +38,7 @@ class EditMode extends AmityCommunitySetupPageMode {
 
 // ignore: must_be_immutable
 class AmityCommunitySetupPage extends NewBasePage {
+  static const String routeName = '/social/community-setup-page';
   late InfoTextFieldState nameTextFieldState;
   late InfoTextFieldState descriptionTextFieldState;
   final AmityCommunitySetupPageMode mode;
@@ -687,6 +688,7 @@ class AmityCommunitySetupPage extends NewBasePage {
   void _goToCategoryPage(BuildContext context, CommunitySetupPageState state) {
     Navigator.of(context).push(
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityCommunityAddCategoryPage.routeName),
         fullscreenDialog: true,
         builder: (_) => PopScope(
           canPop: true,
@@ -707,6 +709,7 @@ class AmityCommunitySetupPage extends NewBasePage {
   void _goToMemberPage(BuildContext context, CommunitySetupPageState state) {
     Navigator.of(context).push(
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityCommunityAddMemberPage.routeName),
         fullscreenDialog: true,
         builder: (_) => PopScope(
           canPop: true,
@@ -728,6 +731,7 @@ class AmityCommunitySetupPage extends NewBasePage {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPostCameraScreen.routeName),
         fullscreenDialog: true,
         builder: (_) => AmityPostCameraScreen(
           selectedType: FileType.image,
@@ -784,6 +788,7 @@ class AmityCommunitySetupPage extends NewBasePage {
       BuildContext context, AmityCommunity community) {
     Navigator.of(context).push(
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
         builder: (_) => AmityCommunityProfilePage(
           communityId: community.communityId ?? '',
         ),

@@ -127,7 +127,7 @@ class AmityEmptyNewsFeedComponent extends NewBaseComponent {
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
                           Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) => const CreateCommunityPage()));
+                              .push(MaterialPageRoute(settings: RouteSettings(name: CreateCommunityPage.routeName), builder: (context) => const CreateCommunityPage()));
                         },
                         child: Container(
                           width: 220,

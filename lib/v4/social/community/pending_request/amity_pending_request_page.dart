@@ -18,6 +18,7 @@ enum AmityPendingRequestPageTab {
 }
 
 class AmityPendingRequestPage extends NewBasePage {
+  static const String routeName = '/social/pending-request-page';
   final AmityCommunity community;
   final AmityPendingRequestPageTab initialTab;
 

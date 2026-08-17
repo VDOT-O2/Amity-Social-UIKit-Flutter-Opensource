@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class AmityImageViewer extends StatefulWidget {
+  static const String routeName = '/social/image-viewer';
   final String imageUrl;
   final bool showDeleteButton;
   final bool showSaveButton;

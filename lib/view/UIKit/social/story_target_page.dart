@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AmityStoryTargetSelectionPage extends StatefulWidget {
+  static const String routeName = '/social/story-target-selection-page';
   const AmityStoryTargetSelectionPage({
     super.key,
   });

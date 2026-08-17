@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AmityPostCameraScreen extends StatefulWidget {
+  static const String routeName = '/social/post-camera-screen';
   FileType? selectedFileType;
 
   AmityPostCameraScreen({Key? key, FileType? selectedType}) : super(key: key) {

@@ -11,6 +11,7 @@ class AmityCommunityProfilePageBehavior {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPendingRequestPage.routeName),
         builder: (context) => AmityPendingRequestPage(
           community: community,
         ),

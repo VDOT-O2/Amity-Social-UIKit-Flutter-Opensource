@@ -182,6 +182,7 @@ class _AmityStoryCommunityTabBuilderState
                           state.stories?.isEmpty == true)) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
+                        settings: RouteSettings(name: CreateStoryConfigProviderWidget.routeName),
                         builder: (BuildContext context) {
                           return CreateStoryConfigProviderWidget(
                             targetType: AmityStoryTargetType.COMMUNITY,
@@ -194,6 +195,7 @@ class _AmityStoryCommunityTabBuilderState
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
+                        settings: RouteSettings(name: AmityViewStoryPage.routeName),
                         builder: (BuildContext context) {
                           return AmityViewStoryPage(
                             type: AmityViewStoryCommunityFeed(

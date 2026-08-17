@@ -11,6 +11,7 @@ class AmityGlobalFeedComponentBehavior {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPostDetailPage.routeName),
         builder: (context) => AmityPostDetailPage(
           postId: id,
           category: category,
@@ -25,6 +26,7 @@ class AmityGlobalFeedComponentBehavior {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityCommunitySetupPage.routeName),
         builder: (context) => AmityCommunitySetupPage(
           mode: const CreateMode(),
         ),

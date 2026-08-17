@@ -257,6 +257,7 @@ class AmityPostHeader extends StatelessWidget {
 
     onEdit() => {
           Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: AmityPostComposerPage.routeName),
               fullscreenDialog: true,
               builder: (context) => ChangeNotifierProvider<EditPostVM>(
                   create: (context) => EditPostVM(),

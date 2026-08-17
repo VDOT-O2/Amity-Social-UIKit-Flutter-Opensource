@@ -34,6 +34,7 @@ part 'widgets/chat_page_helpers.dart';
 // Page for showing one-on-one chat messages
 // ignore: must_be_immutable
 class AmityChatPage extends NewBasePage {
+  static const String routeName = '/social/chat-page';
   static double toastBottomPadding = 56;
 
   final String? channelId;
@@ -282,6 +283,7 @@ class AmityChatPage extends NewBasePage {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
+                                                          settings: RouteSettings(name: FullTextScreen.routeName),
                                                           builder: (context) => FullTextScreen(
                                                             fullText: text,
                                                             displayName: (!isReplied) ? state.userDisplayName ?? "" : "Replied message",
@@ -328,6 +330,7 @@ class AmityChatPage extends NewBasePage {
                                                                   Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
+                                                                      settings: RouteSettings(name: FullTextScreen.routeName),
                                                                       builder: (context) => FullTextScreen(
                                                                         fullText: text,
                                                                         displayName:

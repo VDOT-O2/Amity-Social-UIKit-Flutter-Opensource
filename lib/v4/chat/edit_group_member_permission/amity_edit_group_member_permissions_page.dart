@@ -9,6 +9,7 @@ part 'amity_edit_group_member_permissions_cubit.dart';
 part 'amity_edit_group_member_permissions_state.dart';
 
 class AmityEditGroupMemberPermissionsPage extends NewBasePage {
+  static const String routeName = '/social/edit-group-member-permissions-page';
   final AmityChannel channel;
 
   AmityEditGroupMemberPermissionsPage({Key? key, required this.channel})

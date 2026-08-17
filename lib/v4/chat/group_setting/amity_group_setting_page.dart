@@ -20,6 +20,7 @@ part 'amity_group_setting_cubit.dart';
 part 'amity_group_setting_state.dart';
 
 class AmityGroupSettingPage extends NewBasePage {
+  static const String routeName = '/social/group-setting-page';
   final AmityChannel channel;
   final bool isModerator;
 
@@ -89,6 +90,7 @@ class AmityGroupSettingPage extends NewBasePage {
                                 await Navigator.push<Map<String, dynamic>>(
                               context,
                               MaterialPageRoute(
+                                settings: RouteSettings(name: AmityEditGroupProfilePage.routeName),
                                 builder: (context) => AmityEditGroupProfilePage(
                                     channel: state.channel),
                               ),
@@ -149,6 +151,7 @@ class AmityGroupSettingPage extends NewBasePage {
                                 await Navigator.push<Map<String, dynamic>>(
                               context,
                               MaterialPageRoute(
+                                settings: RouteSettings(name: AmityEditGroupMemberPermissionsPage.routeName),
                                 builder: (context) =>
                                     AmityEditGroupMemberPermissionsPage(
                                         channel: state.channel),
@@ -177,6 +180,7 @@ class AmityGroupSettingPage extends NewBasePage {
                               await Navigator.push<Map<String, dynamic>>(
                             context,
                             MaterialPageRoute(
+                              settings: RouteSettings(name: AmityGroupMemberListPage.routeName),
                               builder: (context) => AmityGroupMemberListPage(
                                   channel: state.channel),
                             ),
@@ -300,6 +304,7 @@ class AmityGroupSettingPage extends NewBasePage {
                                     await Navigator.push<Map<String, dynamic>>(
                                   context,
                                   MaterialPageRoute(
+                                    settings: RouteSettings(name: AmityGroupMemberListPage.routeName),
                                     builder: (context) =>
                                         AmityGroupMemberListPage(
                                       channel: state.channel,

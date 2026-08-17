@@ -79,6 +79,7 @@ extension VideoMessageWidget on MessageBubbleView {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                        settings: RouteSettings(name: VideoMessagePlayer.routeName),
                         builder: (context) => VideoMessagePlayer(
                           message: message,
                           onDelete: () {
@@ -106,6 +107,7 @@ extension VideoMessageWidget on MessageBubbleView {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: VideoMessagePlayer.routeName),
                       builder: (context) => VideoMessagePlayer(
                         message: message,
                         onDelete: () {

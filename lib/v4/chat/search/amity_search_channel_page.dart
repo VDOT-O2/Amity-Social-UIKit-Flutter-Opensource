@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:amity_uikit_beta_service/v4/chat/home/chat_list_skeleton.dart';
 
 class AmitySearchChannelPage extends NewBasePage {
+  static const String routeName = '/social/search-channel-page';
   AmitySearchChannelPage({Key? key}) : super(key: key, pageId: 'search_channel_page');
 
   final scrollController = ScrollController();

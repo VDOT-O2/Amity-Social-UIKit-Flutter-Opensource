@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
 class AmityCommunityAddCategoryPage extends NewBasePage {
+  static const String routeName = '/social/community-add-category-page';
   final ScrollController _scrollController = ScrollController();
   List<CommunityCategory> categories = [];
   Function(List<CommunityCategory>)? onAddedAction;

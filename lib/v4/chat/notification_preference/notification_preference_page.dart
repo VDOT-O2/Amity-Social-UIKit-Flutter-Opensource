@@ -13,6 +13,7 @@ part 'notification_preference_state.dart';
 part 'notification_preference_cubit.dart';
 
 class AmityGroupNotificationPreferencePage extends NewBasePage {
+  static const String routeName = '/social/group-notification-preference-page';
   final AmityChannel channel;
 
   AmityGroupNotificationPreferencePage({

@@ -107,6 +107,7 @@ class AmityRecommendedCommunityCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
+              settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
                 builder: (context) => AmityCommunityProfilePage(
                     communityId: community.communityId ?? ''))).then((_) {
           refreshController?.notifyRefresh();

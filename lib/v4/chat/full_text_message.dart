@@ -5,6 +5,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FullTextScreen extends StatelessWidget {
+  static const String routeName = '/social/full-text-screen';
   final String fullText;
   final String displayName;
   final AmityThemeColor theme;

@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class VideoPostPlayerPager extends StatelessWidget {
+  static const String routeName = '/social/video-post-player-pager';
   final List<AmityPost> posts;
   final int initialIndex;
   final bool autoPlay;

@@ -15,6 +15,7 @@ class AmityPostContentComponentBehavior {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityCommunityProfilePage.routeName),
         builder: (context) => AmityCommunityProfilePage(
           communityId: communityId,
         ),
@@ -38,6 +39,7 @@ class AmityPostContentComponentBehavior {
     Navigator.push(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: AmityPostComposerPage.routeName),
         builder: (context) => AmityPostComposerPage(
           options: AmityPostComposerOptions.editOptions(post: post),
         ),

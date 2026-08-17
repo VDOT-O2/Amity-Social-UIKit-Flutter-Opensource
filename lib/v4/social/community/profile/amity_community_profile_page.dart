@@ -30,6 +30,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../post_poll_composer_page/post_poll_composer_page.dart';
 
 class AmityCommunityProfilePage extends NewBasePage {
+  static const String routeName = '/social/community-profile-page';
   final String communityId;
   AmityCommunityProfilePage({super.key, required this.communityId}) : super(pageId: 'community_profile');
 
@@ -192,6 +193,7 @@ class AmityCommunityProfilePage extends NewBasePage {
               targetId: communityId, community: community, targetType: AmityPostTargetType.COMMUNITY);
 
           Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: AmityPostComposerPage.routeName),
             fullscreenDialog: true,
             builder: (context) => AmityPostComposerPage(
               options: createOptions,
@@ -217,6 +219,7 @@ class AmityCommunityProfilePage extends NewBasePage {
           // Show story creation screen
           Navigator.of(context).push(
             MaterialPageRoute(
+              settings: RouteSettings(name: CreateStoryConfigProviderWidget.routeName),
               builder: (BuildContext context) {
                 return CreateStoryConfigProviderWidget(
                   targetType: AmityStoryTargetType.COMMUNITY,
@@ -236,6 +239,7 @@ class AmityCommunityProfilePage extends NewBasePage {
           Navigator.of(context).pop();
 
           Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: AmityPollPostComposerPage.routeName),
             fullscreenDialog: true,
             builder: (context) => AmityPollPostComposerPage(
               targetId: communityId,
@@ -398,6 +402,7 @@ class AmityCommunityProfilePage extends NewBasePage {
                       Navigator.pop(context);
                       Navigator.of(context).push(
                         MaterialPageRoute(
+                          settings: RouteSettings(name: CreateStoryConfigProviderWidget.routeName),
                           builder: (BuildContext context) {
                             return CreateStoryConfigProviderWidget(
                               targetType: AmityStoryTargetType.COMMUNITY,
@@ -636,7 +641,7 @@ class AmityCommunityProfilePage extends NewBasePage {
             behavior: HitTestBehavior.translucent,
             onTap: () {
               if (state.community != null) {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context2) => AmityCommunitySettingPage(community: state.community!)));
+                Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: AmityCommunitySettingPage.routeName), builder: (context2) => AmityCommunitySettingPage(community: state.community!)));
               }
             },
             child: Container(

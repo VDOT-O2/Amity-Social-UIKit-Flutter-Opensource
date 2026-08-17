@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class AmityCommunityCommentsNotificationSettingPage extends NewBasePage {
+  static const String routeName = '/social/community-comments-notification-setting-page';
   AmityCommunityCommentsNotificationSettingPage(
       {super.key, required this.community, this.notificationSettings})
       : super(pageId: 'community_comments_notification_page');

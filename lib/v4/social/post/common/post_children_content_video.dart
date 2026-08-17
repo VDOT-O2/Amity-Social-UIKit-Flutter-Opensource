@@ -96,6 +96,7 @@ class PostContentVideo extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
+                settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                 builder: (context) => VideoPostPlayerPager(
                   posts: posts,
                   initialIndex: 0,
@@ -126,6 +127,7 @@ class PostContentVideo extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                     builder: (context) => VideoPostPlayerPager(
                       posts: posts,
                       initialIndex: 0,
@@ -146,6 +148,7 @@ class PostContentVideo extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                     builder: (context) => VideoPostPlayerPager(
                       posts: posts,
                       initialIndex: 1,
@@ -175,6 +178,7 @@ class PostContentVideo extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                        settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                         builder: (context) => VideoPostPlayerPager(
                           posts: posts,
                           initialIndex: 0,
@@ -200,6 +204,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 1,
@@ -220,6 +225,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 2,
@@ -251,6 +257,7 @@ class PostContentVideo extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                       builder: (context) => VideoPostPlayerPager(
                         posts: posts,
                         initialIndex: 0,
@@ -273,6 +280,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 1,
@@ -297,6 +305,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 2,
@@ -318,6 +327,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 3,
@@ -352,6 +362,7 @@ class PostContentVideo extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                       builder: (context) => VideoPostPlayerPager(
                         posts: posts,
                         initialIndex: 0,
@@ -375,6 +386,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 1,
@@ -399,6 +411,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 2,
@@ -420,6 +433,7 @@ class PostContentVideo extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: VideoPostPlayerPager.routeName),
                             builder: (context) => VideoPostPlayerPager(
                               posts: posts,
                               initialIndex: 3,

@@ -19,6 +19,7 @@ enum CommunityFeedMenuOption { edit, members }
 enum CommunityType { public, private }
 
 class CreateCommunityPage extends StatefulWidget {
+  static const String routeName = '/social/create-community-page';
   const CreateCommunityPage({super.key});
 
   @override

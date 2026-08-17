@@ -41,6 +41,7 @@ class AmitySocialHomePage extends NewBasePage {
                     if (currentTab == AmitySocialHomePageTab.newsFeed || currentTab == AmitySocialHomePageTab.explore) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
+                          settings: RouteSettings(name: AmitySocialGlobalSearchPage.routeName),
                           builder: (context) => AmitySocialGlobalSearchPage(),
                         ),
                       );
@@ -48,6 +49,7 @@ class AmitySocialHomePage extends NewBasePage {
                         AmitySocialHomePageTab.myCommunities) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
+                          settings: RouteSettings(name: AmityMyCommunitiesSearchPage.routeName),
                           builder: (context) => AmityMyCommunitiesSearchPage(),
                         ),
                       );

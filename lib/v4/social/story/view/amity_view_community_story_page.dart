@@ -499,7 +499,7 @@ class _AmityViewCommunityStoryPageBuilderState extends State<AmityViewCommunityS
                                   widget.lastSegmentReached!();
                                 },
                                 navigateToCreatePage: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                                  Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: CreateStoryConfigProviderWidget.routeName), builder: (BuildContext context) {
                                     return CreateStoryConfigProviderWidget(
                                       targetType: AmityStoryTargetType.COMMUNITY,
                                       targetId: state.storyTarget!.targetId,

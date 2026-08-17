@@ -13,6 +13,7 @@ import 'package:flutter_svg/svg.dart';
 import '../bloc/amity_select_group_member_cubit.dart';
 
 class AmitySelectGroupMemberPage extends NewBasePage {
+  static const String routeName = '/social/select-group-member-page';
   AmitySelectGroupMemberPage._({
     Key? key, 
     required this.isModifyMember, 
@@ -113,6 +114,7 @@ class AmitySelectGroupMemberPage extends NewBasePage {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
+                            settings: RouteSettings(name: AmityCreateGroupChatPage.routeName),
                             builder: (context) => AmityCreateGroupChatPage(
                               selectedUsers: state.selectedUsers,
                               onUserRemoved: (user) {

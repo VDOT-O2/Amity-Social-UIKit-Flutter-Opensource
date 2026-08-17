@@ -153,6 +153,7 @@ class AmityExploreComponent extends NewBaseComponent {
         Navigator.push(
           context,
           MaterialPageRoute(
+            settings: RouteSettings(name: AmityCommunitySetupPage.routeName),
             fullscreenDialog: true,
             builder: (context) => AmityCommunitySetupPage(
               mode: const CreateMode(),

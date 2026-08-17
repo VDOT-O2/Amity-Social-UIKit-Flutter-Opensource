@@ -17,6 +17,7 @@ import '../globalfeed/bloc/global_feed_bloc.dart';
 import 'bloc/poll_post_composer_bloc.dart';
 
 class AmityPollPostComposerPage extends NewBasePage {
+  static const String routeName = '/social/poll-post-composer-page';
   final String targetId;
   final AmityPostTargetType targetType;
   final String? targetCommunityName;
