@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:amity_sdk/amity_sdk.dart';
@@ -32,6 +33,7 @@ import 'package:amity_uikit_beta_service/v4/utils/media_permission_handler.dart'
 import 'package:amity_uikit_beta_service/v4/utils/message_color.dart';
 import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,6 +67,19 @@ class MessageBubbleView extends NewBaseComponent {
   BounceAnimator? bounceAnimator;
   double bounce;
   bool isGroupChat;
+
+  /// Fraction of the screen width the whole message row may occupy, avatar and
+  /// timestamp included.
+  static const double messageRowWidthFactor = 0.8;
+
+  /// Fraction of the screen width the bubble itself may occupy. Anything that
+  /// measures bubble content - see the text painter in [TextMessageWidget] -
+  /// has to use this same value, or the measurement disagrees with what
+  /// actually renders.
+  static const double bubbleWidthFactor = 0.6;
+
+  /// Horizontal padding inside the bubble, per side.
+  static const double bubbleHorizontalPadding = 16.0;
 
   MessageBubbleView({
     super.key,
@@ -127,7 +142,8 @@ class MessageBubbleView extends NewBaseComponent {
             alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.8, // 80% for the whole container including avatar
+                maxWidth:
+                    MediaQuery.of(context).size.width * messageRowWidthFactor,
               ),
               margin: EdgeInsets.only(
                 left: isUser ? 50 : 16,
@@ -147,7 +163,8 @@ class MessageBubbleView extends NewBaseComponent {
                               left: isModerator ? 44 : 40,
                               bottom: 4), // 44px for moderator (36px avatar + 8px spacing), 40px for regular (32px avatar + 8px spacing)
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.6, // Same as bubble width
+                            maxWidth: MediaQuery.of(context).size.width *
+                                bubbleWidthFactor,
                           ),
                           child: Text(
                             message.user?.displayName ?? "",

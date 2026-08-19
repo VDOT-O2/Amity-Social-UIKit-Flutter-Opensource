@@ -105,26 +105,43 @@ extension TextMessageWidget on MessageBubbleView {
 
     return StatefulBuilder(
       builder: (context, setState) {
+        // The text has to be measured at exactly the width it renders at,
+        // otherwise didExceedMaxLines disagrees with what RichText truncates.
+        final bubbleMaxWidth = MediaQuery.of(context).size.width *
+            MessageBubbleView.bubbleWidthFactor;
+
         return Flexible(
           child: LayoutBuilder(
             builder: (context, constraints) {
+              // The incoming constraints are the whole Flexible slot; the text
+              // renders inside the bubble clamp, minus its horizontal padding.
+              final textMaxWidth =
+                  math.min(constraints.maxWidth, bubbleMaxWidth) -
+                      (MessageBubbleView.bubbleHorizontalPadding * 2);
+
               final textPainter = TextPainter(
                 text: TextSpan(
                   text: text,
-                  style: TextStyle(
-                    color: isUser
+                  // Must match the style the spans are rendered with, font
+                  // family included - different metrics wrap differently.
+                  style: AmityTextStyle.body(
+                    isUser
                         ? messageColor.rightBubbleText
                         : messageColor.leftBubbleText,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 maxLines: urls.isNotEmpty ? 5 : 10, // Use 5 lines if message contains link, 10 otherwise
-                ellipsis: '...',
-                textDirection: TextDirection.ltr,
-              )..layout(maxWidth: constraints.maxWidth);
+                ellipsis: '\u2026',
+                textDirection: Directionality.of(context),
+                // The bubble renders with a raw RichText, which does not apply
+                // the system font scale. Keep the measurement unscaled to
+                // match; if the RichText below ever gets a textScaler, this
+                // one has to get the same value.
+                textScaler: TextScaler.noScaling,
+              )..layout(maxWidth: textMaxWidth > 0 ? textMaxWidth : 0);
 
               final isOverflowing = textPainter.didExceedMaxLines;
+              textPainter.dispose();
 
               return GestureDetector(
                 onLongPress: () async {
@@ -171,9 +188,7 @@ extension TextMessageWidget on MessageBubbleView {
                   });
                 },
                 child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.6, // 60% width just for the bubble itself
-                  ),
+                  constraints: BoxConstraints(maxWidth: bubbleMaxWidth),
                   decoration: BoxDecoration(
                     color: initialColor,
                     borderRadius: BorderRadius.circular(20),
@@ -183,7 +198,9 @@ extension TextMessageWidget on MessageBubbleView {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 16),
+                            vertical: 10,
+                            horizontal:
+                                MessageBubbleView.bubbleHorizontalPadding),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start, // Always align text to the left
                           children: [
@@ -256,7 +273,9 @@ extension TextMessageWidget on MessageBubbleView {
                                 child: Container(
                                   color: const Color.fromARGB(0, 11, 11, 11),
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 16.0),
+                                      vertical: 10.0,
+                                      horizontal: MessageBubbleView
+                                          .bubbleHorizontalPadding),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

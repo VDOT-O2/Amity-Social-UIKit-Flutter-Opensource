@@ -30,7 +30,10 @@ class MessageColor {
     rightBubbleDefault = getColor('right_bubble_color', theme.rightBubbleColor);
     rightBubblePressed = getColor('right_bubble_pressed_color', theme.rightBubbleColor.darken(15));
     rightBubbleText = getColor('right_bubble_text_color', theme.rightBubbleTextColor);
-    rightBubbleSubtleText = getColor('right_bubble_subtle_text_color', theme.primaryColor.blend(ColorBlendingOption.shade2));
+    // Derived from the right bubble's own text colour, not from
+    // primaryColor: the right bubble is not painted in primaryColor, so a
+    // shade of it lands as an unrelated hue on that background.
+    rightBubbleSubtleText = getColor('right_bubble_subtle_text_color', theme.rightBubbleTextColor.withValues(alpha: 0.7));
     leftBubblePreviewLinkColor = getColor('left_bubble_preview_link_color', theme.leftBubbleTextColor);
     rightBubblePreviewLinkColor = getColor('right_bubble_preview_link_color', theme.rightBubbleTextColor);
     bubbleDivider = getColor('bubble_divider_color', theme.baseColorShade4);
