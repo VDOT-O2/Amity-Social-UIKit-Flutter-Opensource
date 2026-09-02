@@ -27,12 +27,17 @@ class AmityNetworkImage extends StatelessWidget {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return _renderImage();
     } else {
-      return SvgPicture.asset(
-        placeHolderPath,
-        colorFilter: placeHolderColorFilter,
-        package: 'amity_uikit_beta_service',
-      );
+      return _placeholder();
     }
+  }
+
+  Widget _placeholder() {
+    if (placeHolderPath.isEmpty) return const SizedBox.shrink();
+    return SvgPicture.asset(
+      placeHolderPath,
+      colorFilter: placeHolderColorFilter,
+      package: 'amity_uikit_beta_service',
+    );
   }
 
   Image _renderImage() {
@@ -47,20 +52,12 @@ class AmityNetworkImage extends StatelessWidget {
           if (loadingProgress == null) {
             return child;
           } else {
-            return SvgPicture.asset(
-              placeHolderPath,
-              colorFilter: placeHolderColorFilter,
-              package: 'amity_uikit_beta_service',
-            );
+            return _placeholder();
           }
         },
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return SvgPicture.asset(
-            placeHolderPath,
-            colorFilter: placeHolderColorFilter,
-            package: 'amity_uikit_beta_service',
-          );
+          return _placeholder();
         },
       );
     } else {
@@ -71,11 +68,7 @@ class AmityNetworkImage extends StatelessWidget {
         height: height,
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return SvgPicture.asset(
-            placeHolderPath,
-            colorFilter: placeHolderColorFilter,
-            package: 'amity_uikit_beta_service',
-          );
+          return _placeholder();
         },
       );
     }
