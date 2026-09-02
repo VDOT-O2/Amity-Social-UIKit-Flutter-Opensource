@@ -25,7 +25,10 @@ class VideoPostPlayerBloc extends Bloc<VideoPostPlayerEvent, VideoPostPlayerStat
       }
       final uri = Uri.parse(urls[initialIndex]);
       final controller = VideoPlayerController.networkUrl(uri);
-      await controller.initialize();
+      if (!await _initialize(controller, urls[initialIndex])) {
+        emit(state.copyWith(urls: urls, thumbnails: thumbnails, currentIndex: initialIndex));
+        return;
+      }
       emit(state.copyWith(
         urls: urls,
         thumbnails: thumbnails,
@@ -38,13 +41,30 @@ class VideoPostPlayerBloc extends Bloc<VideoPostPlayerEvent, VideoPostPlayerStat
       state.videoController?.pause();
       final uri = Uri.parse(state.urls[event.currentIndex]);
       final controller = VideoPlayerController.networkUrl(uri);
-      await controller.initialize();
+      if (!await _initialize(controller, state.urls[event.currentIndex])) {
+        return;
+      }
       state.videoController?.dispose();
       emit(state.copyWith(
         currentIndex: event.currentIndex,
         videoController: controller,
       ));
     });
+  }
+
+  /// Initialises [controller], returning false when the source cannot be
+  /// played. Without this the PlatformException escapes the event handler as an
+  /// unhandled async error and the controller is leaked.
+  static Future<bool> _initialize(
+      VideoPlayerController controller, String source) async {
+    try {
+      await controller.initialize();
+      return true;
+    } catch (error) {
+      AmityLog.error("[VideoPostPlayerBloc] Failed to load $source", error);
+      await controller.dispose().catchError((Object _) {});
+      return false;
+    }
   }
 
   @override

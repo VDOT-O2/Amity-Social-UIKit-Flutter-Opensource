@@ -2,7 +2,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/video_post_player/pager/bloc/video_post_player_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
-import 'package:chewie/chewie.dart';
+import 'package:amity_uikit_beta_service/v4/core/video_player/managed_chewie_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -107,15 +107,11 @@ class VideoPostPlayerBuilder extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return Chewie(
-                    controller: ChewieController(
-                      videoPlayerController: state.videoController!,
-                      showControlsOnInitialize: false,
-                      autoInitialize: true,
-                      aspectRatio: state.videoController!.value.aspectRatio,
-                      autoPlay: autoPlay,
-                      looping: true,
-                    ),
+                  return ManagedChewiePlayer(
+                    videoPlayerController: state.videoController!,
+                    aspectRatio: state.videoController!.value.aspectRatio,
+                    autoPlay: autoPlay,
+                    looping: true,
                   );
                 }
               } else {

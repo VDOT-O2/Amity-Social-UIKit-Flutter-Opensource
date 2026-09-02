@@ -7,7 +7,7 @@ import 'package:amity_uikit_beta_service/v4/core/toast/amity_uikit_toast.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/media_permission_handler.dart';
-import 'package:chewie/chewie.dart';
+import 'package:amity_uikit_beta_service/v4/core/video_player/managed_chewie_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,15 +64,11 @@ class AmityVideoPlayerBuilder with ChangeNotifier {
                                   ),
                                 ),
                               )
-                            : Chewie(
-                                controller: ChewieController(
-                                  videoPlayerController: state.videoController!,
-                                  showControlsOnInitialize: false,
-                                  autoInitialize: true,
-                                  aspectRatio: state.videoController!.value.aspectRatio,
-                                  autoPlay: true,
-                                  looping: true,
-                                ),
+                            : ManagedChewiePlayer(
+                                videoPlayerController: state.videoController!,
+                                aspectRatio: state.videoController!.value.aspectRatio,
+                                autoPlay: true,
+                                looping: true,
                               ),
                       ),
                       Padding(

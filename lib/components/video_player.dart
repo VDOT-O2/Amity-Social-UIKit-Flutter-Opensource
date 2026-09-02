@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
@@ -38,11 +39,22 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
   Future<void> initializePlayer() async {
     AmityLog.debug("[LocalVideoPlayer] Initializing player for file=${widget.file.path}");
     videoPlayerController = VideoPlayerController.file(widget.file);
-    await videoPlayerController.initialize();
+    try {
+      await videoPlayerController.initialize();
+    } catch (error) {
+      AmityLog.error("[LocalVideoPlayer] Failed to load ${widget.file.path}", error);
+      return;
+    }
+
+    // autoPlay makes Chewie's constructor re-enter
+    // VideoPlayerController.initialize() once a failed video has reset
+    // `isInitialized`, throwing into a future nobody awaits. Drive playback here
+    // instead - the controller is already initialised above.
     ChewieController controller = ChewieController(
       showControlsOnInitialize: true,
       videoPlayerController: videoPlayerController,
-      autoPlay: true,
+      autoPlay: false,
+      autoInitialize: false,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
@@ -51,6 +63,7 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
     );
 
     controller.setVolume(0.0);
+    unawaited(videoPlayerController.play().catchError((Object _) {}));
 
     setState(() {
       chewieController = controller;
@@ -118,7 +131,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   Future<void> _initializeControllers() async {
    AmityLog.debug("_initializeControllers");
-    _controllers = await Future.wait(
+    final controllers = await Future.wait(
       widget.files.map((file) async {
         var videoData = file.data
             as VideoData; // Assuming VideoData is a type from your code
@@ -128,11 +141,28 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
        AmityLog.debug("  ");
         var controller =
             VideoPlayerController.networkUrl(Uri.parse(fileURL.fileUrl!));
-        await controller.initialize();
+        try {
+          await controller.initialize();
+        } catch (error) {
+          // One unplayable file used to reject the whole Future.wait as an
+          // unhandled async error and leak every controller in the batch.
+          AmityLog.error("[VideoPlayerScreen] Failed to load ${fileURL.fileUrl}", error);
+          await controller.dispose().catchError((Object _) {});
+          return null;
+        }
         return controller;
       }),
     );
+
+    if (!mounted) {
+      for (final controller in controllers) {
+        controller?.dispose();
+      }
+      return;
+    }
+
     setState(() {
+      _controllers = controllers.whereType<VideoPlayerController>().toList();
      AmityLog.debug("success");
     });
   }
@@ -263,13 +293,20 @@ class _FullScreenVideoPlayerWidgetState
   @override
   void initState() {
     super.initState();
+    // autoPlay would make Chewie's constructor re-enter
+    // VideoPlayerController.initialize() once a failed video has reset
+    // `isInitialized`, throwing into a future nobody awaits.
     _chewieController = ChewieController(
       videoPlayerController: widget.videoPlayerController,
       aspectRatio: widget.videoPlayerController.value.aspectRatio,
-      autoPlay: true,
+      autoPlay: false,
+      autoInitialize: false,
       looping: true,
       // Additional Chewie configuration...
     );
+
+    unawaited(Future<void>.microtask(widget.videoPlayerController.play)
+        .catchError((Object _) {}));
   }
 
   @override

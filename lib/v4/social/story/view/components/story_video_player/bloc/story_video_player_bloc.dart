@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/story/draft/amity_story_media_type.dart';
@@ -69,16 +70,22 @@ class StoryVideoPlayerBloc extends Bloc<StoryVideoPlayerEvent, StoryVideoPlayerS
     final rotationDegrees = videoController.value.rotationCorrection;
     final aspectRatio = _resolveAspectRatio(videoController, rotationDegrees, event.isFromGallery);
 
+    // autoPlay and autoInitialize both make Chewie's constructor call
+    // VideoPlayerController.initialize() again once a mid playback failure has
+    // reset `isInitialized`, and that retry throws into a future nobody awaits.
+    // The controller is already initialised above, so start playback ourselves.
     final chewieController = ChewieController(
       showControlsOnInitialize: false,
       videoPlayerController: videoController,
-      autoPlay: true,
+      autoPlay: false,
       showControls: false,
-      autoInitialize: true,
+      autoInitialize: false,
       allowFullScreen: true,
       looping: event.looping,
       aspectRatio: aspectRatio,
     );
+
+    unawaited(videoController.play().catchError((Object _) {}));
 
     emit(StoryVideoPlayerInitialized(
       videoController: videoController,

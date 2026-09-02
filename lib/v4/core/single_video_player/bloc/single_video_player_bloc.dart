@@ -16,7 +16,14 @@ class VideoPostPlayerBloc extends Bloc<SingleVideoPlayerEvent, SingleVideoPlayer
 
       final uri = Uri.parse(videoUrl);
       final controller = VideoPlayerController.networkUrl(uri);
-      await controller.initialize();
+      try {
+        await controller.initialize();
+      } catch (error) {
+        // Escapes as an unhandled async error otherwise, once per rebuild.
+        AmityLog.error("[VideoPostPlayerBloc] Failed to load $videoUrl", error);
+        await controller.dispose().catchError((Object _) {});
+        return;
+      }
 
       emit(state.copyWith(
         url: videoUrl,

@@ -1,7 +1,7 @@
 import 'package:amity_uikit_beta_service/v4/utils/SingleVideoPlayer/bloc/single_video_player_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/utils/config_provider.dart';
 import 'package:amity_uikit_beta_service/viewmodel/configuration_viewmodel.dart';
-import 'package:chewie/chewie.dart';
+import 'package:amity_uikit_beta_service/v4/core/video_player/managed_chewie_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,7 +24,8 @@ class SingleVideoPlayer extends StatelessWidget with ChangeNotifier {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          SingleVideoPlayerBloc(filePath: filePath, fileUrl: fileUrl),
+          SingleVideoPlayerBloc(filePath: filePath, fileUrl: fileUrl)
+            ..add(SingleVideoPlayerEventInitial()),
       child: VideoPlayerBuilder(context: context, initialIndex: 0).build(),
     );
   }
@@ -39,7 +40,6 @@ class VideoPlayerBuilder with ChangeNotifier {
   Widget build() {
     return BlocBuilder<SingleVideoPlayerBloc, SingleVideoPlayerState>(
         builder: (context, state) {
-      context.read<SingleVideoPlayerBloc>().add(SingleVideoPlayerEventInitial());
       return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -79,15 +79,11 @@ class VideoPlayerBuilder with ChangeNotifier {
             if (state.videoController == null) {
               return Container();
             } else {
-              return Chewie(
-                controller: ChewieController(
-                  videoPlayerController: state.videoController!,
-                  showControlsOnInitialize: false,
-                  autoInitialize: true,
-                  aspectRatio: state.videoController!.value.aspectRatio,
-                  autoPlay: true,
-                  looping: true,
-                ),
+              return ManagedChewiePlayer(
+                videoPlayerController: state.videoController!,
+                aspectRatio: state.videoController!.value.aspectRatio,
+                autoPlay: true,
+                looping: true,
               );
             }
           },
