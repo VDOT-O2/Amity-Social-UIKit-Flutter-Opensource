@@ -1,0 +1,17 @@
+# Normalize line endings to LF in the repository. Working copies get the
+# platform-native ending on checkout (CRLF on Windows, LF on macOS/Linux),
+# so neither side has to fight its editor.
+* text=auto
+
+# Shell scripts must keep LF endings, or the shebang line breaks
+# (env sees "bash\r" and fails) when checked out on Windows.
+*.sh text eol=lf
+
+# Windows batch files need CRLF to run reliably.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Generated NDK/CMake build artifacts checked into the example app: leave the
+# bytes exactly as they are.
+*.bin -text
+example/android/app/.cxx/** -text
