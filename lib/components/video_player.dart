@@ -120,7 +120,8 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   int _currentIndex = 0;
-  List<VideoPlayerController>? _controllers; // Changed from late to nullable
+  // Index-aligned with widget.files; a file whose video could not be loaded is null.
+  List<VideoPlayerController?>? _controllers;
 
   @override
   void initState() {
@@ -162,7 +163,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
 
     setState(() {
-      _controllers = controllers.whereType<VideoPlayerController>().toList();
+      _controllers = controllers;
      AmityLog.debug("success");
     });
   }
@@ -170,7 +171,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void dispose() {
     _controllers?.forEach((controller) {
-      controller.dispose();
+      controller?.dispose();
     });
 
     super.dispose();
@@ -185,10 +186,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final firstPlayable = _controllers?.firstWhere(
+      (controller) => controller != null,
+      orElse: () => null,
+    );
+
     return widget.isFillScreen
-        ? _controllers != null && _controllers!.isNotEmpty
-            ? FullScreenVideoPlayerWidget(
-                videoPlayerController: _controllers![0])
+        ? firstPlayable != null
+            ? FullScreenVideoPlayerWidget(videoPlayerController: firstPlayable)
             : Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.black,
@@ -234,9 +239,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       var controller = _controllers![index];
                       var videoData = widget.files[index].data as VideoData;
                       return GestureDetector(
-                        onTap: () {
-                          _openFullScreenVideo(controller);
-                        },
+                        onTap: controller == null
+                            ? null
+                            : () {
+                                _openFullScreenVideo(controller);
+                              },
                         child: Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Stack(
