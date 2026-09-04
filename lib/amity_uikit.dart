@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
+import 'package:amity_uikit_beta_service/v4/utils/media_permission_handler.dart';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/uikit_behavior.dart';
@@ -71,6 +72,13 @@ class AmityUIKit {
     bool showUIKitLogs = false,
   }) async {
     Stopwatch stopwatch = Stopwatch()..start();
+
+    // Every gallery pick in the UIKit must go through the Android Photo Picker;
+    // see MediaPermissionHandler for why. ImagePickerPlatform.instance is a
+    // singleton, so setting it here covers the call sites that use ImagePicker
+    // directly as well.
+    MediaPermissionHandler.enableAndroidPhotoPicker();
+
     AmityRegionalHttpEndpoint? amityEndpoint;
     AmityRegionalMqttEndpoint? amityMqttEndpoint;
     AmityUploadEndpoint? amityUploadEndpoint;

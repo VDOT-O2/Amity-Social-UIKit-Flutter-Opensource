@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
-import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -15,64 +14,54 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
+// Selecting photos and videos always goes through the platform picker — the
+// Android Photo Picker on Android, PHPicker on iOS. Neither needs a runtime
+// permission: the user picks the files and the app receives only those.
+//
+// This is a hard requirement of Google Play's Photo and Video Permissions
+// policy: READ_MEDIA_IMAGES / READ_MEDIA_VIDEO are reserved for apps whose core
+// function is browsing the whole gallery, which this app's avatar / post /
+// chat-attachment flows are not. Do not add a permission request to any picking
+// path, and do not reintroduce a custom gallery browser (wechat_assets_picker,
+// PhotoManager asset listing) — both require the permissions we must not hold.
 class MediaPermissionHandler {
-  // Check and request permissions.
-  // Returns the PermissionState (authorized, limited, denied, notDetermined).
-  // Use [requestPermissions] for a bool result, or inspect the state directly
-  // to decide which picker to open without an extra system call.
-  Future<PermissionState?> requestPermissionsWithState() async {
-    if (await _isAndroid13OrHigher()) {
-      final permissionState = await PhotoManager.requestPermissionExtend();
-      if (permissionState == PermissionState.denied ||
-          permissionState == PermissionState.notDetermined) {
-        await _showPermissionDialog();
-      }
-      return permissionState;
+  static bool _androidPhotoPickerConfigured = false;
+  static bool _photoManagerPermissionCheckDisabled = false;
+
+  // Route image_picker through the Android Photo Picker (ACTION_PICK_IMAGES,
+  // with the Google Play services backport below Android 13) instead of the
+  // legacy gallery intent, which needs READ_MEDIA_*. ImagePickerPlatform.instance
+  // is a singleton, so this only has to happen once.
+  static void enableAndroidPhotoPicker() {
+    if (_androidPhotoPickerConfigured) return;
+    final platform = ImagePickerPlatform.instance;
+    if (platform is ImagePickerAndroid) {
+      platform.useAndroidPhotoPicker = true;
+      _androidPhotoPickerConfigured = true;
     }
-    return null; // Android 12 and below — use handleMediaPermissions()
   }
 
-  // Check and request permissions.
-  // Returns true when the user has granted either full or partial (limited)
-  // access. Use [isLimitedAccess] afterwards to decide which picker to open.
+  // Permission gate for *writing* to the shared gallery. Reading never needs
+  // one. Android 10 (API 29) and up insert through MediaStore without any
+  // permission; only API 28 still needs WRITE_EXTERNAL_STORAGE, which the
+  // manifest declares with maxSdkVersion="28".
   Future<bool> handleMediaPermissions() async {
-    // For Android 13+ (API level 33+) use photo_manager which correctly
-    // distinguishes full vs. partial (limited) access on Android 14+.
-    if (await _isAndroid13OrHigher()) {
-      final permissionState = await PhotoManager.requestPermissionExtend();
+    if (!Platform.isAndroid) return true;
+    if (await _androidSdkInt() >= 29) return true;
 
-      if (permissionState == PermissionState.denied ||
-          permissionState == PermissionState.notDetermined) {
+    final status = await Permission.storage.status;
+    if (status.isDenied) {
+      final result = await Permission.storage.request();
+      if (!result.isGranted) {
         await _showPermissionDialog();
-        return false;
       }
-
-      // PermissionState.authorized  → full access
-      // PermissionState.limited     → partial access (Android 14+)
-      // Both are acceptable — callers use isLimitedAccess() to pick the
-      // right picker UI.
-      return permissionState == PermissionState.authorized ||
-          permissionState == PermissionState.limited;
+      return result.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      await _showPermissionDialog();
+      return false;
     }
-    // For Android 12 and below
-    else {
-      final status = await Permission.storage.status;
-      if (status.isDenied) {
-        final result = await Permission.storage.request();
-        
-        if (!result.isGranted) {
-          await _showPermissionDialog();
-        }
-        
-        return result.isGranted;
-      } else if (status.isPermanentlyDenied) {
-        await _showPermissionDialog();
-        return false;
-      }
-      return status.isGranted;
-    }
+    return status.isGranted;
   }
 
   Future<void> _showPermissionDialog() async {
@@ -80,12 +69,12 @@ class MediaPermissionHandler {
     if (context == null) return;
 
     final appName = await _getAppName();
-    
+
     PermissionAlertV4Dialog().show(
       context: context,
       title: 'Allow access to your photos and videos',
       detailText:
-          'This allows $appName to share photos and videos from this device.',
+          'This allows $appName to save photos and videos to this device.',
       bottomButtonText: 'OK',
       topButtonText: 'Open settings',
       onTopButtonAction: () {
@@ -103,126 +92,63 @@ class MediaPermissionHandler {
     }
   }
 
-  // Check if device is running Android 13 or higher
-  Future<bool> _isAndroid13OrHigher() async {
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      return androidInfo.version.sdkInt >= 33;
-    }
-    return false;
+  Future<int> _androidSdkInt() async {
+    if (!Platform.isAndroid) return 0;
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    return androidInfo.version.sdkInt;
   }
 
-  // Returns true when the user has granted only partial (limited) media access
-  // on Android 14+. Uses photo_manager which correctly reports PermissionState.limited
-  // on Android 14+ (permission_handler does not surface this on Android).
-  Future<bool> isLimitedAccess() async {
-    if (!Platform.isAndroid) return false;
-    if (!await _isAndroid13OrHigher()) return false;
-    final permissionState = await PhotoManager.requestPermissionExtend();
-    return permissionState == PermissionState.limited;
-  }
-
-  // Pick image using photo picker
+  // Pick a single image through the platform photo picker.
   Future<XFile?> pickImage() async {
-    if (await handleMediaPermissions()) {
-      final ImagePicker picker = ImagePicker();
-      try {
-        // Use Android Photo Picker when access is limited so only the
-        // user-selected photos are shown, not the full gallery.
-        final limited = await isLimitedAccess();
-        _configureAndroidPhotoPicker(limited);
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-        );
-        return image;
-      } catch (e) {
-       AmityLog.debug('Error picking image: $e');
-        return null;
-      }
-    }
-    return null;
-  }
-
-  // Pick video using photo picker
-  Future<XFile?> pickVideo() async {
-    if (await handleMediaPermissions()) {
-      final ImagePicker picker = ImagePicker();
-      try {
-        // Use Android Photo Picker when access is limited so only the
-        // user-selected videos are shown, not the full gallery.
-        final limited = await isLimitedAccess();
-        _configureAndroidPhotoPicker(limited);
-        final XFile? video = await picker.pickVideo(
-          source: ImageSource.gallery,
-        );
-        return video;
-      } catch (e) {
-       AmityLog.debug('Error picking video: $e');
-        return null;
-      }
-    }
-    return null;
-  }
-
-  Future<List<XFile>> pickImageAndVideo({int limit = 10, AmityThemeColor? theme}) async {
-    final BuildContext? context = NavigationService.navigatorKey.currentContext;
-    if (context == null) return [];
-
+    enableAndroidPhotoPicker();
     try {
-      // Build picker theme from UIKit AmityThemeColor if provided.
-      // Override iconTheme and textTheme so the check icon and selection
-      // index numbers (1,2,3) are always white — they sit on a colored
-      // circle background and must contrast against it regardless of
-      // whether the app is in light or dark mode.
-      final ThemeData? pickerTheme = theme != null
-          ? AssetPicker.themeData(theme.primaryColor,
-                  light: theme.backgroundColor.computeLuminance() > 0.5)
-              .copyWith(
-              iconTheme: const IconThemeData(color: Colors.white),
-              textTheme: Typography.material2021().white.copyWith(
-                    bodyLarge: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-            )
-          : null;
-
-      final List<AssetEntity>? assets = await AssetPicker.pickAssets(
-        context,
-        pickerConfig: AssetPickerConfig(
-          maxAssets: limit,
-          requestType: RequestType.common, // image + video
-          pickerTheme: pickerTheme,
-        ),
-      );
-
-      if (assets == null || assets.isEmpty) return [];
-
-      final List<XFile> files = [];
-      for (final asset in assets) {
-        final File? file = await asset.originFile;
-        if (file != null) {
-          files.add(XFile(file.path));
-        }
-      }
-      return files;
+      return await ImagePicker().pickImage(source: ImageSource.gallery);
     } catch (e) {
+      AmityLog.debug('Error picking image: $e');
+      return null;
+    }
+  }
+
+  // Pick a single video through the platform photo picker.
+  Future<XFile?> pickVideo() async {
+    enableAndroidPhotoPicker();
+    try {
+      return await ImagePicker().pickVideo(source: ImageSource.gallery);
+    } catch (e) {
+      AmityLog.debug('Error picking video: $e');
+      return null;
+    }
+  }
+
+  // Pick several images and/or videos in one pass through the platform photo
+  // picker.
+  Future<List<XFile>> pickImageAndVideo({int limit = 10}) async {
+    enableAndroidPhotoPicker();
+    try {
+      // image_picker rejects a limit below 2; a single-item selection is just
+      // an unbounded pick the caller trims.
+      return await ImagePicker().pickMultipleMedia(
+        limit: limit >= 2 ? limit : null,
+      );
+    } catch (e) {
+      AmityLog.debug('Error picking media: $e');
       return [];
     }
   }
 
-  void _configureAndroidPhotoPicker(bool enabled) {
-    final platform = ImagePickerPlatform.instance;
-    if (platform is ImagePickerAndroid) {
-      platform.useAndroidPhotoPicker = enabled;
-    }
+  // photo_manager's editor otherwise asks for the gallery read permissions this
+  // app deliberately does not declare. Saving does not need them.
+  void _ignorePhotoManagerPermissionCheck() {
+    if (_photoManagerPermissionCheckDisabled) return;
+    PhotoManager.setIgnorePermissionCheck(true);
+    _photoManagerPermissionCheckDisabled = true;
   }
 
   // Save media to gallery
   Future<bool> saveVideoToGallery(String filePath, String? fileName) async {
     if (await handleMediaPermissions()) {
       try {
+        _ignorePhotoManagerPermissionCheck();
         await PhotoManager.editor.saveVideo(
           File(filePath),
           title: fileName ?? 'video_${DateTime.now().millisecondsSinceEpoch}',
@@ -238,6 +164,7 @@ class MediaPermissionHandler {
   Future<bool> saveImageToGallery(Uint8List imageData, String? fileName) async {
     if (await handleMediaPermissions()) {
       try {
+        _ignorePhotoManagerPermissionCheck();
         await PhotoManager.editor.saveImage(
           imageData,
           filename:

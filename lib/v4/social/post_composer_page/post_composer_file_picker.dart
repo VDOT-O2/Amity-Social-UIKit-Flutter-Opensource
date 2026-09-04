@@ -6,7 +6,6 @@ import 'package:amity_uikit_beta_service/v4/core/utils/log.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/bloc/post_composer_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_composer_page/post_composer_page.dart';
 import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,38 +84,10 @@ extension PostComposerFilePicker on AmityPostComposerPage {
             }
           }
 
-          showPermissionDialog() async {
-            ConfirmationV4Dialog().show(
-              context: context,
-              title: 'Allow access to your vidoes',
-              detailText:
-                  'This allows $appName to access vidoes on your device.',
-              leftButtonColor: null,
-              leftButtonText: 'OK',
-              rightButtonText: 'Open settings',
-              onConfirm: () {
-                openAppSettings();
-              },
-            );
-          }
-
-          try {
-            var androidInfo = await DeviceInfoPlugin().androidInfo;
-            var sdkInt = androidInfo.version.sdkInt;
-
-            if (sdkInt > 32) {              
-              await pickVideos();
-            } else {
-              // Needs to check storage permission on Android versions 12 and below
-              if (await Permission.storage.request().isGranted) {
-                await pickVideos();
-              } else {
-                await showPermissionDialog();
-              }
-            }
-          } catch (e) {
-            await showPermissionDialog();
-          }
+          // The system file picker (ACTION_GET_CONTENT) grants access to the
+          // chosen files only and needs no storage permission on any supported
+          // API level.
+          await pickVideos();
         } else {
           typeText = 'images';
           Future.delayed(const Duration(milliseconds: 1000), () {

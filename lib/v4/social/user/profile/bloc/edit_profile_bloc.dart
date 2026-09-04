@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:amity_uikit_beta_service/v4/utils/media_permission_handler.dart';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
@@ -30,8 +31,10 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
     on<EditProfileImagePickerEvent>(
       (event, emit) async {
-        final XFile? xFile = await ImagePicker()
-            .pickImage(source: ImageSource.gallery, requestFullMetadata: true);
+        // requestFullMetadata pulls EXIF (including location) and pushes
+        // image_picker onto the metadata path that wants media permissions we
+        // no longer hold; the avatar upload does not need it.
+        final XFile? xFile = await MediaPermissionHandler().pickImage();
 
         if (xFile != null) {
           final pickedFile = File(xFile.path);

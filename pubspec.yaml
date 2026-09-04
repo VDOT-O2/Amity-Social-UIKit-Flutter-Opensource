@@ -64,7 +64,6 @@ dependencies:
   palette_generator: ^0.3.3+4
   connectivity_plus: ^6.1.0
   photo_manager: ^3.6.3
-  wechat_assets_picker: ^9.8.0
   diff_match_patch: ^0.4.1
   flutter_markdown: ^0.6.14
   markdown: ^7.0.0
