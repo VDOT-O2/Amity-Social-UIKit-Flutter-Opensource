@@ -96,11 +96,10 @@ class MediaPickerVM with ChangeNotifier {
 
   Future<void> pickFile() async {
     try {
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(allowMultiple: true);
+      final result = await FilePicker.pickFiles();
 
-      if (result != null && result.files.isNotEmpty) {
-        for (var file in result.files) {
+      if (result.isNotEmpty) {
+        for (var file in result) {
           _selectedFiles.add(File(file.path!));
         }
         notifyListeners();

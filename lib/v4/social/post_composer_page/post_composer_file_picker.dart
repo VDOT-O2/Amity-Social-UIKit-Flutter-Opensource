@@ -58,13 +58,9 @@ extension PostComposerFilePicker on AmityPostComposerPage {
           typeText = 'videos';
 
           pickVideos() async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
+            final result = await FilePicker.pickFiles(
               type: type,
-              allowMultiple: true,
-              allowCompression: true,
-              withData: false,
-              withReadStream: true,
-              lockParentWindow: true,
+              compressionQuality: 80,
               onFileLoading: (status) => {
                 if (status == FilePickerStatus.done)
                   {context.read<AmityToastBloc>().add(AmityToastDismiss())}
@@ -76,12 +72,7 @@ extension PostComposerFilePicker on AmityPostComposerPage {
               },
             );
 
-            if (result != null) {
-              files = result.files
-                  .where((file) => file.path != null)
-                  .map((file) => XFile(file.path!))
-                  .toList();
-            }
+            files = result.map((file) => file.xFile).toList();
           }
 
           // The system file picker (ACTION_GET_CONTENT) grants access to the
@@ -157,13 +148,9 @@ extension PostComposerFilePicker on AmityPostComposerPage {
 
         try {
           pickFiles() async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
+            final result = await FilePicker.pickFiles(
               type: type,
-              allowMultiple: true,
-              allowCompression: true,
-              withData: false,
-              withReadStream: true,
-              lockParentWindow: true,
+              compressionQuality: 80,
               onFileLoading: (status) => {
                 if (status == FilePickerStatus.done)
                   {context.read<AmityToastBloc>().add(AmityToastDismiss())}
@@ -175,12 +162,7 @@ extension PostComposerFilePicker on AmityPostComposerPage {
               },
             );
 
-            if (result != null) {
-              files = result.files
-                  .where((file) => file.path != null)
-                  .map((file) => XFile(file.path!))
-                  .toList();
-            }
+            files = result.map((file) => file.xFile).toList();
           }
 
           await pickFiles();

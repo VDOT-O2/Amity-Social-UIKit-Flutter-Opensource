@@ -288,15 +288,9 @@ class CreatePostVMV2 with ChangeNotifier {
           selectFiles([video], MyFileType.video);
         }
       } else if (action == PickerAction.filePicker) {
-        FilePickerResult? result = await FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: FileType.any,
-        );
-        if (result != null && result.files.isNotEmpty) {
-          List<XFile> pickedFiles = result.files
-              .where((file) => file.path != null)
-              .map((file) => XFile(file.path!))
-              .toList();
+        final result = await FilePicker.pickFiles(type: FileType.any);
+        if (result.isNotEmpty) {
+          List<XFile> pickedFiles = result.map((file) => file.xFile).toList();
           selectFiles(pickedFiles, MyFileType.file);
         }
       }
