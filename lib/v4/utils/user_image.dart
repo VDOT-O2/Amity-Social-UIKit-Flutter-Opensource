@@ -55,7 +55,7 @@ class AmityUserImage extends StatelessWidget {
       return 'A';
     }
 
-    final nameParts = displayName.trim().split(' ');
+    final nameParts = displayName.trim().split(RegExp(r'\s+'));
     if (nameParts.length == 1) {
       return nameParts[0][0].toUpperCase();
     } else {
