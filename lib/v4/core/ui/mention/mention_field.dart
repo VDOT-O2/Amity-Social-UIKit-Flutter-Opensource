@@ -137,6 +137,7 @@ class MentionTextField extends StatefulWidget {
     this.enableMention = true,
     this.autocorrect = true,
     this.enableSuggestions = true,
+    this.textCapitalization = TextCapitalization.sentences,
   }) : super(key: key);
 
   final AmityThemeColor theme;
@@ -169,6 +170,7 @@ class MentionTextField extends StatefulWidget {
   final bool enableMention; // Enable/disable mention functionality
   final bool autocorrect; // Enable/disable autocorrect
   final bool enableSuggestions; // Enable/disable keyboard suggestions/autocomplete
+  final TextCapitalization textCapitalization;
 
   @override
   State<MentionTextField> createState() => _MentionTextFieldState();
@@ -1133,6 +1135,7 @@ class _MentionTextFieldState extends State<MentionTextField>
       keyboardType: widget.keyboardType,
       autocorrect: widget.autocorrect,
       enableSuggestions: widget.enableSuggestions,
+      textCapitalization: widget.textCapitalization,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
       enabled: widget.enabled,

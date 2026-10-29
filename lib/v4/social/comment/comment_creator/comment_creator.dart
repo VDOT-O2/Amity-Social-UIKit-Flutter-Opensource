@@ -72,6 +72,11 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
   late MentionTextEditingController controller;
   late ScrollController scrollController;
   final focusNode = FocusNode();
+  final inputKey = GlobalKey();
+  double inputHeight = minInputHeight;
+
+  static const double minInputHeight = 45;
+  static const double maxInputHeight = 200;
 
   String? avatarUrl;
 
@@ -87,6 +92,15 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
     });
 
     fetchUserInfo();
+  }
+
+  void updateInputHeight() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final height = inputKey.currentContext?.size?.height;
+      if (mounted && height != null && height != inputHeight) {
+        setState(() => inputHeight = height);
+      }
+    });
   }
 
   @override
@@ -148,8 +162,8 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
               ),
               Expanded(
                 child: Container(
-                  constraints: const BoxConstraints(minHeight: 45, maxHeight: 135),
-                  height: state.currentHeight,
+                  key: inputKey,
+                  constraints: const BoxConstraints(minHeight: minInputHeight, maxHeight: maxInputHeight),
                   alignment: Alignment.centerLeft,
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
@@ -175,6 +189,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                         scrollController: scrollController,
                         onChanged: (value) {
                           context.read<CommentCreatorBloc>().add(CommentCreatorTextChage(text: value.trim()));
+                          updateInputHeight();
                         },
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
@@ -211,8 +226,8 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        suggestionOverlayBottomPaddingWhenKeyboardClosed: state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
-                        suggestionOverlayBottomPaddingWhenKeyboardOpen: state.currentHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
+                        suggestionOverlayBottomPaddingWhenKeyboardClosed: inputHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
+                        suggestionOverlayBottomPaddingWhenKeyboardOpen: inputHeight + 16.0 + (state.replyTo != null ? 40.0 : 0.0),
                       ),
                     ),
                   ),
@@ -254,6 +269,7 @@ class _AmityCommentCreatorInternalState extends State<AmityCommentCreatorInterna
 
                   focusNode.unfocus();
                   controller.clear();
+                  updateInputHeight();
                 },
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 12, right: 12, left: 8),
